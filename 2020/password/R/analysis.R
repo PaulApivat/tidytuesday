@@ -122,4 +122,22 @@ circle_bar1 <- ggplot(data = label_data, mapping = aes(x=as.factor(rank), y=stre
         inherit.aes = FALSE)
 
 
+###------Highlight Outlier and Change Panel Background------###
+# Neon Green (#65FC6A) and Megenta (#FF0BAC) and Black (#111111)
 
+
+circle_bar2 <- ggplot(data = label_data, mapping = aes(x=as.factor(rank), y=strength)) 
+# fill color on condition of password strength Neon Green (#65FC6A) and Megenta (#FF0BAC) to highlight outlier (no alpha for full color)
++ geom_bar(stat = "identity", fill = if_else(label_data$strength > 10, alpha("#FF0BAC"), alpha("#65FC6A"))) 
++ ylim(-200, 120) 
++ theme_minimal() 
++ theme(axis.text = element_blank(), axis.title = element_blank(), panel.grid = element_blank(), plot.margin = unit(rep(0,4), "cm")) 
++ coord_polar(start = 0) 
++ geom_text(data = label_data, aes(x=rank, y=strength+70, label=password, hjust=hjust), 
+    # (no alpha for full color)
+    color = if_else(label_data$strength > 10, alpha("#FF0BAC"), alpha("#65FC6A")), 
+    fontface="bold", 
+    # text size on condition to highlight outliers
+    size=if_else(label_data$strength > 10, 4, 1.5), 
+    angle=label_data$angle, inherit.aes = FALSE) 
++ theme(panel.background = element_rect(fill = "#111111", colour = "#111111"))
