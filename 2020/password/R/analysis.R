@@ -31,6 +31,10 @@ pass_in_sec$lower_and_num <- grepl("(?=.*[a-z])(?=.*[0-9])", pass_in_sec$passwor
 # delete last six rows (missing data across all columns, NA)
 > pass_in_sec <- pass_in_sec[-(501:507),]
 
+
+
+#-----------RIDGELINE PLOT-------------#
+
 # Ridgeline plot emphasizing outlier that happens to have both alphabet & numbers
 
 plot1 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fill = lower_and_num)) 
@@ -63,11 +67,59 @@ plot3 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fi
 
 plot4 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fill = category)) 
 + geom_density_ridges(scale = 1.5, alpha = 0.8, quantile_lines = TRUE, quantiles = 2) 
-+ theme_classic() + labs(x = "Password Strength", y = "Password Category") 
++ theme_classic() 
++ labs(x = "Password Strength", y = "Password Category", title = "Password Category Median Strength") 
 + scale_y_discrete(expand = c(0.05, 0)) 
 + theme_ridges(grid = FALSE, center = TRUE) 
 + xlim(0,15) 
 + scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) 
 + geom_text(data = pass_in_sec %>% group_by(category) %>% summarize(strength = median(strength)), aes(label=sprintf("%1.1f", strength)), position = position_nudge(y = -0.1), color = "red") 
 + theme(legend.position = "none")
+
+
+
+#-----------CIRCULAR BARPLOT-------------#
+
+#preparing label data for CIRCULAR BARPLOT
+
+label_data <- pass_in_sec
+
+# calculate ANGLE of labels (note: rank is id)
+number_of_bar <- nrow(label_data)
+angle <- 90 - 360 * (label_data$rank-0.5)/number_of_bar
+
+# calculate alignment of labels: right or left
+# labels on the left side of the plot have angles < -90 
+label_data$hjust <- if_else(angle < -90, 1, 0)
+
+# flip angle to make them readable
+label_data$angle <- if_else(angle < -90, angle+180, angle)
+
+# circle bar plot
+# rank is id, necessary to order the words
+circle_bar1 <- ggplot(data = label_data, mapping = aes(x=as.factor(rank), y=strength)) 
+
+# adds blue bars for 'strength' of password
++ geom_bar(stat = "identity", fill = alpha("blue", 0.3)) 
+
+# limits of plot: more negative (left) makes circle bigger; more positive (right number) makes circle smaller
++ ylim(-200, 120) 
++ theme_minimal() 
++ theme(axis.text = element_blank(), 
+        axis.title = element_blank(), 
+        panel.grid = element_blank(), 
+        plot.margin = unit(rep(0,4), "cm")) 
+
+# coordinate polar instead of cartesian
++ coord_polar(start = 0) 
+
+# hjust and angle ensure words don't overlap (to extent possible)
++ geom_text(data = label_data, aes(x=rank, y=strength+60, label=password, hjust=hjust), 
+        color = "black", 
+        fontface="bold", 
+        alpha=0.6, size=1.5, 
+        angle=label_data$angle, 
+        inherit.aes = FALSE)
+
+
 
