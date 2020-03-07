@@ -58,3 +58,16 @@ plot3 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fi
 + theme_ridges(grid = FALSE, center = TRUE) + xlim(0,15) 
 + scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30"))
 
+# Ridgline plot, categories
+# median only
+
+plot4 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fill = category)) 
++ geom_density_ridges(scale = 1.5, alpha = 0.8, quantile_lines = TRUE, quantiles = 2) 
++ theme_classic() + labs(x = "Password Strength", y = "Password Category") 
++ scale_y_discrete(expand = c(0.05, 0)) 
++ theme_ridges(grid = FALSE, center = TRUE) 
++ xlim(0,15) 
++ scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) 
++ geom_text(data = pass_in_sec %>% group_by(category) %>% summarize(strength = median(strength)), aes(label=sprintf("%1.1f", strength)), position = position_nudge(y = -0.1), color = "red") 
++ theme(legend.position = "none")
+
