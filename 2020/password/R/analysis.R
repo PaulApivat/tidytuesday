@@ -31,9 +31,30 @@ pass_in_sec$lower_and_num <- grepl("(?=.*[a-z])(?=.*[0-9])", pass_in_sec$passwor
 # delete last six rows (missing data across all columns, NA)
 > pass_in_sec <- pass_in_sec[-(501:507),]
 
+# Ridgeline plot emphasizing outlier that happens to have both alphabet & numbers
 
-add <- function(x,y){
-    x + y
-}
+plot1 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fill = lower_and_num)) 
++ geom_density_ridges(scale = 1.5, alpha = 0.8) + theme_classic() 
++ scale_fill_manual(values = c("#7b3294", "#008837")) 
++ labs(x = "Password Strength", y = "Password Category", fill = "Contains lowercase letters  AND numbers")
 
-print(add(10,20))
+# Ridgeline plot emphasizing categories
+
+plot2 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fill = category)) 
++ geom_density_ridges(scale = 1.5, alpha = 0.8) 
++ xlim(0,15) + theme_classic() 
++ labs(x = "Password Strength", y = "Password Category")
+
+# Ridgline plot, cateogries
+# compare with quantile lines (1st, median, 3rd), vline_color & scale_discrete_manual
+# change plot colors scale_fill_manual
+
+plot3 <- ggplot(data = pass_in_sec, mapping = aes(x = strength, y = category, fill = category, vline_color = ..quantile..)) 
++ geom_density_ridges(scale = 1.5, alpha = 0.8, quantile_lines = TRUE) 
++ scale_discrete_manual("vline_color", values = c("blue", "black", "blue", "#39FF14"), breaks = c(1,2,3), labels = c("1st", "median", "3rd"), name = NULL) 
++ theme_classic() 
++ labs(x = "Password Strength", y = "Password Category") 
++ scale_y_discrete(expand = c(0.01, 0)) 
++ theme_ridges(grid = FALSE, center = TRUE) + xlim(0,15) 
++ scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30"))
+
