@@ -141,3 +141,23 @@ circle_bar2 <- ggplot(data = label_data, mapping = aes(x=as.factor(rank), y=stre
     size=if_else(label_data$strength > 10, 4, 1.5), 
     angle=label_data$angle, inherit.aes = FALSE) 
 + theme(panel.background = element_rect(fill = "#111111", colour = "#111111"))
+
+## Circle Bar with Title, Subtitle, Annotation
+
+circle_bar3 <- ggplot(data = label_data, mapping = aes(x=as.factor(rank), y=strength)) 
++ geom_bar(stat = "identity", fill = if_else(label_data$strength > 10, alpha("#FF0BAC"), alpha("#65FC6A"))) 
++ ylim(-200, 120) 
++ theme_minimal() 
+# plot.title is differnt from axis.title
++ theme(axis.text = element_blank(), plot.title = element_text(colour = "#E4F995"), plot.subtitle = element_text(colour = "#E4F995"), plot.caption = element_text(colour = "#E4F995"), panel.grid = element_blank(), plot.margin = unit(rep(0,4), "cm")) 
++ coord_polar(start = 0) 
++ geom_text(data = label_data, aes(x=rank, y=strength+70, label=password, hjust=hjust), color = if_else(label_data$strength > 10, alpha("#FF0BAC"), alpha("#65FC6A")), 
+        fontface="bold", 
+        size=if_else(label_data$strength > 10, 4, 1.5), 
+        angle=label_data$angle, 
+        inherit.aes = FALSE) 
++ theme(panel.background = element_rect(fill = "#111111", colour = "#111111"), plot.background = element_rect(fill = "#111111")) 
+# position text to be middle of the circle
++ annotate("text", x = 0, y = -200, label = "What makes better passwords?", size = 5, color = "#E4F995") 
++ labs(x = NULL, y = NULL, title = "Outliers Among Distribution of 500 Bad Passwords", subtitle = "Illustrated below is a circular barplot. Not all bad passwords are equally bad.", caption = "Graphic: @paulapivat")
+
