@@ -34,6 +34,13 @@ ggplot(aes(x=age_group, y=number_est, fill = ifelse(grepl("Unintentional Falls",
 + theme_classic()
 + labs(fill = "Injury Mechanism", y = "Numbers", x = "Age")
 
+# Comparison of Injury Mechanism across Life Span, Position = Dodge
+tbi_age %>% 
+filter(age_group != 'Total' & age_group != '0-17' & injury_mechanism != 'Other or no mechanism specified') %>% 
+ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism)) 
++ geom_bar(stat = "identity", position = "dodge") 
++ theme_classic() 
++ labs(fill = "Injury Mechanism", y = "Numbers", x = "Age")
 
 # have each injury mechanism represent on bar geom_bar
 
