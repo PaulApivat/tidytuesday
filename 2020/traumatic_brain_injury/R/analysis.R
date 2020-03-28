@@ -34,7 +34,8 @@ ggplot(aes(x=age_group, y=number_est, fill = ifelse(grepl("Unintentional Falls",
 + theme_classic()
 + labs(fill = "Injury Mechanism", y = "Numbers", x = "Age")
 
-# Comparison of Injury Mechanism across Life Span, Position = Dodge
+# Comparison of Injury Mechanism across Life Span, 
+# have each injury mechanism represent on bar geom_bar, Position = Dodge
 tbi_age %>% 
 filter(age_group != 'Total' & age_group != '0-17' & injury_mechanism != 'Other or no mechanism specified') %>% 
 ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism)) 
@@ -42,7 +43,30 @@ ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism))
 + theme_classic() 
 + labs(fill = "Injury Mechanism", y = "Numbers", x = "Age")
 
-# have each injury mechanism represent on bar geom_bar
+# convert injury_mechanism as character to factor
+tbi_age$injury_mechanism <- as.factor(tbi_age$injury_mechanism)
 
+# Comparing Injury Mechanisms across Life Span,
+# Highlight diverging trend in brain trauma from Unintentional Falls
+# manually change colors only for Factors
+tbi_age %>% 
+filter(age_group != 'Total' & age_group != '0-17' & injury_mechanism != 'Other or no mechanism specified') %>% 
+ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism)) 
++ geom_bar(stat = "identity", position = "dodge") 
++ theme_classic() 
++ labs(fill = "Injury Mechanism", y = "Numbers", x = "Age") 
++ scale_fill_manual(values = c("#276419", "#4d9221", "#7fbc41", "#b8e186", "#de77ae", "#e6f5d0"))
+
+# Two levels of diversion (cool vs warm colors); all lighter shades
+# highlight Unintentional Falls; only dark shade
+injury_across_age_group <- tbi_age %>% 
+filter(age_group != 'Total' & age_group != '0-17' & injury_mechanism != 'Other or no mechanism specified') %>% 
+ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism)) 
++ geom_bar(stat = "identity", position = "dodge") 
++ theme_classic() 
++ labs(title = "Injuries Across Life-Span", subtitle = "Data from 2006 - 2014", fill = "Injury Mechanism", y = "Numbers", x = "Age") 
++ scale_fill_manual(values = c("#a6cee3", "#b2df8a", "#cab2d6", "#fb9a99", "#e31a1c", "#fdbf6f"))
+
+injury_across_age_group
 
 # read data from PDF
