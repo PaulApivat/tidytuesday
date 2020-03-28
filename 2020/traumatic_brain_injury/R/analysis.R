@@ -28,10 +28,12 @@ options(scipen = 999)
 
 # Unintentional Falls vs Everything else, across age groups
 tbi_age %>% 
-filter(age_group != 'Total') %>% 
+filter(age_group != 'Total' & age_group != '0-17') %>% 
 ggplot(aes(x=age_group, y=number_est, fill = ifelse(grepl("Unintentional Falls", injury_mechanism), "red", "black"))) 
 + geom_bar(stat = "identity")
 + theme_classic()
++ labs(fill = "Injury Mechanism", y = "Numbers", x = "Age")
+
 
 # have each injury mechanism represent on bar geom_bar
 
