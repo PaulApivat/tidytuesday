@@ -75,12 +75,26 @@ injury_across_age_group
 class(tbi_year$injury_mechanism)
 tbi_year$injury_mechanism <- as.factor(tbi_year$injury_mechanism)
 
-
-# display all years separately on x-axis
-
-
+# view factor levels of injury_mechanism
+tbi_year %>% sapply(levels)
 
 # plot basic barchart
+# display all years separately on x-axis
+# note: employ scale_fill_manual to injury_mechanism which is a factor
+
+injury_across_year <- tbi_year %>% 
+filter(injury_mechanism != 'Other or no mechanism specified') %>% 
+ggplot(aes(x=year, y=number_est, fill=injury_mechanism)) 
++ geom_bar(stat = "identity", position = "fill") 
++ theme_classic() 
+# only possible after convert injury_mechanism to factor
++ scale_fill_manual(values = c("#a6cee3", "#b2df8a", "#cab2d6", "#fb9a99", "#e31a1c", "#fdbf6f")) 
+# display all years separately
++ scale_x_continuous(breaks = tbi_year$year) 
++ labs(title = "Injuries from 2006 - 2014", subtitle = "Across all age groups", fill = "Injury Mechanism", y = "Observed Numbers", x = "Year")
+
+injury_across_year
+
 
 
 
