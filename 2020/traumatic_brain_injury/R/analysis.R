@@ -132,6 +132,22 @@ temp <- tbi_military %>%
 
 
 
+###-----EXPERIMENTING change tbi_military$year to factor
+# note makes no difference
 
+tbi_military2 <- tbi_military
+tbi_military2$year <- as.factor(tbi_military2$year)
+
+tbi_year2 <- tbi_year
+tbi_year2$year <- as.factor(tbi_year2$year)
+
+tbi_year2 %>%
++ select(year, injury_mechanism, type, number_est) -> temp
+
+temp <- tbi_military2 %>%
++ inner_join(temp, by = "year")
+
+# plot
+ggplot(data = temp, mapping = aes(x=type, y=diagnosed, fill=service)) + geom_bar(stat = 'identity', position = 'fill')
 
 # read data from PDF
