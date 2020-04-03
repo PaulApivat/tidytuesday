@@ -69,6 +69,22 @@ ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism))
 
 injury_across_age_group
 
+
+##----- tbi_year ------##
+# change injury_mechanism to factor
+class(tbi_year$injury_mechanism)
+tbi_year$injury_mechanism <- as.factor(tbi_year$injury_mechanism)
+
+
+# display all years separately on x-axis
+
+
+
+# plot basic barchart
+
+
+
+
 ## creation of 'temp' data frame, does NOT make sense
 ## figure out why
 
