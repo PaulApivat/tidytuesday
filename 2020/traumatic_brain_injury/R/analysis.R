@@ -70,7 +70,8 @@ ggplot(aes(x=age_group, y=number_est, fill = injury_mechanism))
 injury_across_age_group
 
 
-##----- tbi_year ------##
+########----- tbi_year ------########
+
 # change injury_mechanism to factor
 class(tbi_year$injury_mechanism)
 tbi_year$injury_mechanism <- as.factor(tbi_year$injury_mechanism)
@@ -85,6 +86,7 @@ tbi_year %>% sapply(levels)
 injury_across_year <- tbi_year %>% 
 filter(injury_mechanism != 'Other or no mechanism specified') %>% 
 ggplot(aes(x=year, y=number_est, fill=injury_mechanism)) 
+# position = fill provides % stacked bar 
 + geom_bar(stat = "identity", position = "fill") 
 + theme_classic() 
 # only possible after convert injury_mechanism to factor
@@ -95,7 +97,17 @@ ggplot(aes(x=year, y=number_est, fill=injury_mechanism))
 
 injury_across_year
 
+## injuries across 'type' (death, ED, hospitalization)
 
+injury_across_type <- tbi_year %>% 
+filter(injury_mechanism != 'Other or no mechanism specified') %>% 
+ggplot(aes(x=type, y=number_est, fill=injury_mechanism)) 
++ geom_bar(stat = "identity", position = "fill") 
++ theme_classic() 
++ scale_fill_manual(values = c("#a6cee3", "#b2df8a", "#cab2d6", "#fb9a99", "#e31a1c", "#fdbf6f")) 
++ labs(title = "Injuries from 2006 - 2014", subtitle = "Across Injury Type", fill = "Injury Mechanism", y = "Observed Numbers", x = "Type")
+
+injury_across_type
 
 
 
