@@ -150,4 +150,15 @@ temp <- tbi_military2 %>%
 # plot
 ggplot(data = temp, mapping = aes(x=type, y=diagnosed, fill=service)) + geom_bar(stat = 'identity', position = 'fill')
 
+# get age
+tbi_age %>%
++ select(age_group, type) -> temp2
+
+# join temp and temp2
+temp <- temp2 %>%
++ inner_join(temp, by = "type")
+
+# CANNOT search within 'Unintentional falls' to find severity (equal number of severity categories)
+# conclusion: joined data frames not informative: temp, temp2
+
 # read data from PDF
