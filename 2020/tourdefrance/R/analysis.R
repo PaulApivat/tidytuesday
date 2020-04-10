@@ -49,7 +49,22 @@ tdf_winners %>%
 # step 1: group by winner_name, tally
 tdf_winners %>%
     group_by(winner_name) %>%
-    tally(sort = TRUE)
+    tally(sort = TRUE) -> multi_win
+
+colnames(multi_win)[2] <- 'num_wins'
+
+# join to add new column 'num_wins'
+tdf_winners2 <- tdf_winners %>%
+inner_join(multi_win, by = 'winner_name')
+
+# two colors, >1 red, 1 orange
+tdf_winners2 %>% 
+    arrange(distance) %>% 
+    ggplot(aes(x=reorder(winner_name, desc(distance)), y=distance)) 
+    + geom_segment(aes(xend=winner_name, yend=0)) 
+    # conditionally change color
+    + geom_point(size=4, color = if_else(tdf_winners2$num_wins > 1, 'red', 'orange')) 
+    + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
 # what *could* be combined? distance + time_overall
