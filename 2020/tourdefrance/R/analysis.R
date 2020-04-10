@@ -31,6 +31,20 @@ tdf_winners %>%
     + geom_point(size=4, color='orange') 
     + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+## re-ordering winners by distance traveled (arranged in descending left-to-right)
+tdf_winners %>% 
+    arrange(distance) %>% 
+    ggplot(aes(x=reorder(winner_name, desc(distance)), y=distance)) 
+    + geom_segment(aes(xend=winner_name, yend=0)) 
+    + geom_point(size=4, color='orange') 
+    + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+## group_by birth_country of winner (France: 36, Belgium: 19, Spain: 12, Italy: 11, USA: 10)
+tdf_winners %>%
++ group_by(birth_country) %>%
++ tally(sort = TRUE)
+
 ## change color by 'number' of tour de france(s) won
 # step 1: group by winner_name, tally
 tdf_winners %>%
