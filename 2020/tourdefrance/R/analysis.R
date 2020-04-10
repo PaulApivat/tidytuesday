@@ -66,6 +66,41 @@ tdf_winners2 %>%
     + geom_point(size=4, color = if_else(tdf_winners2$num_wins > 1, 'red', 'orange')) 
     + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+# NOTE: given num_wins goes from 1-7, doing 7 nested if_else() statement is unwieldy
+# convert num_wins from int to factor otherwise get "Error: Continuous value supplied to discrete scale"
+tdf_winners3 <- tdf_winners2
+tdf_winners3$num_wins <- as.factor(tdf_winners3$num_wins)
+
+
+# match color of lollipop to x-axis winner_name
+
+# step 1 create color column - nested ifelse()
+# NOTE: the factor level for 'color' should be "1" "2" "3" "4" "5" "7"
+tdf_winners3 <- tdf_winners3 %>%
++ mutate(color = ifelse(num_wins==1, '#d9f0a3', 
+                ifelse(num_wins==2, '#addd8e', 
+                ifelse(num_wins==3, '#78c679', 
+                ifelse(num_wins==4, '#41ab5d', 
+                ifelse(num_wins==5, '#238443', 
+                ifelse(num_wins==6, '#006837', '#004529')))))))
+
+
+# lollipop chart, color by factor level of num_wins, arranged in descending order of Distance
+ggplot(data = tdf_winners3, aes(x=reorder(winner_name, desc(distance)), y=distance, color = num_wins)) 
++ geom_segment(aes(xend=winner_name, yend=0)) 
++ geom_point(size=4) 
+# colour = tdf_winners3$color2 doesn't line up quite right because 
+# with axis.test.x...we're manually assigning colors to *specific axis labels*,
+# therefore colors need to be exactly in the right order
+# source: https://stackoverflow.com/questions/47934253/coloring-ggplot2-axis-tick-labels-based-on-data-displayed-at-axis-tick-positions
++ theme(axis.text.x = element_text(angle = 90, hjust = 1, colour = tdf_winners3$color2), 
+    panel.background = element_rect(fill = 'black'), 
+    panel.grid.major = element_line(colour = 'black'), 
+    panel.grid.minor = element_line(colour = 'black'), 
+    plot.background = element_rect(fill = 'black'),) 
++ scale_color_manual(values = c('#addd8e', '#78c679', '#41ab5d', '#238443', '#006837', '#004529'))
+
+
 
 # what *could* be combined? distance + time_overall
 
