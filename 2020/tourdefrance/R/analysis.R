@@ -22,4 +22,21 @@ tdf_winners %>%
     + geom_point(size=4, color='orange') 
     + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+## re-ordering distance
+tdf_winners %>% 
+    arrange(distance) %>% 
+    # reorder winner_name by distance
+    ggplot(aes(x=reorder(winner_name, distance), y=distance)) 
+    + geom_segment(aes(xend=winner_name, yend=0)) 
+    + geom_point(size=4, color='orange') 
+    + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+## change color by 'number' of tour de france(s) won
+# step 1: group by winner_name, tally
+tdf_winners %>%
+    group_by(winner_name) %>%
+    tally(sort = TRUE)
+
+
+# what *could* be combined? distance + time_overall
 
