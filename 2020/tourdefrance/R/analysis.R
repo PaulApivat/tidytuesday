@@ -84,6 +84,30 @@ tdf_winners3 <- tdf_winners3 %>%
                 ifelse(num_wins==5, '#238443', 
                 ifelse(num_wins==6, '#006837', '#004529')))))))
 
+# step 2 subset tdf_winners3 with edition, winner_name, distance, num_wins, color
+
+tdf_winners3 %>%
+    select(edition, winner_name, distance, num_wins, color) -> tdf_winners4
+
+# step 2a group_by winner_name
+# goal is to match color with winner_name ONCE (only) AND in descending order of MEAN distance
+
+# distance arrange in descending order 
+# use this view to see what color is associated with each winner_name to manually create vector 
+# specifically for y-axis labels
+# need 63 labels (not 106) because multi-time winners count as one
+View(tdf_winners4 %>% arrange(desc(distance)))
+
+
+
+# Create 'colors' vector to manually assign colors to *specific axis labels*
+
+
+
+
+# so 106 rows is actually 63
+
+
 
 # lollipop chart, color by factor level of num_wins, arranged in descending order of Distance
 ggplot(data = tdf_winners3, aes(x=reorder(winner_name, desc(distance)), y=distance, color = num_wins)) 
@@ -99,6 +123,21 @@ ggplot(data = tdf_winners3, aes(x=reorder(winner_name, desc(distance)), y=distan
     panel.grid.minor = element_line(colour = 'black'), 
     plot.background = element_rect(fill = 'black'),) 
 + scale_color_manual(values = c('#addd8e', '#78c679', '#41ab5d', '#238443', '#006837', '#004529'))
+
+# Horizontal Bar Chart
+ggplot(data = tdf_winners3, aes(x=reorder(winner_name, distance), y=distance, color = num_wins)) 
++ geom_segment(aes(xend=winner_name, yend=0)) 
++ geom_point(size=4) 
+# axis.text.y instead of axis.text.x when using coord_flip()
++ theme(axis.text.y = element_text(hjust = 1, colour = tdf_winners3$color2), 
+        # this axis becomes distance
+        axis.text.x = element_text(colour = "white"), 
+        panel.background = element_rect(fill = 'black'), 
+        panel.grid.major = element_line(colour = 'black'), 
+        panel.grid.minor = element_line(colour = 'black'), 
+        plot.background = element_rect(fill = 'black'),) 
++ scale_color_manual(values = c('#addd8e', '#78c679', '#41ab5d', '#238443', '#006837', '#004529')) 
++ coord_flip()
 
 
 
