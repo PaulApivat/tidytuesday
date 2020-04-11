@@ -99,10 +99,34 @@ tdf_winners3 %>%
 View(tdf_winners4 %>% arrange(desc(distance)))
 
 
-
+# step 3
 # Create 'colors' vector to manually assign colors to *specific axis labels*
+# note: need to reverse to fit horizontal y-axis of names in descending order of distance
+# multi-time winners, 4x, 5x or 7x are in orange
+colors <- c("#d9f0a3", "#d9f0a3", "#addd8e", "#addd8e", "#addd8e", "#78c679", "#d9f0a3", "#d9f0a3", 
+"#d9f0a3", "#d9f0a3", "#addd8e", "#addd8e", "#addd8e", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3", 
+"#addd8e", "#d9f0a3", "#d9f0a3", "#78c679", "#d9f0a3", "#d9f0a3", "#addd8e", "#d9f0a3", "#d9f0a3", 
+"#feb24c", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#addd8e", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3", 
+"#d9f0a3", "#d9f0a3", "#addd8e", "#d9f0a3", "#feb24c", "#d9f0a3", "#addd8e", "#d9f0a3", "#feb24c", 
+"#d9f0a3", "#feb24c", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#78c679", "#d9f0a3", "#addd8e", 
+"#f03b20", "#d9f0a3", "#fed976", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3", "#d9f0a3")
 
-
+# step 4 
+# plot horizontal bar chart, space grey background
+ggplot(data = tdf_winners3, aes(x=reorder(winner_name, distance), y=distance, color = num_wins)) 
++ geom_segment(aes(xend=winner_name, yend=0)) 
++ geom_point(size=4) 
+# use reverse of 'colors' vector manually created above - rev() to match descending order
++ theme(axis.text.y = element_text(hjust = 1, colour = rev(colors)), 
+    axis.text.x = element_text(colour = "white"), 
+    # space gray background
+    panel.background = element_rect(fill = '#4f5b66'), 
+    panel.grid.major = element_line(colour = '#4f5b66'), 
+    panel.grid.minor = element_line(colour = '#4f5b66'), 
+    plot.background = element_rect(fill = '#4f5b66'),) 
+    # 4x, 5x and 7x multi-time winners in orange shade to contrast against space gray background
++ scale_color_manual(values = c('#addd8e', '#78c679', '#41ab5d', '#fed976', '#feb24c', '#f03b20')) 
++ coord_flip()
 
 
 # so 106 rows is actually 63
