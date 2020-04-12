@@ -263,7 +263,7 @@ p5 <- ggplot(data = tdf_winners3, mapping = aes(x=reorder(winner_name, distance)
     axis.title.x = element_text(color = 'white'), 
     axis.title.y = element_text(color = 'white')) 
 + coord_flip() 
-+ labs(y = "Distance (KM)", x = "Names", title = "Tour De France Winners by Distance", subtitle = "1903 - 2019")
++ labs(y = "Distance (KM)", x = "Names", title = "Tour de France Winners by Distance", subtitle = "1903 - 2019")
 
 # patchwork
 library(patchwork)
