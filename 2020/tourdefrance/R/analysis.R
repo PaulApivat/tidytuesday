@@ -186,3 +186,36 @@ ggplot(data = tdf_winners3, aes(x=reorder(winner_name, distance), y=distance, co
 
 # what *could* be combined? distance + time_overall
 
+# basic plot with time_margin as y-axis variable
+# note: observations of p1 + p2 side-by-side
+# 1. time_margin appears to follow power law distribution
+# 2. the people who had the highest time_margin victory appears to also have the shortest distances
+p1 <- ggplot(data = tdf_winners3, mapping = aes(x=reorder(winner_name, time_margin), y=time_margin)) 
++ geom_segment(aes(xend=winner_name, yend=0)) 
++ geom_point(size=4) 
++ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+p2 <- ggplot(data = tdf_winners3, mapping = aes(x=reorder(winner_name, desc(distance)), y=distance)) 
++ geom_segment(aes(xend=winner_name, yend=0)) 
++ geom_point(size=4, color = 'orange') 
++ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+p3 <- ggplot(data = tdf_winners3, mapping = aes(x=reorder(winner_name, time_overall), y=time_overall)) 
++ geom_segment(aes(xend=winner_name, yend=0)) 
++ geom_point(size=4, color = 'purple') 
++ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+library(patchwork)
+p1 + p2 + p3
+
+# correlation between time_margin and distance
+library(moderndive)
+
+# r = 0.167
+get_correlation(data = tdf_winners3, distance ~ time_margin, na.rm = TRUE)
+
+# conversely, higher correlation between distance and time_overall
+# r = 0.93
+get_correlation(data = tdf_winners3, distance ~ time_overall, na.rm = TRUE)
+
