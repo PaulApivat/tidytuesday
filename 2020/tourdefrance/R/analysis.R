@@ -219,3 +219,13 @@ get_correlation(data = tdf_winners3, distance ~ time_margin, na.rm = TRUE)
 # r = 0.93
 get_correlation(data = tdf_winners3, distance ~ time_overall, na.rm = TRUE)
 
+##### Bar chart of time_margin, but arranged in order of descending, distance
+# x-axis arranged in order of distance
+ggplot(data = tdf_winners3, aes(x=reorder(winner_name, desc(distance)))) 
+# y-axis time_margin
++ geom_bar(aes(y=time_margin), stat = 'identity', alpha = 0.5) 
++ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+#### Lolli chart of time_margin, arranged in order of distance
+# only those with time_margin >1 highlighted
+p4 <- ggplot(data = tdf_winners3, mapping = aes(x=reorder(winner_name, distance), y=time_margin)) + geom_segment(aes(xend=winner_name, yend=0), color = ifelse(tdf_winners3$time_margin > 1, 'red', 'black')) + geom_point(size=4, color = ifelse(tdf_winners3$time_margin > 1, 'red', 'black')) + theme(axis.text.x = element_text(hjust = 1, color = 'white'), axis.text.y = element_text(colour = "white"), panel.background = element_rect(fill = '#4f5b66'), panel.grid.major = element_line(colour = '#4f5b66'), panel.grid.minor = element_line(colour = '#4f5b66'), plot.background = element_rect(fill = '#4f5b66'), plot.title = element_text(color = 'white'), plot.subtitle = element_text(color = 'white'), axis.title.x = element_text(color = 'white'), axis.title.y = element_text(color = 'white')) + coord_flip() + scale_y_reverse() + scale_x_discrete(position = "left") + labs(y = "Time Margin", x = "Names", title = "Tour de France Winners by Time", subtitle = "Margin of Victory in Minutes")
