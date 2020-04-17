@@ -67,3 +67,17 @@ ggplot(data = num_one, mapping = aes(x=year1, y=artist))
 + scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
 + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+# arrange y-axis, artist, not by alphabetical, but by year
+ggplot(data = num_one, mapping = aes(x=year1, y=reorder(artist, year1))) 
++ geom_point() 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Golden Age of Rap
+# two red lines 1990 - 1999
+ggplot(data = num_one, mapping = aes(x=year1, y=reorder(artist, year1))) 
++ geom_point() 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ geom_vline(xintercept = as.numeric(as.Date(c("1990-01-01", "1999-01-01"))), linetype=4, color="red")
+
