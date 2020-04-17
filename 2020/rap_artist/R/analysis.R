@@ -81,3 +81,14 @@ ggplot(data = num_one, mapping = aes(x=year1, y=reorder(artist, year1)))
 + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 + geom_vline(xintercept = as.numeric(as.Date(c("1990-01-01", "1999-01-01"))), linetype=4, color="red")
 
+# heat map
+# difficult to tell
+ggplot(data = num_one, aes(x=year1, y=artist)) 
++ geom_bin2d(bins = 70) 
++ scale_fill_continuous(type = "viridis") + theme_bw()
+
+# basic bar plot
+ggplot(data = z, mapping = aes(x=reorder(artist, n), y=n)) 
++ geom_bar(stat = 'identity') 
++ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
