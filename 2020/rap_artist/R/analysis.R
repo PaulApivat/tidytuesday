@@ -51,3 +51,19 @@ polls %>%
     tally(sort = TRUE)
 
 ####-------- Basic Plots -------#####
+ggplot(data = num_one, mapping = aes(x=year, y=artist)) + geom_point()
+
+# want x-axis to list ALL years
+library(zoo)
+
+# beginning of year
+# year is not a 'date' technically
+# end of year would be as.Date(as.yearmon(num_one$year) + 11/12, frac = 1)
+num_one$year1 <- as.Date(as.yearmon(num_one$year))
+
+# basic geom_point plot all artists with #1 songs, by individual year
+ggplot(data = num_one, mapping = aes(x=year1, y=artist)) 
++ geom_point() 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
