@@ -99,9 +99,45 @@ ggplot(data = z, mapping = aes(x=reorder(artist, num_critics), y=num_critics))
 
 # geom_point
 # golden age of rap + num_critics as bubble size
+num_one_2 <- num_one %>%
+    inner_join(z, by = 'artist')
+
 ggplot(data = num_one_2, mapping = aes(x=year1, y=reorder(artist, year1), size = num_critics)) 
 + geom_point(alpha = 0.7) 
 + scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
 + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 + geom_vline(xintercept = as.numeric(as.Date(c("1990-01-01", "1999-01-01"))), linetype=4, color="red")
+
+# geom_point
+# golden age of hip hop (1985 - 1995), points as bubble size
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points)) 
++ geom_point(alpha = 0.3) 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ geom_vline(xintercept = as.numeric(as.Date(c("1985-01-01", "1996-01-01"))), linetype=4, color="red")
+
+# add color to bubble size
+# golden age of hip hop (1985 - 1995), points as bubble size
+
+# change num_critics to factor
+num_one_3$num_critics <- as.factor(num_one_3$num_critics)
+
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics)) 
++ geom_point(alpha = 0.3) 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ geom_vline(xintercept = as.numeric(as.Date(c("1985-01-01", "1996-01-01"))), linetype=4, color="red") 
++ scale_size(range = c(1, 20), name="Points Awarded")
+
+# annotate for golden age period
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics)) 
++ geom_point(alpha = 0.3) 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ geom_vline(xintercept = as.numeric(as.Date(c("1985-01-01", "1996-01-01"))), linetype=1, color="white") 
++ scale_size(range = c(1, 20), name="Points Awarded") 
+# gray shaded area to highlight golden age of rap
++ annotate("rect", xmin = as.Date("1978-01-01"), xmax = as.Date("1981-01-01"), ymin = 0, ymax = Inf, alpha = 0.2) 
++ annotate("rect", xmin = as.Date("1996-01-01"), xmax = as.Date("2017-01-01"), ymin = 0, ymax = Inf, alpha = 0.2)
+
 
