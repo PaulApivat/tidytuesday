@@ -6,6 +6,10 @@ rankings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 # load library
 library(tidyverse)
+install.packages("png")
+library(png)
+library(grid)
+install.packages('showtext')
 
 # quick exploration
 # What year range is represented in this data set? Ans: 1979 - 2019
@@ -177,5 +181,32 @@ ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size =
     axis.title.y = element_text(color = "gold"), 
     legend.position = "none") 
 + scale_size(range = c(1, 20), name="Points Awarded") 
-+ labs(title = 'In the Golden Age of Hip-Hop, One Artist and One Song Stands Out', x = '', y='')
++ labs(title = "Spread Love, it's the Brooklyn Way", x = '', y='', caption = '@paulapivat | getwyze.com')
+
+
+# Final Version 2.0
+# note num_one_3
+
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics)) 
+# upload png image to background
++ annotation_custom(rasterGrob(img1, width = unit(1, "npc"), height = unit(1, "npc"))) 
++ geom_point(alpha = 0.8) 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1, color = '#ffffcc'), 
+    axis.text.y = element_text(color = '#ffffcc'),
+    panel.background = element_rect(fill = "#777572"), 
+    panel.grid.major = element_line(color = '#777572'), 
+    panel.grid.minor = element_line(color = '#777572'), 
+    plot.background = element_rect(fill = '#777572',color = 'gold'), 
+    plot.title = element_text(size=22, color = '#ffffcc'), 
+    plot.subtitle = element_text(color = 'gold'),
+    axis.title.x = element_text(color = '#ffffcc'), 
+    axis.title.y = element_text(color = "#ffffcc"), 
+    legend.position = "none") 
++ scale_size(range = c(1, 20), name="Points Awarded") 
++ labs(title = "Spread Love, the Brooklyn Way", x = '', y='', caption = '@paulapivat | getwyze.com')
+# change color palette 
++ scale_color_brewer(type = 'seq', palette = 'OrRd')
+
+
 
