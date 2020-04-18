@@ -87,8 +87,21 @@ ggplot(data = num_one, aes(x=year1, y=artist))
 + geom_bin2d(bins = 70) 
 + scale_fill_continuous(type = "viridis") + theme_bw()
 
+
 # basic bar plot
-ggplot(data = z, mapping = aes(x=reorder(artist, n), y=n)) 
+# tally all number 1 votes
+num_one %>% group_by(artist) %>% tally(sort = TRUE) -> z
+colnames(z)[2] <- 'num_critics'
+
+ggplot(data = z, mapping = aes(x=reorder(artist, num_critics), y=num_critics)) 
 + geom_bar(stat = 'identity') 
 + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# geom_point
+# golden age of rap + num_critics as bubble size
+ggplot(data = num_one_2, mapping = aes(x=year1, y=reorder(artist, year1), size = num_critics)) 
++ geom_point(alpha = 0.7) 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ geom_vline(xintercept = as.numeric(as.Date(c("1990-01-01", "1999-01-01"))), linetype=4, color="red")
 
