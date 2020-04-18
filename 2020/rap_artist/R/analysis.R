@@ -141,3 +141,20 @@ ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size =
 + annotate("rect", xmin = as.Date("1996-01-01"), xmax = as.Date("2017-01-01"), ymin = 0, ymax = Inf, alpha = 0.2)
 
 
+# add image to background
+install.packages("png")
+library(png)
+library(grid)
+
+# downloaded a biggie.png and saved working directory
+img <- png::readPNG('biggie.png')
+img1 <- png::readPNG("biggie_bw.png")
+
+# biggie background with no golden age shade
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics)) 
++ annotation_custom(rasterGrob(img1, width = unit(1, "npc"), height = unit(1, "npc"))) 
++ geom_point(alpha = 0.3) 
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ scale_size(range = c(1, 20), name="Points Awarded")
+
