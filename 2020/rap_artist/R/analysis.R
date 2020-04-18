@@ -158,3 +158,24 @@ ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size =
 + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 + scale_size(range = c(1, 20), name="Points Awarded")
 
+# Final Version 1.0
+img1 <- png::readPNG("biggie_bw.png")
+
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics))
+# load background image 
++ annotation_custom(rasterGrob(img1, width = unit(1, "npc"), height = unit(1, "npc"))) 
++ geom_point(alpha = 0.8) + scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1, color = 'gold'), 
+    axis.text.y = element_text(color = 'gold'),
+    panel.background = element_rect(fill = "#777572"), 
+    panel.grid.major = element_line(color = '#777572'), 
+    panel.grid.minor = element_line(color = '#777572'), 
+    plot.background = element_rect(fill = '#777572',color = 'gold'), 
+    plot.title = element_text(color = 'gold'), 
+    plot.subtitle = element_text(color = 'gold'),
+    axis.title.x = element_text(color = 'gold'), 
+    axis.title.y = element_text(color = "gold"), 
+    legend.position = "none") 
++ scale_size(range = c(1, 20), name="Points Awarded") 
++ labs(title = 'In the Golden Age of Hip-Hop, One Artist and One Song Stands Out', x = '', y='')
+
