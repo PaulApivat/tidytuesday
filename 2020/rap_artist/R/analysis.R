@@ -162,7 +162,26 @@ ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size =
 + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 + scale_size(range = c(1, 20), name="Points Awarded")
 
-# Final Version 1.0
+############# Follow-Up: Figured out expand = c(0,0) to prevent adding additional ticks ##########
+
+## to Golden Age
+## Also cannot have geom_point be after annotation: error discrete value supplied to continuous scale
+ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics))
+# position png background image using xmin, xmax, ymin, ymax (need to set to as.Date()) 
++ annotation_custom(rasterGrob(img1, width = unit(1, "npc"), height = unit(1, "npc")), xmin = as.Date("1978-01-01"), xmax = as.Date("2000-01-01"), ymin = 0, ymax = Inf) 
+## geom_point needs to be BEFORE annotate()
++ geom_point(alpha = 0.7) 
++ annotate("rect", xmin = as.Date("1978-01-01"), xmax = as.Date("1981-01-01"), ymin = 0, ymax = Inf, alpha = 0.2) 
++ annotate("rect", xmin = as.Date("1996-01-01"), xmax = as.Date("2017-01-01"), ymin = 0, ymax = Inf, alpha = 0.2) 
+## expand = c(0,0) helps prevent annotations from adding additional rows
++ scale_x_date(date_labels = "%Y", date_breaks = "1 year", expand = c(0,0)) 
++ theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
++ geom_vline(xintercept = as.numeric(as.Date(c("1981-01-01", "1996-01-01"))), linetype=1, color="white") 
++ scale_size(range = c(1, 20), name="Points Awarded")
+
+
+########### ------ Final Version 1.0 --------###########
+
 img1 <- png::readPNG("biggie_bw.png")
 
 ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics))
@@ -184,7 +203,8 @@ ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size =
 + labs(title = "Spread Love, it's the Brooklyn Way", x = '', y='', caption = '@paulapivat | getwyze.com')
 
 
-# Final Version 2.0
+############------------ Final Version 2.0 ------------###############
+
 # note num_one_3
 
 ggplot(data = num_one_3, mapping = aes(x=year1, y=reorder(artist, year1), size = points, color = num_critics)) 
