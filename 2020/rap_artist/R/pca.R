@@ -219,7 +219,7 @@ tidied_pca %>%
 
 
 ########## Pause PCA ############
-########## RADAR CHART ##########
+########## SINGLE RADAR CHART ##########
 install.packages('fmsb')
 library(fmsb)
 
@@ -266,7 +266,45 @@ radarchart(nas)
 radarchart(dre)
 
 
+########## MULTI RADAR CHART ##########
+install.packages('fmsb')
+library(fmsb)
 
+### Create sample data frame to visually see 
+### what the data for Radar chart must look like
+# source: https://www.r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html
+
+# Create data: note in High school for several students
+set.seed(99)
+multi_data <- as.data.frame(matrix(sample(0:20, 15, replace = F), ncol = 5))
+colnames(multi_data) <- c("math" , "english" , "biology" , "music" , "R-coding" )
+rownames(multi_data) <- paste("mister", letters[1:3], sep = "-")
+
+# Add Max and Min
+multi_data <- rbind(rep(20,5), rep(0,5), multi_data)
+
+# Color Vectors (to distinguish the three Radar Charts)
+colors_border=c( rgb(0.2,0.5,0.5,0.9), rgb(0.8,0.2,0.5,0.9) , rgb(0.7,0.5,0.1,0.9) )
+colors_in=c( rgb(0.2,0.5,0.5,0.4), rgb(0.8,0.2,0.5,0.4) , rgb(0.7,0.5,0.1,0.4) )
+
+# basic Multi Radar plot with 
+    # default options
+radarchart(multi_data, axistype = 1, 
+    # custom polygon
+    pcol = colors_border, pfcol = colors_in, plwd = 4, plty = 1, 
+    # custom grid
+    cglcol = "grey", cglty = 1, axislabcol = "grey", caxislabels = seq(0,20,5), cglwd = 0.8, 
+    # custom labels
+    vlcex = 0.8)
+
+# add legend
+legend(x=0.7, y=1, legend = rownames(multi_data[-c(1,2),]), 
+        bty = "n", 
+        pch = 20, 
+        col = colors_in, 
+        text.col = 'grey', 
+        cex = 1.2, 
+        pt.cex = 3)
 
 
 
