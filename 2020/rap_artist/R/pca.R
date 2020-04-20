@@ -63,6 +63,7 @@ pull_id <- function(query){
 }
 
 ######
+###### Get track identifier (id)
 
 ## use purrr::map() to apply it to all songs in the dataset
 ## takes rankings df
@@ -89,9 +90,23 @@ ranking_ids <- rankings %>%
     # example: Stan Eminem ft. Dido --> stan eminem
     search_query = str_remove(search_query, "ft.*$")
   ) %>%
-  # find id for each search query
+  # find id for each search query by map_chr()
   mutate(id = map_chr(search_query, possibly(pull_id, NA_character_)))
 
+###### Get Audio Features of each track
+
+# note: get_track_audio_features() only takes 100 tracks at most at once
+# divide up tracks into smaller chunks, then map() through
+ranking_features <- ranking_ids %>%
+    mutate(id_group = row_number() %/% 80) %>%
+    select(id_group, id) %>%
+    nest(data = c(id)) %>%
+    mutate(audio_features = map(data, ~ get_track_audio_features(.$id)))
+
+# to see Tibble: 4 x 3
+ranking_features
+
+# View(ranking_features[[2]][[2]]) to see nested data
 
 
 
