@@ -108,6 +108,21 @@ ranking_features
 
 # View(ranking_features[[2]][[2]]) to see nested data
 
+###### Put Audio Features together with Rankings 
+### to create a dataframe for modeling
+
+# join ranking_ids and ranking_features
+ranking_df <- ranking_ids %>%
+    bind_cols(ranking_features %>% 
+        select(audio_features) %>% 
+        unnest(audio_features)) %>%
+    select(title, artist, points, year, danceability:tempo) %>%
+    na.omit()
+
+# to see Tibble: 293 x 15
+ranking_df
+
+
 
 
 
