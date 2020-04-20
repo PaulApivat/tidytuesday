@@ -198,6 +198,26 @@ tidied_pca %>%
   facet_wrap(~component) +
   labs(y = NULL)
 
+##### Zoom in on First Four Components (PC1 - PC4)
+library(tidytext)
+
+# Plot NOT showing up correctly
+tidied_pca %>%
+  filter(component %in% c("PC1", "PC2", "PC3", "PC4")) %>%
+  group_by(component) %>%
+  top_n(6, abs(value)) %>%
+  ungroup() %>%
+  mutate(terms = reorder_within(terms, abs(value), component)) %>%
+  ggplot(aes(abs(value), terms, fill = value > 0)) +
+  geom_col() +
+  facet_wrap(~component, scales = "free_y") +
+  scale_y_reordered() +
+  labs(
+    x = "Absolute value of contribution",
+    y = NULL, fill = "Positive?"
+  )
+
+
 
 
 
