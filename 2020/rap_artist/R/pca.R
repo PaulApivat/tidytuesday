@@ -184,6 +184,19 @@ ranking_prep <- prep(ranking_rec)
 
 ranking_prep
 
+#### Explore PCA
+
+# tidy() recipe step 3 - the PCA step
+# NOTE: You can inspect the 12 components in a data frame
+tidied_pca <- tidy(ranking_prep, 3)
+
+# NOTE: COULD NOT GET TO WORK
+tidied_pca %>%
+  mutate(component = fct_inorder(component)) %>%
+  ggplot(aes(value, terms, fill = terms)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~component) +
+  labs(y = NULL)
 
 
 
