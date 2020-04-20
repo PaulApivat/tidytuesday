@@ -122,6 +122,22 @@ ranking_df <- ranking_ids %>%
 # to see Tibble: 293 x 15
 ranking_df
 
+###### Find out how musical attributes are correlated with each other
+install.packages("corrr")
+library(corrr)
+
+ranking_df %>%
+    select(year:tempo) %>%
+    correlate() %>%
+    rearrange() %>%
+    shave() %>%
+    rplot(shape = 15, colour = c("darkorange", "white", "darkcyan")) 
+
+## Findings: loudness positively correlated with energy
+## danceability negatively correlated with year - older songs more danceable
+## valence negatively correlated with year - older songs more happy
+
+
 
 
 
