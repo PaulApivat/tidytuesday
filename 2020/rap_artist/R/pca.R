@@ -218,6 +218,33 @@ tidied_pca %>%
   )
 
 
+########## Pause PCA ############
+########## RADAR CHART ##########
+install.packages('fmsb')
+library(fmsb)
+
+### Create sample data frame to visually see 
+### what the data for Radar chart must look like
+# source: https://www.r-graph-gallery.com/142-basic-radar-chart.html
+
+# create sample data
+# sample(2:20, 10, replace = T) - random sample and permutations; 
+# you'll get a different Radar Chart everytime re-run
+sample_data <- as.data.frame(matrix(sample(2:20, 10, replace = T), ncol = 10))
+colnames(sample_data) <- c("math", "english", "biology", "music", "R-coding", "data-viz", "french", "physics", "statistics", "sports")
+
+# add two lines to dataframe - Max and Min of each topic to show on the plot
+# Max -> rep(20,10) "20, ten times"
+# Min -> rep(0,10) "0, ten times"
+sample_data <- rbind(rep(20,10), rep(0,10), sample_data)
+
+# default Radar Chart
+radarchart(sample_data)
+
+
+
+
+
 
 
 
