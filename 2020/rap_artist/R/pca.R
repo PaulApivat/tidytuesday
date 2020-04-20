@@ -65,6 +65,34 @@ pull_id <- function(query){
 ######
 
 ## use purrr::map() to apply it to all songs in the dataset
+## takes rankings df
+## add search_query and id column(s)
+
+ranking_ids <- rankings %>%
+  mutate(
+    search_query = paste(title, artist),
+    search_query = str_to_lower(search_query),
+    search_query = str_remove(search_query, "ft.*$")
+  ) %>%
+  mutate(id = map_chr(search_query, possibly(pull_id, NA_character_)))
+
+
+ranking_ids <- rankings %>%
+  mutate(
+    # select & paste title and artist column(s) from ranking
+    search_query = paste(title, artist),
+    # change all search queries to lower case
+    search_query = str_to_lower(search_query),
+    # remove any character that comes after ft - featuring
+    # example: Stan Eminem ft. Dido --> stan eminem
+    search_query = str_remove(search_query, "ft.*$")
+  ) %>%
+  # find id for each search query
+  mutate(id = map_chr(search_query, possibly(pull_id, NA_character_)))
+
+
+  
+
 
 
 
