@@ -241,6 +241,25 @@ sample_data <- rbind(rep(20,10), rep(0,10), sample_data)
 # default Radar Chart
 radarchart(sample_data)
 
+##### RADAR CHART: Biggie vs Nas
+library(fmsb)
+
+# subset ranking_df for six attributes
+ranking_df %>%
+    select(danceability, energy, speechiness, acousticness, liveness, valence) -> temp
+
+# subset first row from temp - The Notorious BIG, Juicy
+# subset ninth row from temp - Nas, NY State of Mind
+biggie <- temp[1,]
+nas <- temp[9,]
+
+# Add Min and Max to biggie and nas
+biggie <- rbind(rep(1,6), rep(0,6), biggie)
+nas <- rbind(rep(1,6), rep(0,6), nas)
+
+# default Radar Chart - biggie and nas
+radarchart(biggie)
+radarchart(nas)
 
 
 
