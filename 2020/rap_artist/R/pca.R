@@ -77,6 +77,8 @@ ranking_ids <- rankings %>%
   mutate(id = map_chr(search_query, possibly(pull_id, NA_character_)))
 
 
+## explainer
+
 ranking_ids <- rankings %>%
   mutate(
     # select & paste title and artist column(s) from ranking
@@ -91,7 +93,8 @@ ranking_ids <- rankings %>%
   mutate(id = map_chr(search_query, possibly(pull_id, NA_character_)))
 
 
-  
+
+
 
 
 
