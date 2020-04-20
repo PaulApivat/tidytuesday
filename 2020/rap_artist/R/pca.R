@@ -137,6 +137,59 @@ ranking_df %>%
 ## danceability negatively correlated with year - older songs more danceable
 ## valence negatively correlated with year - older songs more happy
 
+###### Train a Linear Model on these Audio Features
+
+ranking_lm <- ranking_df %>%
+    select(-title, -artist) %>%
+    lm(log(points) ~ ., data = .)
+
+summary(ranking_lm)
+
+## note  'year' was only significant coefficient in the model
+## model does *NOT* explain critic's rating well 
+## Adjusted R-squared: 0.05653
+
+##### Recap: Data Frames created ######
+# function pull_id
+# data frame: 
+ranking_ids
+ranking_features
+ranking_df
+
+# linear model
+ranking_lm
+
+
+#######------- Principal Components Analysis--------#######
+
+# question: why do PCA when entire linear model has weak explanatory power?
+# answer: PCA - dimensionality reduction - clusters the variables together to potentially improve explanatory power
+
+library(tidymodels)
+
+# tell recipe() what the model is going to be
+ranking_rec <- recipe(points ~ ., data = ranking_df) %>%
+    # update role for title, artist because these variables we want to keep around for convenience 
+    # as identifiers for rows but not a predictor or outcome
+    update_role(title, artist, new_role = 'id') %>%
+    # take the log of the outcome (points - critic's ratings)
+    step_log(points) %>%
+    # center and scale the numeric predictors as precursor to implementing PCA
+    step_normalize(all_predictors()) %>%
+    # implement principal component analysis
+    step_pca(all_predictors())
+
+# this steps actually runs the PCA
+ranking_prep <- prep(ranking_rec)
+
+ranking_prep
+
+
+
+
+
+
+
 
 
 
