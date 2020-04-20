@@ -250,16 +250,21 @@ ranking_df %>%
 
 # subset first row from temp - The Notorious BIG, Juicy
 # subset ninth row from temp - Nas, NY State of Mind
+# subset fifth row from temp - Dre, Nuthin' But A 'G' Thang
 biggie <- temp[1,]
 nas <- temp[9,]
+dre <- temp[5,]
 
-# Add Min and Max to biggie and nas
+# Add Min and Max to biggie and nas and dre
 biggie <- rbind(rep(1,6), rep(0,6), biggie)
 nas <- rbind(rep(1,6), rep(0,6), nas)
+dre <- rbind(rep(1,6), rep(0,6), dre)
 
-# default Radar Chart - biggie and nas
+# default Radar Chart - biggie and nas and dre
 radarchart(biggie)
 radarchart(nas)
+radarchart(dre)
+
 
 
 
