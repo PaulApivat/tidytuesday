@@ -283,6 +283,8 @@ rownames(multi_data) <- paste("mister", letters[1:3], sep = "-")
 # Add Max and Min
 multi_data <- rbind(rep(20,5), rep(0,5), multi_data)
 
+# View(multi_data) to see
+
 # Color Vectors (to distinguish the three Radar Charts)
 colors_border=c( rgb(0.2,0.5,0.5,0.9), rgb(0.8,0.2,0.5,0.9) , rgb(0.7,0.5,0.1,0.9) )
 colors_in=c( rgb(0.2,0.5,0.5,0.4), rgb(0.8,0.2,0.5,0.4) , rgb(0.7,0.5,0.1,0.4) )
@@ -306,12 +308,54 @@ legend(x=0.7, y=1, legend = rownames(multi_data[-c(1,2),]),
         cex = 1.2, 
         pt.cex = 3)
 
+##### Multi-Radar Chart for Biggie, Nas & Dre
+
+# copy Biggie, Dre and Nas into one data frame
+# temp[1,] , temp[5,] , temp[9,]
+# NOTE: must add ALL three at once
+multi_rapper <- temp[c(1,5,9),]
+
+# Add Max and Min - two rows
+multi_rapper <- rbind(rep(1,6), rep(0,6), multi_rapper)
+
+# set row names
+rownames(multi_rapper)[3] <- "Juicy, Biggie"
+rownames(multi_rapper)[4] <- "Nuthin But.., Dr Dre"
+rownames(multi_rapper)[5] <- "NY State of Mind, Nas"
+
+# Color Vectors (to distinguish three Radar Charts)
+# re-use one from example above
+colors_border=c( rgb(0.2,0.5,0.5,0.9), rgb(0.8,0.2,0.5,0.9) , rgb(0.7,0.5,0.1,0.9) )
+colors_in=c( rgb(0.2,0.5,0.5,0.4), rgb(0.8,0.2,0.5,0.4) , rgb(0.7,0.5,0.1,0.4) )
 
 
+# re-create basic Multi Radar plot  
+radarchart(multi_rapper, axistype = 1, 
+    pcol = colors_border, 
+    pfcol = colors_in, 
+    plwd = 4, 
+    plty = 1, 
+    cglcol = 'grey', 
+    cglty = 1, 
+    axislabcol = 'grey', 
+    # interpretation: seq(least, most, space-between)
+    caxislabels = seq(0,1,.25), 
+    cglwd = 0.8, 
+    vlcex = 0.8)
 
+# add legend
 
-
-
+    # position: lower-left; 
+    # NOTE: x=0, y=0 is dead center of spider-chart
+legend(x=-1.25, y=-1, 
+        # NOTE: this works better than rownames(multi_rapper[-c(1,2),])
+        legend = rownames(multi_rapper)[3:5], 
+        bty = "n", 
+        pch = 20, 
+        col = colors_in, 
+        text.col = 'grey', 
+        cex = 1.2, 
+        pt.cex = 3)
 
 
 
