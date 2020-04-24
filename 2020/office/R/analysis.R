@@ -69,9 +69,15 @@ ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season))
 + geom_jitter() 
 + geom_text_repel(aes(label=ifelse(imdb_rating > 9.0, title, '')))
 
-###### MOST legible
+###### MOST legible - geom_label_repel
 ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
 + geom_point() 
 + geom_jitter() 
 + geom_label_repel(aes(label=ifelse(imdb_rating > 9.0, title, '')))
 
+### Next Steps:
+# 1. install.packages('schrute')
+# 2. read tidytext sentiment analysis
+# 3. re-create sentiment by character https://pudding.cool/2017/08/the-office/
+# 4. find most common positive / negative words in select episodes
+# 5. visualize
