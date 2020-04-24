@@ -41,5 +41,23 @@ ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season))
 + geom_point() 
 + geom_jitter()
 
+# add geom_text label to each geom_point()
+ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
++ geom_point() 
++ geom_jitter() 
++ geom_text(aes(label=title), hjust=1, vjust=1)
+
+# Conditionally add geom_text label only if total_votes > 4000
+ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
++ geom_point() 
++ geom_jitter() 
++ geom_text(aes(label=ifelse(total_votes > 4000, title, '')), hjust=1, vjust=1)
+
+# Conditionally add geom_text label only if imdb_ratings > 9.0
+ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
++ geom_point() 
++ geom_jitter() 
++ geom_text(aes(label=ifelse(imdb_rating > 9.0, title, '')), hjust=1, vjust=1)
+
 
 
