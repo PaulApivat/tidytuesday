@@ -4,6 +4,7 @@
 
 # load library (first)
 library(tidyverse)
+library(ggrepel)    #for legible text annotations
 
 # load data from TidyTuesday
 office_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-17/office_ratings.csv')
@@ -59,5 +60,18 @@ ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season))
 + geom_jitter() 
 + geom_text(aes(label=ifelse(imdb_rating > 9.0, title, '')), hjust=1, vjust=1)
 
+###### ----- Prevent Text Overlap ggrepel ------#######
+library(ggrepel)
 
+# same conditional add geom_text_repel - much more legible 
+ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
++ geom_point() 
++ geom_jitter() 
++ geom_text_repel(aes(label=ifelse(imdb_rating > 9.0, title, '')))
+
+###### MOST legible
+ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
++ geom_point() 
++ geom_jitter() 
++ geom_label_repel(aes(label=ifelse(imdb_rating > 9.0, title, '')))
 
