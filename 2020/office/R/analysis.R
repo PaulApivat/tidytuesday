@@ -70,13 +70,30 @@ ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season))
 + geom_text_repel(aes(label=ifelse(imdb_rating > 9.0, title, '')))
 
 ###### MOST legible - geom_label_repel
+
+# highest rated episodes
+# Finale, Goodbye Michael, Stress Relief, Dinner Party, Casino Night
+# Niagara part 1+2, Threat Level Midnight, Goodbye, Toby, Beach Games, Broke, Garage Sale
 ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
 + geom_point() 
 + geom_jitter() 
 + geom_label_repel(aes(label=ifelse(imdb_rating > 9.0, title, '')))
 
+
+# lowest rated episodes
+# The Banker, Get the Girl
+ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season)) 
++ geom_point() 
++ geom_jitter() 
++ geom_label_repel(aes(label=ifelse(imdb_rating < 7.0, title, '')))
+
+
 ### Next Steps:
-# 1. install.packages('schrute')
+install.packages('schrute')
+library(schrute)
+
+
+
 # 2. read tidytext sentiment analysis
 # 3. re-create sentiment by character https://pudding.cool/2017/08/the-office/
 # 4. find most common positive / negative words in select episodes
