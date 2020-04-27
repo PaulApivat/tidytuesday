@@ -125,6 +125,19 @@ lines_text_s1$season <- as.integer(lines_text_s1$season)
 mydata2 <- dplyr::left_join(mydata, lines_text_s1, by=c("season" = "season", "character" = "character"))
 
 ## need to make sure season 2 can be done without erasing season 1
+## NOTE: did NOT work, adding season 2 erased season 1
+mydata %>% filter(season==2) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s2
+colnames(lines_text_s2)[2] <- 'num_lines'
+lines_text_s2$season <- 2
+lines_text_s2$season <- as.integer(lines_text_s2$season)
+mydata2 <- dplyr::left_join(mydata, lines_text_s2, by=c("season" = "season", "character" = "character"))
+
+## rbind lines_text_s1 and lines_text_s2, then left_join with mydata
+## this works.
+lines_text_temp <- rbind(lines_text_s1, lines_text_s2)
+mydata2 <- dplyr::left_join(mydata, lines_text_temp, by=c("season" = "season", "character" = "character"))
+
+## Next steps: create lines_text_s3-10, then rbind(), then left_join()
 
 
 
