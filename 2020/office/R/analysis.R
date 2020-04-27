@@ -92,6 +92,40 @@ ggplot(data = df, mapping = aes(x=total_votes, y=imdb_rating, color = season))
 install.packages('schrute')
 library(schrute)
 
+# load data
+mydata <- schrute::theoffice
+
+# subset data frame in mydata (imdb_rating > 9.0) - highest rated ep
+# subset data frame in df (imdb_rating > 9.0) - highest rated ep
+mydata %>% filter(imdb_rating > 9.0) -> mydata_high
+df %>% filter(imdb_rating > 9.0) -> df_high
+
+# singling out one high rated episode "Dinner Party"
+mydata %>% filter(episode_name=='Dinner Party') -> dinner_party
+
+# create data frame to represent lines of text (across all 10 seasons)
+mydata %>%
+    group_by(character) %>%
+    tally(sort = TRUE) -> lines_text
+
+###### better idea, visualize lines_of_text by EACH season
+###### Create stacked area chart by season examining lines of each character
+mydata %>% filter(season==1) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s1
+
+# change n to num_lines
+colnames(lines_text_s1)[2] <- 'num_lines'
+
+# add column 'season', assign 1
+lines_text_s1$season <- 1
+
+# change num to int (so can join with mydata, where 'season' is int)
+lines_text_s1$season <- as.integer(lines_text_s1$season)
+
+# join lines_text_s1 with mydata by season and character
+mydata2 <- dplyr::left_join(mydata, lines_text_s1, by=c("season" = "season", "character" = "character"))
+
+## need to make sure season 2 can be done without erasing season 1
+
 
 
 # 2. read tidytext sentiment analysis
