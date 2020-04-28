@@ -249,6 +249,13 @@ lines_text_main %>% group_by(character) %>% summarize(sum_lines = sum(num_lines)
 12 Stanley         678
 13 Meredith        559
 
+# first drop UNUSED factor levels in character (from 773 -> 13)
+lines_text_main$character <- droplevels(lines_text_main$character)
+
+
+
+
+
 
 
 # 2. read tidytext sentiment analysis
