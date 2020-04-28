@@ -214,11 +214,40 @@ lines_text_temp$season <- as.numeric(lines_text_temp$season)
 office_levels <- c('Michael', 'Jim', 'Pam', 'Dwight', 'Andy', 'Meredith', 'Toby', 'Ryan', 'Kevin', 'Oscar', 'Angela', 'Phyllis', 'Stanley')
 
 # subset dataframe of lines_text_main (main characters only)
+# Idea: apply filter for mydata2 as well
 lines_text_temp %>% filter(character %in% office_levels) -> lines_text_main
 
 # basic stacked area chart for main characters (working)
-ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=character)) + geom_area()
+ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=character)) 
++ geom_area()
++ scale_x_discrete(limits=1:9)
 
+# back stacked area chart (by percentage) for main characters 
+ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=character)) 
+# automatic transform to percentage
++ geom_area(position = 'fill') 
++ scale_x_discrete(limits=1:9)
+
+
+# reorder factor levels in descending order by sum of all lines (season 1-9)
+lines_text_main %>% group_by(character) %>% summarize(sum_lines = sum(num_lines)) %>% arrange(desc(sum_lines))
+
+# A tibble: 13 x 2 -- use this table to guide re-ordering of factor levels
+   character sum_lines
+   <fct>         <dbl>
+ 1 Michael       10921
+ 2 Dwight         6847
+ 3 Jim            6303
+ 4 Pam            5031
+ 5 Andy           3754
+ 6 Angela         1569
+ 7 Kevin          1564
+ 8 Oscar          1368
+ 9 Ryan           1198
+10 Phyllis         970
+11 Toby            818
+12 Stanley         678
+13 Meredith        559
 
 
 
