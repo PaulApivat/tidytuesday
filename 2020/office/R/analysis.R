@@ -137,7 +137,31 @@ mydata2 <- dplyr::left_join(mydata, lines_text_s2, by=c("season" = "season", "ch
 lines_text_temp <- rbind(lines_text_s1, lines_text_s2)
 mydata2 <- dplyr::left_join(mydata, lines_text_temp, by=c("season" = "season", "character" = "character"))
 
-## Next steps: create lines_text_s3-10, then rbind(), then left_join()
+## Next steps: create lines_text_s3-9, then rbind(), then left_join()
+
+# season 3
+mydata %>% filter(season==3) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s3
+colnames(lines_text_s3)[2] <- 'num_lines'
+lines_text_s3$season <- 3
+lines_text_s3$season <- as.integer(lines_text_s3$season)
+
+# season 4
+
+# season 5
+
+# season 6
+
+# season 7
+
+# season 8
+
+# season 9
+
+
+
+
+
+
 
 
 
