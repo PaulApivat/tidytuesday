@@ -156,12 +156,24 @@ colnames(lines_text_s5)[2] <- 'num_lines'
 lines_text_s5$season <- as.integer(5)
 
 # season 6
+mydata %>% filter(season==6) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s6
+colnames(lines_text_s6)[2] <- 'num_lines'
+lines_text_s6$season <- as.integer(6)
 
 # season 7
+mydata %>% filter(season==7) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s7
+colnames(lines_text_s7)[2] <- 'num_lines'
+lines_text_s7$season <- as.integer(7)
 
 # season 8
+mydata %>% filter(season==8) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s8
+colnames(lines_text_s8)[2] <- 'num_lines'
+lines_text_s8$season <- as.integer(8)
 
 # season 9
+mydata %>% filter(season==9) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s9
+colnames(lines_text_s9)[2] <- 'num_lines'
+lines_text_s9$season <- as.integer(9)
 
 
 
