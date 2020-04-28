@@ -252,6 +252,9 @@ lines_text_main %>% group_by(character) %>% summarize(sum_lines = sum(num_lines)
 # first drop UNUSED factor levels in character (from 773 -> 13)
 lines_text_main$character <- droplevels(lines_text_main$character)
 
+# reorder factor levels according to total number of lines
+lines_text_main$character <- factor(lines_text_main$character, levels = c('Michael', 'Dwight', 'Jim', 'Pam', 'Andy', 'Angela', 'Kevin', 'Oscar', 'Ryan', 'Phyllis', 'Toby', 'Stanley', 'Meredith'))
+
 
 
 
