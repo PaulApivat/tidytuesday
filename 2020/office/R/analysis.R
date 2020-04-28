@@ -262,12 +262,15 @@ ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=charact
 + scale_x_discrete(limits=1:9) 
 + scale_fill_manual(values = c("#488f31", '#679f51', '#83af70', '#9fc08f', '#bad0af', '#d5e0cf', '#f1f1f1', '#f1d4d4', '#f0b8b8', '#ec9c9d', '#e67f83', '#de6069', '#de425b'))
 
-### Diverget color palettes 
+### Plot 1: Diverget color palettes 
 # blue to red
-ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=character)) 
+plot1 <- ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=character)) 
 + geom_area(position = 'fill') 
 + scale_x_discrete(limits=1:9) 
-+ scale_fill_manual(values = c("#084594", '#2171b5', '#4292c6', '#6baed6', '#9ecae1', '#c6dbef', '#eff3ff', '#fee5d9', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d'))
++ scale_fill_manual(values = c("#084594", '#2171b5', '#4292c6', '#6baed6', '#9ecae1', '#c6dbef', '#eff3ff', '#fee5d9', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d')) 
++ theme_minimal() 
++ labs(title = "The Office: Key Players by Lines", subtitle = "Seasons 1-9", y = 'Number of Lines', x = "Seasons")
+
 
 
 
