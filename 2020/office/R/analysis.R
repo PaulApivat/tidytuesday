@@ -271,6 +271,9 @@ plot1 <- ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fil
 + theme_minimal() 
 + labs(title = "The Office: Key Players by Lines", subtitle = "Seasons 1-9", y = 'Number of Lines', x = "Seasons")
 
+# locate highest rated episodes (e.g., Casino Night, Dinner Party) 
+# group_by(character) %>% tally(sort = TRUE)  for each episode
+# note: inconsistent episode names between df and mydata2
 
 
 
