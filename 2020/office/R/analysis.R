@@ -5,6 +5,7 @@
 # load library (first)
 library(tidyverse)
 library(ggrepel)    #for legible text annotations
+library(schrute)    #the office text
 
 # load data from TidyTuesday
 office_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-17/office_ratings.csv')
@@ -130,12 +131,10 @@ mydata %>% filter(season==2) %>% group_by(character) %>% tally(sort = TRUE) -> l
 colnames(lines_text_s2)[2] <- 'num_lines'
 lines_text_s2$season <- 2
 lines_text_s2$season <- as.integer(lines_text_s2$season)
+
+# note - must add all seasons at once, not individually
 mydata2 <- dplyr::left_join(mydata, lines_text_s2, by=c("season" = "season", "character" = "character"))
 
-## rbind lines_text_s1 and lines_text_s2, then left_join with mydata
-## this works.
-lines_text_temp <- rbind(lines_text_s1, lines_text_s2)
-mydata2 <- dplyr::left_join(mydata, lines_text_temp, by=c("season" = "season", "character" = "character"))
 
 ## Next steps: create lines_text_s3-9, then rbind(), then left_join()
 
@@ -176,9 +175,49 @@ colnames(lines_text_s9)[2] <- 'num_lines'
 lines_text_s9$season <- as.integer(9)
 
 
+## rbind lines_text_s1 through lines_text_s9, then left_join with mydata
+## this works.
+lines_text_temp <- rbind(lines_text_s1, lines_text_s2, lines_text_s3, lines_text_s4, lines_text_s5, lines_text_s6, lines_text_s7, lines_text_s8, lines_text_s9)
+
+mydata2 <- dplyr::left_join(mydata, lines_text_temp, by=c("season" = "season", "character" = "character"))
+
+# first attemp stacked area chart (NOT working)
+mydata2 %>%
++ filter(num_lines > 500) %>%
++ ggplot(aes(x=season, y=num_lines, fill=character)) + geom_area()
+
+# need to make 'character' a factor; season as numeric, num_lines as numeric
+mydata2$character <- as.factor(mydata2$character)
+mydata2$season <- as.numeric(mydata2$season)
+mydata2$num_lines <- as.numeric(mydata2$num_lines)
 
 
 
+
+####### create example stacked area chart from scratch  ########
+time <- as.numeric(rep(seq(1,7), each=7))   # X Axis
+value <- runif(49, 10, 100)                 # Y Axis
+group <- rep(LETTERS[1:7], times=7)         # group, one shape per group
+data <- data.frame(time, value, group)
+
+# sample stacked area chart works
+ggplot(data = data, aes(x=time, y=value, fill=group)) + geom_area()
+
+#################################################################
+
+
+lines_text_temp$character <- as.factor(lines_text_temp$character)
+lines_text_temp$num_lines <- as.numeric(lines_text_temp$num_lines)
+lines_text_temp$season <- as.numeric(lines_text_temp$season)
+
+# office_factor_levels
+office_levels <- c('Michael', 'Jim', 'Pam', 'Dwight', 'Andy', 'Meredith', 'Toby', 'Ryan', 'Kevin', 'Oscar', 'Angela', 'Phyllis', 'Stanley')
+
+# subset dataframe of lines_text_main (main characters only)
+lines_text_temp %>% filter(character %in% office_levels) -> lines_text_main
+
+# basic stacked area chart for main characters (working)
+ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fill=character)) + geom_area()
 
 
 
