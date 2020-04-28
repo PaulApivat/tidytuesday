@@ -146,8 +146,14 @@ lines_text_s3$season <- 3
 lines_text_s3$season <- as.integer(lines_text_s3$season)
 
 # season 4
+mydata %>% filter(season==4) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s4
+colnames(lines_text_s4)[2] <- 'num_lines'
+lines_text_s4$season <- as.integer(4)
 
 # season 5
+mydata %>% filter(season==5) %>% group_by(character) %>% tally(sort = TRUE) -> lines_text_s5
+colnames(lines_text_s5)[2] <- 'num_lines'
+lines_text_s5$season <- as.integer(5)
 
 # season 6
 
