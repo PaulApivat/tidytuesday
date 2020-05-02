@@ -323,7 +323,8 @@ highest_rated <- ggplot(data = df2, mapping = aes(x=total_votes.x, y=imdb_rating
 + theme(panel.background = element_rect(fill = '#fee5d9', color = '#fee5d9'), plot.background = element_rect(fill = '#fee5d9'), panel.grid = element_line(color = '#fee5d9'),legend.position = 'none') 
 + labs(x = 'Number of Votes', y = 'IMDB Rating', title = 'The Office: Top 10 Highest Rated Episodes')
 
-
+## That's what she said Filter
+filter(mydata2, grepl("That's what she said|that's what she said", text))
 
 # note: inconsistent episode names between df and mydata2
 
