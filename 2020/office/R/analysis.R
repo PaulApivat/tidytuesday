@@ -272,7 +272,40 @@ plot1 <- ggplot(data = lines_text_main, mapping = aes(x=season, y=num_lines, fil
 + labs(title = "The Office: Key Players by Lines", subtitle = "Seasons 1-9", y = 'Number of Lines', x = "Seasons")
 
 # locate highest rated episodes (e.g., Casino Night, Dinner Party) 
-# group_by(character) %>% tally(sort = TRUE)  for each episode
+# group_by(character) %>% tally(sort = TRUE)  for each episode * current num_lines is for the season NOT episode
+# Search director for highest rated episodes
+
+# Finale - Ken Kwapis, Writer Greg Daniels
+# Stress Relief (s5e13) or Prince Family Paper - Dir Asaad Kelada, Writer BJ Novak
+# Goodbye, Michael - Dir. Paul Feig, Writer Greg Daniels
+# Dinner Party - Dir. Paul Feig, Writer: Gene Stupnitsky, Lee Eisenberg
+# Casino Night - Dir. Greg Daniels, Writer: Steve Carell
+# Niagara (Parts 1&2) - Dir Paul Feig, Writer: Greg Daniels, Mindy Kaling
+# Threat Level Midnight - Dir. Tucker Gates, Writer: BJ Novak
+# Beach Games - Dir. Harold Ramis, Writer: Greg Daniels
+# The Job (Parts 1&2) - Dir. Ken Kwapis, Writer: Paul Liberstein, Michael Schur
+# A.A.R.M - Dir. David Rogers, Writer: Brent Forrester
+# Garage Sale - Dir. Steve Carell, Writer: Jon Vitti
+# Broke - Dir. Steve Carell, Writer: Charlie Grandy
+
+# Scatter Plot show Title + Director + Writer
+
+# first must make sure 'season' and 'episode' of df and mydata2 are of compatible types
+> mydata3 <- mydata2
+> mydata3$season <- as.factor(mydata3$season)
+> mydata3$episode <- as.numeric(mydata3$episode)
+
+# new data frame with director, writer
+df2 <- df %>%
++ inner_join(mydata3, by=c('season', 'episode'))
+
+# keep only unique season, episode
+df2 <- df2 %>%
++ distinct(season, episode, .keep_all = TRUE)
+
+# scatter plot with director, writer
+
+
 # note: inconsistent episode names between df and mydata2
 
 
