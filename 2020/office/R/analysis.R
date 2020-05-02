@@ -303,7 +303,26 @@ df2 <- df %>%
 df2 <- df2 %>%
 + distinct(season, episode, .keep_all = TRUE)
 
-# scatter plot with director, writer
+###### Combine Multiple Columns through String Interpolation ######
+df2 <- df2 %>% 
+    group_by(title) %>% 
+    mutate(info = str_interp("Episode: ${title}, Directed by: ${director}, Written by: ${writer}, Season: ${season}"))
+
+
+### Just have writers due to overlap
+df2 <- df2 %>% 
+    group_by(title) %>% 
+    mutate(info = str_interp("${title} by ${writer}, S: ${season}"))
+
+df2 <- df2 %>% group_by(title) %>% mutate(info = str_interp("${title} by ${writer}"))
+
+### Final Scatterplot of Episodes by IMDB Rating and Votes
+highest_rated <- ggplot(data = df2, mapping = aes(x=total_votes.x, y=imdb_rating.x)) 
++ geom_point(color = dplyr::case_when(df2$imdb_rating.x > 9.1 ~ '#084594', TRUE ~ '#6baed6')) 
++ geom_label_repel(aes(label=ifelse(imdb_rating.x > 9.1, info, '')), color = '#084594') 
++ theme(panel.background = element_rect(fill = '#fee5d9', color = '#fee5d9'), plot.background = element_rect(fill = '#fee5d9'), panel.grid = element_line(color = '#fee5d9'),legend.position = 'none') 
++ labs(x = 'Number of Votes', y = 'IMDB Rating', title = 'The Office: Top 10 Highest Rated Episodes')
+
 
 
 # note: inconsistent episode names between df and mydata2
