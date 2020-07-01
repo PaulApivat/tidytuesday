@@ -87,6 +87,17 @@ characters %>%
 characters %>%
     select(1:2, 14:34) %>% view()
 
+### Filter out ALL NA's for each action involving another character
+### then do HEAT MAP or Network connection
+### can only do ONE column at a time because they have different lengths when filtering out NA
+### repeat for other interactions beyond hand_holding
+characters %>%
+    filter(!is.na(hand_holding_with_which_character)) %>%
+    select(issue, character, hand_holding_with_which_character) %>%
+    group_by(character, hand_holding_with_which_character) %>% 
+    tally(sort = T) %>%
+    view()
+
 
 
 # select all columns that are double()
