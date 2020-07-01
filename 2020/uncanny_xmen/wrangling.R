@@ -60,5 +60,44 @@ characters %>%
     select(1:2, 14:28) %>%
     summarize_all(~ sum(is.na(.)) / length(.)) %>%
     view()
-    
-    
+
+# dividing characters dataset into two
+options(scipen = 999)
+
+# outlier? jean grey killing 5 billion?
+characters %>% 
+    arrange(desc(number_of_kills_non_humans)) %>%
+    view()
+
+characters %>% 
+    select(1:13) %>% 
+    gather(key = Actions, 3:13, value = Count) %>% 
+    group_by(character, Actions, Count) %>%
+    arrange(desc(Count)) %>% view()
+
+# select all columns that are double()
+characters %>%
+    select_if(is.character) %>% view()
+
+characters %>%
+    select_if(is.double)
+
+# covers ----
+
+covers %>% view()
+
+# issue_collaborators ----
+
+issue_collaborators %>% view()
+
+# locations ----
+
+locations %>% view()
+
+# comic bechdel ----
+
+comic_bechdel %>% view()
+
+# xmen bechdel ----
+
+xmen_bechdel %>% view()
