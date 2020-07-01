@@ -69,11 +69,25 @@ characters %>%
     arrange(desc(number_of_kills_non_humans)) %>%
     view()
 
+#### character  by Count of action (filter out issue 135 outlier; Jean Gray)
+# filter only issues #97 - 278
+# Storm sees the most action
 characters %>% 
     select(1:13) %>% 
     gather(key = Actions, 3:13, value = Count) %>% 
-    group_by(character, Actions, Count) %>%
-    arrange(desc(Count)) %>% view()
+    filter(issue != 135 & issue != 279:280) %>%
+    arrange(desc(Count)) %>% 
+    ggplot(aes(x=Count, y=reorder(character, Count), fill=Actions)) + geom_bar(stat = "identity")
+
+# check to see if filter out 135, 279, 280
+characters %>%
+    filter(issue == 135 | issue== 279:280) %>% view()
+
+#### analyze to see character-to-character interactions
+characters %>%
+    select(1:2, 14:34) %>% view()
+
+
 
 # select all columns that are double()
 characters %>%
