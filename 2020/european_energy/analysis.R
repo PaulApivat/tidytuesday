@@ -38,6 +38,13 @@ raw_excel %>%
     fill(country) %>% 
     select(-c(...1, ...2, ...14:...18)) %>% view()
 
-
-
+# Go to Sheet 3 of Excel file, grab content from cells C48:C61 and turns them into individual words
+# each representing various energy source categories. 
+read_excel("./data/Electricity_generation_statistics_2019.xlsx",
+           sheet = 3,
+           # goes from a tibble (14 x 1) to individual words, get rid of the first 'of which'
+           range = "C48:C61", col_names = FALSE)[[1]][c(1,3:14)] %>%
+    str_remove('[:digit:]') %>%
+    str_remove("of which: ") %>%
+    str_remove("\\.") %>% str_trim()
 
