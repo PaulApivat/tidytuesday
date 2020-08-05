@@ -59,6 +59,27 @@ country_totals %>%
     geom_bar(stat = 'identity', position = 'stack') +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+# Treemap in GGPLOT2 ----
+library(treemapify)
+
+# Data Transformation ----
+
+energy_types %>%
+    group_by(country_name, type) %>%
+    mutate(total = `2016` + `2017` + `2018`) %>%
+    # create Type_2 column
+    mutate(type_2 = if_else(type != 'Conventional thermal', 'Clean electricity', type)) %>%
+    mutate(type_2 = if_else(type == 'Nuclear', 'Nuclear', type_2)) %>%
+    mutate(type_2 = if_else(type_2 == 'Clean electricity', 'Renewable', type_2)) %>%
+    
+    
+    
 
 
+    
+    
+
+
+    
+    
 
