@@ -64,15 +64,30 @@ library(treemapify)
 
 # Data Transformation ----
 
-energy_types %>%
+# calculate Total gwh across three years and type_2 classification
+energy_types_total <- energy_types %>%
     group_by(country_name, type) %>%
     mutate(total = `2016` + `2017` + `2018`) %>%
     # create Type_2 column
     mutate(type_2 = if_else(type != 'Conventional thermal', 'Clean electricity', type)) %>%
     mutate(type_2 = if_else(type == 'Nuclear', 'Nuclear', type_2)) %>%
     mutate(type_2 = if_else(type_2 == 'Clean electricity', 'Renewable', type_2)) %>%
+    # always ungroup()
+    ungroup()
     
+
+# Total & Proportion of 2018 data
+energy_types_total %>%
+    select(country_name, country, `2018`, type_2) %>%
+    group_by(country) %>%
+    mutate(total_2018 = sum(`2018`)) %>%
+    mutate(proportion_2018 = `2018`/total_2018) %>%
+    mutate(type_2 = as.factor(type_2)) %>%
+    ungroup() %>%
     
+    ggplot(aes(x = reorder(country, `2018`), y = `2018`, fill = type_2)) +
+    geom_bar(stat = 'identity', position = 'stack', width = 0.9) +
+    facet_wrap(~ type_2)
     
 
 
