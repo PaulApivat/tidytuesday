@@ -90,11 +90,27 @@ energy_types_total %>%
     facet_wrap(~ type_2)
     
 
+# Find proportion of Clean energy + proportion of Conventional thermal
+energy_types_proportion_2018 <- energy_types_total %>%
+    select(country_name, country, `2018`, type_2) %>%
+    group_by(country) %>%
+    mutate(total_2018 = sum(`2018`)) %>%
+    mutate(
+        proportion_2018 = `2018`/total_2018
+        ) %>%
+    mutate(type_2 = as.factor(type_2)) %>%
+    ungroup()
+    
 
-    
-    
+energy_types_proportion_2018 %>%
+    group_by(country, type_2) %>%
+    summarise(
+        total_proportion_2018 = sum(proportion_2018)
+    ) %>%
+    ungroup() %>% 
+    ggplot(aes(x = country, y = total_proportion_2018, fill = type_2)) +
+    geom_bar(stat = 'identity')
 
 
-    
-    
+
 
