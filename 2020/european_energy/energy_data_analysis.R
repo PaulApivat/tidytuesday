@@ -117,15 +117,24 @@ base_visualization_2018 <- energy_types_proportion_2018 %>%
     ungroup() %>% 
     # order by total_proportion, descending
     ggplot(aes(x = reorder(country, desc(total_proportion_2018)), y = total_proportion_2018, fill = type_2)) +
+    geom_hline(yintercept = 1, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = .75, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = .5, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = .25, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = -.25, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = -.5, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = -.75, color = '#98a2ab', linetype = 'longdash') +
+    geom_hline(yintercept = -1, color = '#98a2ab', linetype = 'longdash') +
     geom_bar(stat = 'identity') 
     
 
 themed_visualization_2018 <- base_visualization_2018 +
-    scale_y_continuous(labels = scales::percent, limits = c(-1,1.5), breaks = c(-1,1)) +
+    scale_y_continuous(labels = abs(c(-100,-75,-50,-25,25,50,75,100)), limits = c(-1,1.5), breaks = c(-1,-.75,-.5,-.25,.25,.5,.75,1)) +
+    #scale_y_continuous(labels = scales::percent, limits = c(-1,1.5), breaks = c(-1,-.75,-.5,-.25,.25,.5,.75,1)) +
     labs(
         title = 'How european countries generated electricity in 2018',
-        caption = 'Visualization: @paulapivat | paulapivat.com',
-        y = 'Proportion of Energy Sources',
+        caption = 'author: @paulapivat | paulapivat.com',
+        y = 'Proportion of Energy Sources (%)',
         x = 'Country Codes',
         fill = 'Energy Source'
     ) +
@@ -139,7 +148,7 @@ themed_visualization_2018 <- base_visualization_2018 +
         panel.background = element_rect(fill = '#47535e'),
         plot.background = element_rect(fill = '#47535e'),
         plot.title = element_text(color = 'white', size = 25),
-        plot.caption = element_text(color = 'white'),
+        plot.caption = element_text(color = 'white', face = 'italic'),
         legend.background = element_rect(fill = '#47535e'),
         legend.title = element_text(color = 'white'),
         legend.text = element_text(color = 'white'),
