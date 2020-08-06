@@ -127,7 +127,7 @@ base_visualization_2018 <- energy_types_proportion_2018 %>%
     geom_hline(yintercept = -1, color = '#98a2ab', linetype = 'longdash') +
     geom_bar(stat = 'identity') 
     
-
+# Add Theme
 themed_visualization_2018 <- base_visualization_2018 +
     scale_y_continuous(labels = abs(c(-100,-75,-50,-25,25,50,75,100)), limits = c(-1,1.5), breaks = c(-1,-.75,-.5,-.25,.25,.5,.75,1)) +
     #scale_y_continuous(labels = scales::percent, limits = c(-1,1.5), breaks = c(-1,-.75,-.5,-.25,.25,.5,.75,1)) +
@@ -141,23 +141,29 @@ themed_visualization_2018 <- base_visualization_2018 +
     theme_classic() +
     theme(
         line = element_blank(),
-        axis.title.x = element_text(color = 'white'),
-        axis.title.y = element_text(color = 'white'),
+        axis.title.x = element_text(color = 'white', face = 'bold'),
+        axis.title.y = element_text(color = 'white', face = 'bold'),
         axis.text.x = element_text(color = 'white'),
         axis.text.y = element_text(color = 'white'),
         panel.background = element_rect(fill = '#47535e'),
         plot.background = element_rect(fill = '#47535e'),
-        plot.title = element_text(color = 'white', size = 25),
+        plot.title = element_text(color = 'white', size = 25, face = 'bold'),
         plot.caption = element_text(color = 'white', face = 'italic'),
         legend.background = element_rect(fill = '#47535e'),
         legend.title = element_text(color = 'white'),
         legend.text = element_text(color = 'white'),
         legend.position = 'bottom'
     ) +
-    scale_fill_manual(values = c('grey', '#23a858', '#03fc66'))
+    scale_fill_manual(values = c('grey', '#23a858', '#03fc66')) 
  
-    
+# Add Annotation 
+annotated_visualization_2018 <- themed_visualization_2018 + 
+    annotate(geom = 'text', x = 8, y = 1.3, color = 'white', label = 'Norway had an electricity production\n almost entirely made up of renewable\n energy (97%). It is the second largest\n producer of this type of energy.') +
+    annotate(geom = 'text', x = 8, y = -.75, color = 'white', label = 'France is, by far, the largest nuclear energy\n provider representing 71% of its production.') +
+    annotate(geom = 'text', x = 30, y = 1.0, color = 'white', label = 'Germany is the largest renewable and\n conventional thermal energy producer.') +
+    annotate(geom = 'text', x = 25, y = -.90, color = 'white', label = 'Most of Poland electricity production is\n from conventional thermal energy (90%).')
 
+annotated_visualization_2018
 
-
+# Add Arrows
 
