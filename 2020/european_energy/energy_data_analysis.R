@@ -101,18 +101,42 @@ energy_types_proportion_2018 <- energy_types_total %>%
     mutate(type_2 = as.factor(type_2)) %>%
     ungroup()
     
+# Data Visualization ----
 
-energy_types_proportion_2018 %>%
+# Base Visualization
+base_visualization_2018 <- energy_types_proportion_2018 %>%
     group_by(country, type_2) %>%
     summarise(
-        total_proportion_2018 = sum(proportion_2018)
+        total_proportion_2018 = sum(proportion_2018) 
     ) %>% 
+    # key to one factor level be negative based on a condition
+    # if 'Conventional thermal' add negative sign, else keep as is
     mutate(
         total_proportion_2018 = if_else(type_2=='Conventional thermal', -total_proportion_2018, total_proportion_2018)
     ) %>%
     ungroup() %>% 
-    ggplot(aes(x = reorder(country, total_proportion_2018), y = total_proportion_2018, fill = type_2)) +
-    geom_bar(stat = 'identity')
+    # order by total_proportion, descending
+    ggplot(aes(x = reorder(country, desc(total_proportion_2018)), y = total_proportion_2018, fill = type_2)) +
+    geom_bar(stat = 'identity') 
+    
+
+base_visualization_2018 +
+    scale_y_continuous(labels = scales::percent) +
+    labs(
+        title = 'How european countries generated electricity in 2018',
+        caption = 'Visualization: @paulapivat | paulapivat.com',
+        y = 'Proportion of Energy Sources',
+        x = 'Country Codes',
+        fill = 'Energy Source'
+    ) +
+    theme_classic() +
+    theme(
+        panel.background = element_rect(fill = '#7990a6'),
+        plot.background = element_rect(fill = '#7990a6'),
+        legend.background = element_rect(fill = '#7990a6')
+    ) +
+    scale_fill_manual(values = c('grey', '#9CFD56', '#00DD20'))
+    
 
 
 
