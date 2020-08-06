@@ -156,14 +156,25 @@ themed_visualization_2018 <- base_visualization_2018 +
     ) +
     scale_fill_manual(values = c('grey', '#23a858', '#03fc66')) 
  
-# Add Annotation 
+# Add Annotation and Arrows
 annotated_visualization_2018 <- themed_visualization_2018 + 
     annotate(geom = 'text', x = 8, y = 1.3, color = 'white', label = 'Norway had an electricity production\n almost entirely made up of renewable\n energy (97%). It is the second largest\n producer of this type of energy.') +
+    annotate('segment', x = 4.5, xend = 2, y = 1.3, yend = .99, color = 'white', size = .5, alpha = 0.5, arrow=arrow(angle = 30, length = unit(0.10, 'inches'), ends = 'last', type = 'open')) +
+    
     annotate(geom = 'text', x = 8, y = -.75, color = 'white', label = 'France is, by far, the largest nuclear energy\n provider representing 71% of its production.') +
+    annotate('segment', x = 4, xend = 4, y = -.75, yend = -.18, color = 'white', size = .5, alpha = 0.5, arrow=arrow(angle = 30, length = unit(0.10, 'inches'), ends = 'last', type = 'open')) +
+    
     annotate(geom = 'text', x = 30, y = 1.0, color = 'white', label = 'Germany is the largest renewable and\n conventional thermal energy producer.') +
-    annotate(geom = 'text', x = 25, y = -.90, color = 'white', label = 'Most of Poland electricity production is\n from conventional thermal energy (90%).')
+    annotate('segment', x = 26.5, xend = 23, y = .99, yend = .50, color = 'white', size = .5, alpha = 0.5, arrow=arrow(angle = 30, length = unit(0.10, 'inches'), ends = 'last', type = 'open')) +
+    
+    annotate(geom = 'text', x = 25, y = -.90, color = 'white', label = 'Most of Poland electricity production is\n from conventional thermal energy (90%).') +
+    annotate('segment', x = 28.5, xend = 33.5, y = -.99, yend = -.92, color = 'white', size = .5, alpha = 0.5, arrow=arrow(angle = 30, length = unit(0.10, 'inches'), ends = 'last', type = 'open'))
+
+
 
 annotated_visualization_2018
 
-# Add Arrows
+
+
+
 
