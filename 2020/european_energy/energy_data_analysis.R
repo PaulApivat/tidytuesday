@@ -106,9 +106,12 @@ energy_types_proportion_2018 %>%
     group_by(country, type_2) %>%
     summarise(
         total_proportion_2018 = sum(proportion_2018)
+    ) %>% 
+    mutate(
+        total_proportion_2018 = if_else(type_2=='Conventional thermal', -total_proportion_2018, total_proportion_2018)
     ) %>%
     ungroup() %>% 
-    ggplot(aes(x = country, y = total_proportion_2018, fill = type_2)) +
+    ggplot(aes(x = reorder(country, total_proportion_2018), y = total_proportion_2018, fill = type_2)) +
     geom_bar(stat = 'identity')
 
 
