@@ -120,8 +120,8 @@ base_visualization_2018 <- energy_types_proportion_2018 %>%
     geom_bar(stat = 'identity') 
     
 
-base_visualization_2018 +
-    scale_y_continuous(labels = scales::percent) +
+themed_visualization_2018 <- base_visualization_2018 +
+    scale_y_continuous(labels = scales::percent, limits = c(-1,1.5), breaks = c(-1,1)) +
     labs(
         title = 'How european countries generated electricity in 2018',
         caption = 'Visualization: @paulapivat | paulapivat.com',
@@ -131,11 +131,22 @@ base_visualization_2018 +
     ) +
     theme_classic() +
     theme(
-        panel.background = element_rect(fill = '#7990a6'),
-        plot.background = element_rect(fill = '#7990a6'),
-        legend.background = element_rect(fill = '#7990a6')
+        line = element_blank(),
+        axis.title.x = element_text(color = 'white'),
+        axis.title.y = element_text(color = 'white'),
+        axis.text.x = element_text(color = 'white'),
+        axis.text.y = element_text(color = 'white'),
+        panel.background = element_rect(fill = '#47535e'),
+        plot.background = element_rect(fill = '#47535e'),
+        plot.title = element_text(color = 'white', size = 25),
+        plot.caption = element_text(color = 'white'),
+        legend.background = element_rect(fill = '#47535e'),
+        legend.title = element_text(color = 'white'),
+        legend.text = element_text(color = 'white'),
+        legend.position = 'bottom'
     ) +
-    scale_fill_manual(values = c('grey', '#9CFD56', '#00DD20'))
+    scale_fill_manual(values = c('grey', '#23a858', '#03fc66'))
+ 
     
 
 
