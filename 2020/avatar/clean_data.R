@@ -14,3 +14,26 @@ glimpse(avatar)
 scene_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-11/scene_description.csv')
 glimpse(scene_description)
 
+# EDA
+scene_description %>%
+    group_by(scene_description) %>% 
+    tally(sort = TRUE)
+
+avatar %>%
+    group_by(imdb_rating) %>%
+    tally(sort = TRUE)
+
+scene_description %>%
+    left_join(avatar, by = 'id') %>%
+    view()
+
+
+
+
+
+
+
+
+
+
+
