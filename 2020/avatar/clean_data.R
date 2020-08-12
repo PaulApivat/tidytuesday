@@ -204,23 +204,22 @@ subset_df %>%
 
 # Filtering a column, based on a vector of chracter strings
 
-# Fear vector
-fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")) 
 
 # Using base R to filter a specific column
 subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))] %>% view()
 
-subset_df2 <- mutate_all(subset_df, .funs=toupper)
-
-
-
-subset_df2 %>%
-    filter(grepl(fear_words, scene_description)) %>% view()
         
-    
+# Use with subset_df2 
 subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))] %>% view()
 
+# see if this function produces a logical - TRUE/FALSE
 Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
+
+
+
+# Basic Emotion vectors
+fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")) 
+
 
 # Take data frame that's been converted to uppercase
 subset_df2 %>%
