@@ -162,10 +162,39 @@ subset_df %>%
 
 subset_df %>%
     filter(scene_description %in% top_emotions) %>%
+    filter(character %in% top_characters) %>%
     ggplot(aes(x = scene_description, y = character)) +
-    geom_tile(aes(fill = imdb_rating))
+    geom_tile(aes(fill = imdb_rating)) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme_minimal()
 
+subset_df %>%
+    filter(scene_description %in% top_emotions) %>%
+    filter(character %in% top_characters) %>% 
+    ggplot(aes(x = character, y = scene_description)) +
+    geom_tile(aes(fill = scene_description)) +
+    theme_minimal() +
+    theme(
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_rect(fill = "grey")
+        )
 
+# Data Transformation (Emotion classification) ----
 
+# Paul Ekman, universal emotions (and synonyms):
 
+# Anger - annoy, furious, displease, exasperat(e), indignant, irrita(te)/irratably, rage/enrage/outrage, resentment
+# Disgust - disgus(t), dislike
+# Fear - fear, anxiety, concern, despair, dismay, doubt, horror, panic, scare, terror, worr(y, ies)
+# Happiness
+# Sadness
+# Surprise
+
+fear_words <- c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")
+
+subset_df %>%
+    mutate(rating_bin = ntile(imdb_rating, 3)) %>% view()
+
+subset_df %>%
+    filter(grepl("worr", scene_description)) %>% view()
 
