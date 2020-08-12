@@ -24,13 +24,22 @@ scene_description %>%
     tally(sort = TRUE) %>%
     view()
     
-# remove special characters 
+# remove special characters (non-alphanumeric) in scene_descriptions
 scene_description %>%
     mutate(
         scene_description = gsub("\\[", "", scene_description),
         scene_description = gsub("\\.]", "", scene_description)
-        ) %>% view()
-    
+        ) %>% 
+    group_by(scene_description) %>%
+    tally(sort = TRUE) %>% view()
+
+# Shorter way to remove all non-alphanumeric characters
+scene_description %>%
+    mutate(
+        scene_description = gsub("[^[:alnum:]]", "", scene_description)
+    ) %>% 
+    group_by(scene_description) %>%
+    tally(sort = TRUE) %>% view()
 
 
 avatar %>%
