@@ -1,20 +1,20 @@
-# Session Info
+# Session Info ----
 R version 3.6.3 (2020-02-29)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 Running under: macOS Catalina 10.15.5
 
-# Load Libraries
+# Load Libraries ----
 library(tidyverse)
 
 
-# Read Data
+# Read Data ----
 avatar <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-11/avatar.csv')
 glimpse(avatar)
 
 scene_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-11/scene_description.csv')
 glimpse(scene_description)
 
-# EDA
+# EDA ----
 
 str(scene_description)
 
@@ -46,13 +46,15 @@ avatar %>%
     group_by(imdb_rating) %>%
     tally(sort = TRUE)
 
+# left join two data sets
 scene_description %>%
     left_join(avatar, by = 'id') %>%
     view()
 
 ####
 
-View(str_remove_all(scene_description$scene_description, "\\["))
+# remove all non-alphanumeric without using dplyr chain
+View(str_remove_all(scene_description$scene_description, "[^[:alnum:] ]"))
 
 
 
