@@ -44,7 +44,8 @@ scene_description %>%
 
 avatar %>%
     group_by(character) %>%
-    tally(sort = TRUE)
+    tally(sort = TRUE) %>%
+    view()
 
 # right join two data sets
 scene_description %>%
@@ -125,8 +126,46 @@ subset_df <- scene_description %>%
     ) %>% 
     # if drop_na then back to 7626 observations
     drop_na(scene_description) %>% 
-    select(scene_description, book, imdb_rating)
+    select(scene_description, book, imdb_rating, character)
 
 glimpse(subset_df)
+
+# Filter Column based on List of Words ----
+
+top_emotions <- c('Angrily', 'Angry', 'Angered', 'Sarcastically', 'Annoyed', "Surprised", 
+                  "Shocked", "Excitedly", "Excited", "Happily", "Laughs", "Smiling", "Smiles", 
+                  "Confused", "Sadly", "Nervously", "Calmly", "Determined", "Irritated", "Amused", 
+                  "Cheerfully", "Worried", "Disappointed", "Curiously")
+
+top_characters <- c("Aang","Sokka","Katara","Zuko","Toph","Iroh","Azula","Jet","Suki","Zhao",
+                    "Mai","Hakoda","Roku","Ty Lee","Ozai","Bumi","Yue","Hama","Warden","Long Feng")
+
+
+
+# Heat Map Visualization ----
+
+subset_df %>%
+    filter(scene_description %in% top_emotions) %>%
+    group_by(scene_description, book, character) %>%
+    tally(sort = TRUE) %>% 
+    ggplot(aes(x = scene_description, y = character)) +
+    geom_tile(aes(fill = n)) +
+    facet_wrap(~ book)
+
+subset_df %>%
+    filter(scene_description %in% top_emotions) %>%
+    group_by(scene_description, book, imdb_rating) %>%
+    tally(sort = TRUE) %>%
+    ggplot(aes(x = scene_description, y = book)) +
+    geom_tile(aes(fill = imdb_rating)) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+subset_df %>%
+    filter(scene_description %in% top_emotions) %>%
+    ggplot(aes(x = scene_description, y = character)) +
+    geom_tile(aes(fill = imdb_rating))
+
+
+
 
 
