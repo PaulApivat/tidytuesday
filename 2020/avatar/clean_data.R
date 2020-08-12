@@ -205,7 +205,35 @@ subset_df %>%
 # Filtering a column, based on a vector of chracter strings
 
 # Fear vector
-fear_words <- c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")
+fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")) 
 
 # Using base R to filter a specific column
-subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))]
+subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))] %>% view()
+
+subset_df2 <- mutate_all(subset_df, .funs=toupper)
+
+
+
+subset_df2 %>%
+    filter(grepl(fear_words, scene_description)) %>% view()
+        
+    
+subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))] %>% view()
+
+Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
+
+# Take data frame that's been converted to uppercase
+subset_df2 %>%
+    mutate(
+        # create new column
+        basic_emotions = "NA",
+        # fill column based on condition
+        # if scene_description contains a word from fear_words, label is "fear", otherwise keep column as is
+        basic_emotions = if_else(Reduce(`|`, lapply(fear_words, grepl, x = scene_description)), "fear", basic_emotions)
+    ) %>% 
+    group_by(basic_emotions) %>% 
+    tally()
+
+
+
+
