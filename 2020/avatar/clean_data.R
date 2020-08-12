@@ -15,9 +15,23 @@ scene_description <- readr::read_csv('https://raw.githubusercontent.com/rfordata
 glimpse(scene_description)
 
 # EDA
+
+str(scene_description)
+
+# find major categories of scene_descriptions
 scene_description %>%
     group_by(scene_description) %>% 
-    tally(sort = TRUE)
+    tally(sort = TRUE) %>%
+    view()
+    
+# remove special characters 
+scene_description %>%
+    mutate(
+        scene_description = gsub("\\[", "", scene_description),
+        scene_description = gsub("\\.]", "", scene_description)
+        ) %>% view()
+    
+
 
 avatar %>%
     group_by(imdb_rating) %>%
@@ -27,8 +41,9 @@ scene_description %>%
     left_join(avatar, by = 'id') %>%
     view()
 
+####
 
-
+View(str_remove_all(scene_description$scene_description, "\\["))
 
 
 
