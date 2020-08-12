@@ -190,7 +190,7 @@ subset_df %>%
 # Sadness
 # Surprise
 
-fear_words <- c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")
+
 
 subset_df %>%
     mutate(rating_bin = ntile(imdb_rating, 3)) %>% view()
@@ -198,3 +198,14 @@ subset_df %>%
 subset_df %>%
     filter(grepl("worr", scene_description)) %>% view()
 
+
+subset_df %>%
+    filter(grepl(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr"), scene_description)) %>% view()
+
+# Filtering a column, based on a vector of chracter strings
+
+# Fear vector
+fear_words <- c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")
+
+# Using base R to filter a specific column
+subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))]
