@@ -199,9 +199,9 @@ subset_df %>%
     mutate(rating_bin = ntile(imdb_rating, 3)) %>% view()
 
 subset_df %>%
-    filter(grepl("cheerfully", scene_description)) %>% view()
+    filter(grepl("dislike", scene_description)) %>% view()
 
-c("bliss", "content", "delight", "exhil", "joy", "laugh", "opti", "peace", "happily", "smiling", "smiles", "amused", "cheerfully")
+c("disgust", "dislike")
 
 subset_df %>%
     filter(grepl(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr"), scene_description)) %>% view()
@@ -220,11 +220,22 @@ subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df
 Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
 
 
+top_emotions <- c(, 'Sarcastically',  
+                  
+                  "Confused",    "Determined",  
+                 "Curiously")
+
+
+
+
 
 # Basic Emotion vectors
-fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")) 
-anger_words <- toupper(c("anger", "annoy", "furious", "displease", "exasperat", "indignant", "irrita", "rage", "resentment"))
-happiness_words <- toupper(c("bliss", "content", "delight", "exhil", "joy", "laugh", "opti", "peace", "happily", "smiling", "smiles", "amused", "cheerfully"))
+fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr", "worried", "nervously", "horrified")) 
+anger_words <- toupper(c("anger", "annoy", "annoyed", "furious", "displease", "exasperat", "indignant", "irrita", "rage", "resentment", "angrily", "angry", "angered", "irritated", "frantic"))
+happiness_words <- toupper(c("bliss", "content", "delight", "exhil", "joy", "laugh", "opti", "peace", "happily", "smiling", "smiles", "amused", "cheerfully", "calmly"))
+sadness_words <- toupper(c("hopeless", "misery", "sorrow", "sadly", "sad", "disappoint", "downcast"))
+surprise_words <- toupper(c("amaze", "astonish", "awe", "bewild", "curious", "curiously", "shock", "wonder", "surprised", "excited", "excitedly"))
+disgust_words <- toupper(c("disgust", "dislike"))
 
 
 # Take data frame that's been converted to uppercase
@@ -236,8 +247,13 @@ subset_df2 %>%
         # if scene_description contains a word from fear_words, label is "fear", otherwise keep column as is
         basic_emotions = if_else(Reduce(`|`, lapply(fear_words, grepl, x = scene_description)), "fear", basic_emotions),
         basic_emotions = if_else(Reduce(`|`, lapply(anger_words, grepl, x = scene_description)), "anger", basic_emotions),
-        basic_emotions = if_else(Reduce(`|`, lapply(happiness_words, grepl, x = scene_description)), "happiness", basic_emotions)
+        basic_emotions = if_else(Reduce(`|`, lapply(happiness_words, grepl, x = scene_description)), "happiness", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(sadness_words, grepl, x = scene_description)), "sadness", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(surprise_words, grepl, x = scene_description)), "surprise", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(disgust_words, grepl, x = scene_description)), "disgust", basic_emotions)
     ) %>% 
+    # group imdb_ratings into three bins - low(1), medium(2), high(3)
+    mutate(rating_bin = ntile(imdb_rating, 3)) %>% 
     group_by(basic_emotions) %>% 
     tally()
 
