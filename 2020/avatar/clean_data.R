@@ -190,14 +190,18 @@ subset_df %>%
 # Sadness
 # Surprise
 
-
+top_emotions <- c('Angrily', 'Angry', 'Angered', 'Sarcastically', 'Annoyed', "Surprised", 
+                  "Shocked", "Excitedly", "Excited", "Happily", "Laughs", "Smiling", "Smiles", 
+                  "Confused", "Sadly", "Nervously", "Calmly", "Determined", "Irritated", "Amused", 
+                  "Cheerfully", "Worried", "Disappointed", "Curiously")
 
 subset_df %>%
     mutate(rating_bin = ntile(imdb_rating, 3)) %>% view()
 
 subset_df %>%
-    filter(grepl("worr", scene_description)) %>% view()
+    filter(grepl("cheerfully", scene_description)) %>% view()
 
+c("bliss", "content", "delight", "exhil", "joy", "laugh", "opti", "peace", "happily", "smiling", "smiles", "amused", "cheerfully")
 
 subset_df %>%
     filter(grepl(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr"), scene_description)) %>% view()
@@ -219,6 +223,8 @@ Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
 
 # Basic Emotion vectors
 fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr")) 
+anger_words <- toupper(c("anger", "annoy", "furious", "displease", "exasperat", "indignant", "irrita", "rage", "resentment"))
+happiness_words <- toupper(c("bliss", "content", "delight", "exhil", "joy", "laugh", "opti", "peace", "happily", "smiling", "smiles", "amused", "cheerfully"))
 
 
 # Take data frame that's been converted to uppercase
@@ -228,7 +234,9 @@ subset_df2 %>%
         basic_emotions = "NA",
         # fill column based on condition
         # if scene_description contains a word from fear_words, label is "fear", otherwise keep column as is
-        basic_emotions = if_else(Reduce(`|`, lapply(fear_words, grepl, x = scene_description)), "fear", basic_emotions)
+        basic_emotions = if_else(Reduce(`|`, lapply(fear_words, grepl, x = scene_description)), "fear", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(anger_words, grepl, x = scene_description)), "anger", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(happiness_words, grepl, x = scene_description)), "happiness", basic_emotions)
     ) %>% 
     group_by(basic_emotions) %>% 
     tally()
