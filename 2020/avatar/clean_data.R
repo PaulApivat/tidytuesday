@@ -260,12 +260,17 @@ subset_df2 %>%
     filter(basic_emotions != 'NA') %>% 
     filter(character %in% top_characters) %>%
     ggplot(aes(x = character, y = basic_emotions, fill = rating_bin)) +
+    geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf), fill = 'grey') +
     geom_tile() +
     scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
+    #facet_wrap(~ book) +
     theme_classic() +
-    theme(axis.text.x = element_text(angle = 75, hjust = 1)) +
-    facet_wrap(~ book)
+    theme(axis.text.x = element_text(angle = 75, hjust = 1))
     
+
+
+
+
 
 subset_df2 %>%
     mutate(imdb_rating = as.numeric(imdb_rating)) %>%
