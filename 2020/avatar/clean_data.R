@@ -261,7 +261,8 @@ subset_df2 %>%
     ggplot(aes(x = character, y = basic_emotions, fill = rating_bin)) +
     geom_tile() +
     scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
-    theme_classic()
+    theme_classic() +
+    facet_wrap(~ book)
     
 
 subset_df2 %>%
