@@ -220,10 +220,8 @@ subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df
 Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
 
 
-top_emotions <- c(, 'Sarcastically',  
-                  
-                  "Confused",    "Determined",  
-                 "Curiously")
+top_characters <- toupper(c("Aang","Sokka","Katara","Zuko","Toph","Iroh","Azula","Jet","Suki","Zhao",
+                    "Mai","Hakoda","Roku","Ty Lee","Ozai","Bumi","Yue","Hama","Warden","Long Feng"))
 
 
 
@@ -253,9 +251,28 @@ subset_df2 %>%
         basic_emotions = if_else(Reduce(`|`, lapply(disgust_words, grepl, x = scene_description)), "disgust", basic_emotions)
     ) %>% 
     # group imdb_ratings into three bins - low(1), medium(2), high(3)
-    mutate(rating_bin = ntile(imdb_rating, 3)) %>% 
-    group_by(basic_emotions) %>% 
-    tally()
+    mutate(
+        rating_bin = ntile(imdb_rating, 10),
+        rating_bin = as.factor(rating_bin)
+        ) %>% 
+    filter(rating_bin != 'NA') %>%
+    filter(basic_emotions != 'NA') %>% 
+    filter(character %in% top_characters) %>%
+    ggplot(aes(x = character, y = basic_emotions, fill = rating_bin)) +
+    geom_tile() +
+    scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
+    theme_classic()
+    
+
+subset_df2 %>%
+    mutate(imdb_rating = as.numeric(imdb_rating)) %>%
+    summarize(
+        min_rating = min(imdb_rating, na.rm = TRUE),
+        max_rating = max(imdb_rating, na.rm = TRUE),
+        mean_rating = mean(imdb_rating, na.rm = TRUE),
+        median_rating = median(imdb_rating, na.rm = TRUE)
+    )
+   
 
 
 
