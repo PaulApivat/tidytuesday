@@ -237,6 +237,7 @@ disgust_words <- toupper(c("disgust", "dislike"))
 
 
 # Take data frame that's been converted to uppercase
+# Near Final
 subset_df2 %>%
     mutate(
         # create new column
@@ -262,6 +263,7 @@ subset_df2 %>%
     geom_tile() +
     scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
     theme_classic() +
+    theme(axis.text.x = element_text(angle = 75, hjust = 1)) +
     facet_wrap(~ book)
     
 
