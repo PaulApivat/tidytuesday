@@ -212,7 +212,9 @@ subset_df %>%
 # Using base R to filter a specific column
 subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))] %>% view()
 
-        
+
+
+
 # Use with subset_df2 
 subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))] %>% view()
 
@@ -220,8 +222,8 @@ subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df
 Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
 
 
-top_characters <- toupper(c("Aang","Sokka","Katara","Zuko","Toph","Iroh","Azula","Jet","Suki","Zhao",
-                    "Mai","Hakoda","Roku","Ty Lee","Ozai","Bumi","Yue","Hama","Warden","Long Feng"))
+top_characters <- c("Aang","Sokka","Katara","Zuko","Toph","Iroh","Azula","Jet","Suki","Zhao",
+                    "Mai","Hakoda","Roku","Ty Lee","Ozai","Bumi","Yue","Hama","Warden","Long Feng")
 
 
 
@@ -236,10 +238,15 @@ surprise_words <- toupper(c("amaze", "astonish", "awe", "bewild", "curious", "cu
 disgust_words <- toupper(c("disgust", "dislike"))
 
 
-# Take data frame that's been converted to uppercase
+
 # Near Final
-subset_df2 %>%
+    
+
+# Re-build from ground up.
+subset_df %>%
     mutate(
+        # convert scene_description to uppercase
+        scene_description = toupper(scene_description),
         # create new column
         basic_emotions = "NA",
         # fill column based on condition
@@ -255,20 +262,28 @@ subset_df2 %>%
     mutate(
         rating_bin = ntile(imdb_rating, 10),
         rating_bin = as.factor(rating_bin)
-        ) %>% 
+    ) %>% 
     filter(rating_bin != 'NA') %>%
     filter(basic_emotions != 'NA') %>% 
     filter(character %in% top_characters) %>%
     ggplot(aes(x = character, y = basic_emotions, fill = rating_bin)) +
-    geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf), fill = 'grey') +
+    geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf), fill = '#d9d9d9') +
     geom_tile() +
     scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
     #facet_wrap(~ book) +
     theme_classic() +
-    theme(axis.text.x = element_text(angle = 75, hjust = 1))
-    
-
-
+    theme(
+        axis.text.x = element_text(angle = 75, hjust = 1),
+        plot.background = element_rect(fill = '#d9d9d9'),
+        legend.background = element_rect(fill = '#d9d9d9')
+        ) +
+    labs(
+        fill = 'Ratings',
+        x = '',
+        y = 'Emotions',
+        title = 'Six Universal Emotions Display by Top 20 Avatar Characters',
+        subtitle = 'Relative IMDB Ratings: Lowest to Highest'
+    )
 
 
 
