@@ -14,7 +14,7 @@ glimpse(avatar)
 scene_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-11/scene_description.csv')
 glimpse(scene_description)
 
-# EDA ----
+# Exploratory Data Analysis ----
 
 str(scene_description)
 
@@ -71,7 +71,7 @@ View(str_remove_all(scene_description$scene_description, "[^[:alnum:] ]"))
 
 # List all scene_descriptions that are emotion words ----
 
-# Top 20 Emotions
+# Top 20 Emotions (frequency)
 Angrily 79 / Angry 10 / Angered 6
 Sarcastically 65
 Annoyed 42
@@ -93,7 +93,7 @@ Worried 12
 Disappointed 10
 Curiously 9
 
-# Next 20 Emotions
+# Next 20 Emotions (frequency)
 Mockingly 9
 Desperately 8
 Smugly 8
@@ -130,7 +130,7 @@ subset_df <- scene_description %>%
 
 glimpse(subset_df)
 
-# Filter Column based on List of Words ----
+# Top Emotions and Top Characters by frequency
 
 top_emotions <- c('Angrily', 'Angry', 'Angered', 'Sarcastically', 'Annoyed', "Surprised", 
                   "Shocked", "Excitedly", "Excited", "Happily", "Laughs", "Smiling", "Smiles", 
@@ -142,7 +142,7 @@ top_characters <- c("Aang","Sokka","Katara","Zuko","Toph","Iroh","Azula","Jet","
 
 
 
-# Heat Map Visualization ----
+# Initial Heat Map Visualization ----
 
 subset_df %>%
     filter(scene_description %in% top_emotions) %>%
@@ -195,40 +195,6 @@ top_emotions <- c('Angrily', 'Angry', 'Angered', 'Sarcastically', 'Annoyed', "Su
                   "Confused", "Sadly", "Nervously", "Calmly", "Determined", "Irritated", "Amused", 
                   "Cheerfully", "Worried", "Disappointed", "Curiously")
 
-subset_df %>%
-    mutate(rating_bin = ntile(imdb_rating, 3)) %>% view()
-
-subset_df %>%
-    filter(grepl("dislike", scene_description)) %>% view()
-
-c("disgust", "dislike")
-
-subset_df %>%
-    filter(grepl(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr"), scene_description)) %>% view()
-
-# Filtering a column, based on a vector of chracter strings
-
-
-# Using base R to filter a specific column
-subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))] %>% view()
-
-
-
-
-# Use with subset_df2 
-subset_df2$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))] %>% view()
-
-# see if this function produces a logical - TRUE/FALSE
-Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
-
-
-top_characters <- c("Aang","Sokka","Katara","Zuko","Toph","Iroh","Azula","Jet","Suki","Zhao",
-                    "Mai","Hakoda","Roku","Ty Lee","Ozai","Bumi","Yue","Hama","Warden","Long Feng")
-
-
-
-
-
 # Basic Emotion vectors
 fear_words <- toupper(c("fear", "anxiety", "concern", "despair", "dismay", "doubt", "horror", "panic", "scare", "terror", "worr", "worried", "nervously", "horrified")) 
 anger_words <- toupper(c("anger", "annoy", "annoyed", "furious", "displease", "exasperat", "indignant", "irrita", "rage", "resentment", "angrily", "angry", "angered", "irritated", "frantic"))
@@ -239,11 +205,32 @@ disgust_words <- toupper(c("disgust", "dislike"))
 
 
 
-# Near Final
+subset_df %>%
+    mutate(rating_bin = ntile(imdb_rating, 3)) %>% view()
+
+subset_df %>%
+    filter(grepl("dislike", scene_description)) %>% view()
+
+
+# Filtering Column by Membership in Character Vector ----
+
+
+# Using base R to filter a specific column
+subset_df$scene_description[Reduce(`|`, lapply(fear_words, grepl, x = subset_df$scene_description))] %>% view()
+
+
+# see if this function produces a logical - TRUE/FALSE
+Reduce(`|`, lapply(fear_words, grepl, x = subset_df2$scene_description))
+
+
+
+
+
+# Final Plots ----
     
 
-# Re-build from ground up.
-subset_df %>%
+# Main Plot
+main_plot <- subset_df %>%
     mutate(
         # convert scene_description to uppercase
         scene_description = toupper(scene_description),
@@ -267,15 +254,16 @@ subset_df %>%
     filter(basic_emotions != 'NA') %>% 
     filter(character %in% top_characters) %>%
     ggplot(aes(x = character, y = basic_emotions, fill = rating_bin)) +
-    geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf), fill = '#d9d9d9') +
+    geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf), fill = 'whitesmoke') +
     geom_tile() +
-    scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
+    #scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
+    scale_fill_manual(values = c("#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#006837")) +
     #facet_wrap(~ book) +
     theme_classic() +
     theme(
         axis.text.x = element_text(angle = 75, hjust = 1),
-        plot.background = element_rect(fill = '#d9d9d9'),
-        legend.background = element_rect(fill = '#d9d9d9')
+        plot.background = element_rect(fill = 'whitesmoke'),
+        legend.background = element_rect(fill = 'whitesmoke')
         ) +
     labs(
         fill = 'Ratings',
@@ -285,18 +273,54 @@ subset_df %>%
         subtitle = 'Relative IMDB Ratings: Lowest to Highest'
     )
 
+main_plot
 
-
-subset_df2 %>%
-    mutate(imdb_rating = as.numeric(imdb_rating)) %>%
-    summarize(
-        min_rating = min(imdb_rating, na.rm = TRUE),
-        max_rating = max(imdb_rating, na.rm = TRUE),
-        mean_rating = mean(imdb_rating, na.rm = TRUE),
-        median_rating = median(imdb_rating, na.rm = TRUE)
+# Facet Plot
+facet_plot <- subset_df %>%
+    mutate(
+        # convert scene_description to uppercase
+        scene_description = toupper(scene_description),
+        # create new column
+        basic_emotions = "NA",
+        # fill column based on condition
+        # if scene_description contains a word from fear_words, label is "fear", otherwise keep column as is
+        basic_emotions = if_else(Reduce(`|`, lapply(fear_words, grepl, x = scene_description)), "fear", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(anger_words, grepl, x = scene_description)), "anger", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(happiness_words, grepl, x = scene_description)), "happiness", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(sadness_words, grepl, x = scene_description)), "sadness", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(surprise_words, grepl, x = scene_description)), "surprise", basic_emotions),
+        basic_emotions = if_else(Reduce(`|`, lapply(disgust_words, grepl, x = scene_description)), "disgust", basic_emotions)
+    ) %>% 
+    # group imdb_ratings into three bins - low(1), medium(2), high(3)
+    mutate(
+        rating_bin = ntile(imdb_rating, 10),
+        rating_bin = as.factor(rating_bin)
+    ) %>% 
+    filter(rating_bin != 'NA') %>%
+    filter(basic_emotions != 'NA') %>% 
+    filter(character %in% top_characters) %>%
+    ggplot(aes(x = character, y = basic_emotions, fill = rating_bin)) +
+    geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf), fill = 'whitesmoke') +
+    geom_tile() +
+    #scale_fill_manual(values = c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")) +
+    scale_fill_manual(values = c("#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#006837")) +
+    facet_wrap(~ book) +
+    theme_classic() +
+    theme(
+        axis.text.x = element_text(angle = 75, hjust = 1),
+        plot.background = element_rect(fill = 'whitesmoke'),
+        legend.position = 'none'
+    ) +
+    labs(
+        x = '',
+        y = 'Emotions',
+        title = '',
+        subtitle = 'Data Split by Three Elements',
+        caption = 'author: @paulapivat | paulapivat.com'
     )
-   
 
+facet_plot
 
+library(patchwork)
 
-
+plot(main_plot / facet_plot)
