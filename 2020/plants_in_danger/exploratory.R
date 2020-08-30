@@ -57,7 +57,51 @@ actions %>%
     )
 
 
+# dataset: plants ----
+
+# How many binomial plants are in danger per each country or continent?
+plants %>%
+    select(binomial_name, country, continent) %>%
+    group_by(country) %>%
+    summarize(
+        distinct_binomial = n_distinct(binomial_name)
+    ) %>%
+    view()
+
+
+
+# dataset: threats ----
+    
+# How many extinction threat_type are associated with each plant?
+# ISSUE: Not informative - there are 500 plants in each threat_type & 12 threat_types per plant
+# need to include "threatened"
+
+threats %>%
+    select(binomial_name, threat_type, threatened) %>%
+    # only 899 out of 6000 meet this filter condition
+    filter(threatened == 1) %>%
+    group_by(binomial_name) %>%
+    summarize(
+        distinct_threat_type = n_distinct(threat_type)
+    ) 
+
+# How many binomial plants are associated with each extinction threat_type?
+threats %>%
+    select(binomial_name, threat_type, threatened) %>%
+    # only 899 out of 6000 meet this filter condition
+    filter(threatened == 1) %>%
+    group_by(threat_type) %>%
+    summarize(
+        distinct_binomial_name = n_distinct(binomial_name)
+    ) 
+
+
+
+
+
+
 # Finding unique membership of distinct binomial plants within the 6 groups (threats)
+# nested visuals
 threats %>%
     select(binomial_name, group, year_last_seen, red_list_category) %>%
     group_by(group) %>%
@@ -65,8 +109,15 @@ threats %>%
         distinct_binomial = n_distinct(binomial_name)
     )
 
-
-
+# number of plants & groups in each red_list_category 
+# nested visuals
+threats %>%
+    select(binomial_name, group, year_last_seen, red_list_category) %>%
+    group_by(red_list_category) %>%
+    summarize(
+        distinct_binomial = n_distinct(binomial_name),
+        distinct_group = n_distinct(group)
+    )
 
 
 
