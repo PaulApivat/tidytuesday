@@ -36,7 +36,34 @@ plants %>%
         distinct_red_list = n_distinct(red_list_category)
     )
 
+threats %>%
+    select(binomial_name, group, year_last_seen, red_list_category) %>%
+    group_by(binomial_name) %>%
+    summarize(
+        distinct_group = n_distinct(binomial_name)
+        #distinct_binomial = n_distinct(group),
+        #distinct_year_last = n_distinct(year_last_seen),
+        #distinct_red_list = n_distinct(red_list_category)
+    )
 
+actions %>%
+    select(binomial_name, group, year_last_seen, red_list_category) %>%
+    group_by(group) %>%
+    summarize(
+        #distinct_group = n_distinct(binomial_name),
+        distinct_binomial = n_distinct(group)
+        #distinct_year_last = n_distinct(year_last_seen),
+        #distinct_red_list = n_distinct(red_list_category)
+    )
+
+
+# Finding unique membership of distinct binomial plants within the 6 groups (threats)
+threats %>%
+    select(binomial_name, group, year_last_seen, red_list_category) %>%
+    group_by(group) %>%
+    summarize(
+        distinct_binomial = n_distinct(binomial_name)
+    )
 
 
 
