@@ -159,6 +159,19 @@ actions %>%
     ) %>%
     view()
 
+# Data Visualization ----
+
+# ggplot: geom_tile heatmap
+plants %>%
+    select(binomial_name, threat_AA:action_NA) %>%
+    pivot_longer(cols = threat_AA:action_NA, names_to = "action", values_to = "count") %>%
+    ggplot(aes(x = binomial_name, y = action, fill = count)) +
+    geom_tile() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+
+
 
 
 
