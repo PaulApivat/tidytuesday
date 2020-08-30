@@ -25,6 +25,8 @@ glimpse(threats)
 # How many distinct binomial_name?              Ans: 500
 # How many distinct year_last_seen ranges?      Ans: 8 (w/ NA)
 # How many distinct red_list_category?          Ans: 2
+# How many distinct threat_types?               Ans: 12
+# How many distinct action_types?               Ans: 6
 
 plants %>%
     select(binomial_name, group, year_last_seen, red_list_category) %>%
@@ -59,7 +61,7 @@ actions %>%
 
 # dataset: plants ----
 
-# How many binomial plants are in danger per each country or continent?
+# How many distinct binomial plants are in danger per each country or continent?
 plants %>%
     select(binomial_name, country, continent) %>%
     group_by(country) %>%
@@ -72,9 +74,14 @@ plants %>%
 
 # dataset: threats ----
     
-# How many extinction threat_type are associated with each plant?
-# ISSUE: Not informative - there are 500 plants in each threat_type & 12 threat_types per plant
-# need to include "threatened"
+# How many distinct threat_types are there?
+threats %>%
+    group_by(threat_type) %>%
+    summarize(distinct_threat_type = n_distinct(threat_type))
+
+
+# How many extinction threat_type are associated with each binomial plant?
+# Note: Not informative - there are 500 plants in each threat_type & 12 threat_types per plant; need to include "threatened"
 
 threats %>%
     select(binomial_name, threat_type, threatened) %>%
@@ -120,12 +127,37 @@ threats %>%
     )
 
 
+# dataset: actions ----
 
+# How many distinct action_types are there?
+actions %>%
+    group_by(action_type) %>%
+    summarize(distinct_action_type = n_distinct(action_type))
+    
 
+# How many action_types/action_taken are associated with each binomial plant?
 
+actions %>%
+    select(binomial_name, action_type, action_taken) %>%
+    # only 899 out of 6000 meet this filter condition
+    filter(action_taken == 1) %>%
+    group_by(binomial_name) %>%
+    summarize(
+        distinct_action_type = n_distinct(action_type)
+    ) %>%
+    view()
 
+# How many action_types/action_taken are associated with each plant group?
 
-
+actions %>%
+    select(group, action_type, action_taken) %>%
+    # only 899 out of 6000 meet this filter condition
+    filter(action_taken == 1) %>%
+    group_by(group) %>%
+    summarize(
+        distinct_action_type = n_distinct(action_type)
+    ) %>%
+    view()
 
 
 
