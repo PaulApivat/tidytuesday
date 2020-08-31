@@ -162,6 +162,8 @@ actions %>%
 # Data Visualization ----
 
 # ggplot: geom_tile heatmap
+
+# Heatmap: Threats & Action Per Binomial Plant
 plants %>%
     select(binomial_name, threat_AA:action_NA) %>%
     pivot_longer(cols = threat_AA:action_NA, names_to = "action", values_to = "count") %>%
@@ -169,7 +171,17 @@ plants %>%
     geom_tile() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+# Heatmap: Threats & Action Per Group (of Plants)
+plants %>%
+    select(binomial_name, group, threat_AA:action_NA) %>%
+    pivot_longer(cols = threat_AA:action_NA, names_to = "action", values_to = "count") %>%
+    ggplot(aes(x = group, y = action, fill = count)) +
+    geom_tile() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+
+
+# Distinct Binomial Plants by Quantile in Country/Continent
 plants %>%
     select(binomial_name, country, continent) %>%
     group_by(continent, country) %>%
