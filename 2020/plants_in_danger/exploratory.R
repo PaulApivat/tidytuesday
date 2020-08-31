@@ -170,6 +170,23 @@ plants %>%
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
+plants %>%
+    select(binomial_name, country, continent) %>%
+    group_by(continent, country) %>%
+    summarize(
+        distinct_binomial = n_distinct(binomial_name)
+    ) %>%
+    mutate(
+        distinct_binomial_bin = as.factor(ntile(distinct_binomial, 4))
+    ) %>% 
+    ggplot(aes(x = continent, y = reorder(country, distinct_binomial))) +
+    # can also add position = 'jitter'
+    geom_point(aes(color = distinct_binomial_bin, size = distinct_binomial), alpha = 0.8) +
+    labs(title = "Distinct Binomial Plants by Quantile")
+
+
+ 
+
 
 
 
