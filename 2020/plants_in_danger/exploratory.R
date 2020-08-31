@@ -198,9 +198,75 @@ plants %>%
 
 
  
+# EXAMPLE: Dendrogram from a nested dataframe ----
+# source: https://www.r-graph-gallery.com/334-basic-dendrogram-with-ggraph.html
+
+install.packages("ggraph")
+install.packages("igraph")
+library(ggraph)
+library(igraph)
+
+# create a data frame
+data <- data.frame(
+    level1="CEO",
+    level2=c( rep("boss1",4), rep("boss2",4)),
+    level3=paste0("mister_", letters[1:8])
+)
+
+data
+
+# transform it to an edge list
+edges_level1_2 <- data %>% select(level1, level2) %>% unique %>% rename(from=level1, to=level2)
+edges_level2_3 <- data %>% select(level2, level3) %>% unique %>% rename(from=level2, to=level3)
+edge_list=rbind(edges_level1_2, edges_level2_3)
+
+# plot
+mygraph <- graph_from_data_frame( edge_list )
+ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+    geom_edge_diagonal() +
+    geom_node_point() +
+    theme_void()
 
 
+# Plant Dendogram ----
 
+plants_data <- plants %>%
+    select(group, binomial_name) %>%
+    group_by(group) %>%
+    arrange(group) %>% 
+    mutate(
+        level1 = 'center',
+        level2 = group,
+        level3 = binomial_name
+    ) %>%
+    # important to ungroup here
+    ungroup() %>%
+    select(level1:level3) 
+
+plants_data
+
+# transform it to an edge list
+plants_edges_level1_2 <- plants_data %>% 
+    select(level1, level2) %>% 
+    unique %>% 
+    rename(from=level1, to=level2)
+
+plants_edges_level2_3 <- plants_data %>% 
+    select(level2, level3) %>% 
+    unique %>% 
+    rename(from=level2, to=level3)
+
+plants_edge_list=rbind(plants_edges_level1_2, plants_edges_level2_3)
+
+plants_edge_list
+
+# plot plant dendogram
+plantgraph <- graph_from_data_frame(plants_edge_list)
+
+ggraph(plantgraph, layout = "dendrogram", circular = TRUE) +
+    geom_edge_diagonal() +
+    geom_node_point() +
+    theme_void()
 
 
 
