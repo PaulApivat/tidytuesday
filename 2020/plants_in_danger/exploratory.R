@@ -269,7 +269,11 @@ ggraph(plantgraph, layout = "dendrogram", circular = TRUE) +
     theme_void()
 
 
-
+# add text & color(leaf)
+ggraph(plantgraph, layout = "dendrogram", circular = TRUE) +
+    geom_edge_diagonal() +
+    geom_node_text(aes(label = name, filter=leaf), hjust = 1, size = 1) +
+    geom_node_point()
 
 
 
