@@ -275,5 +275,8 @@ ggraph(plantgraph, layout = "dendrogram", circular = TRUE) +
     geom_node_text(aes(label = name, filter=leaf), hjust = 1, size = 1) +
     geom_node_point()
 
-
+# Flowering Plants far out number other groups
+plants %>%
+    group_by(group) %>%
+    tally(sort = TRUE)
 
