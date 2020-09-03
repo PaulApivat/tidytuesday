@@ -393,7 +393,8 @@ plants %>%
 
 # OCEANIA ----
 
-plants %>%
+# data wrangling
+oceania_threat <- plants %>%
     # select all 'known' threats (exclude: threat_NA)
     select(continent, binomial_name, threat_AA:threat_GE) %>%
     pivot_longer(cols = threat_AA:threat_GE, names_to = 'threats') %>%
@@ -408,5 +409,43 @@ plants %>%
     ) %>%
     select(level1:level3) 
 
+oceania_threat
+
+# transform it to an edge list
+oceania_level1_2 <- oceania_threat %>% 
+    select(level1, level2) %>% 
+    unique %>% 
+    rename(from=level1, to=level2)
+
+oceania_level2_3 <- oceania_threat %>% 
+    select(level2, level3) %>% 
+    unique %>% 
+    rename(from=level2, to=level3)
+
+oceania_edge_list=rbind(oceania_level1_2, oceania_level2_3)
+
+oceania_edge_list
 
 
+# plot plant dendogram
+oceania_graph <- graph_from_data_frame(oceania_edge_list)
+
+oceania_graph
+
+# ggraph
+ggraph(oceania_graph, layout = "dendrogram", circular = TRUE) +
+    #geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from, label = oceania_edge_list$from)) +
+    geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from, label = oceania_edge_list$from)) +
+    geom_node_text(aes(label = name, filter=leaf, color='red'), hjust = 1, size = 3) +
+    geom_node_point() +
+    theme(
+        plot.background = element_rect(fill = '#343d46'),
+        panel.background = element_rect(fill = '#343d46'),
+        legend.position = 'none',
+        plot.title = element_text(colour = 'orange', face = 'bold'),
+        plot.caption = element_text(color = 'orange', face = 'italic')
+    ) +
+    labs(
+        title = 'OCEANIA: Threats to Plants',
+        caption = '@paulapivat'
+    )
