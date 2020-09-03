@@ -400,7 +400,13 @@ plants %>%
     filter(value==1) %>%
     select(continent, threats, binomial_name) %>%
     filter(continent=='Oceania') %>%
-    arrange(threats)
+    arrange(threats) %>%
+    mutate(
+        level1 = continent,
+        level2 = threats,
+        level3 = binomial_name
+    ) %>%
+    select(level1:level3) 
 
 
 
