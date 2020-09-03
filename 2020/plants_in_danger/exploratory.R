@@ -271,12 +271,136 @@ ggraph(plantgraph, layout = "dendrogram", circular = TRUE) +
 
 # add text & color(leaf)
 ggraph(plantgraph, layout = "dendrogram", circular = TRUE) +
-    geom_edge_diagonal() +
-    geom_node_text(aes(label = name, filter=leaf), hjust = 1, size = 1) +
-    geom_node_point()
+    geom_edge_diagonal(edge_colour = 'orange') +
+    geom_node_text(aes(label = name, filter=leaf, color="red"), hjust = 1, size = 3) +
+    geom_node_point() +
+    theme(
+        plot.background = element_rect(fill = '#343d46'),
+        panel.background = element_rect(fill = '#343d46'),
+        legend.position = 'none',
+        plot.title = element_text(colour = 'orange'),
+        plot.caption = element_text(color = 'orange')
+    ) +
+    labs(
+        title = 'Fire Gray',
+        caption = '@paulapivat'
+    )
+
+?geom_node_text
+?geom_edge_diagonal
 
 # Flowering Plants far out number other groups
 plants %>%
     group_by(group) %>%
     tally(sort = TRUE)
+
+# Dendogram: Flowering Plant (only) by Threats
+
+threats %>%
+    select(group, threat_type) %>%
+    filter(group=='Flowering Plant') %>%
+    group_by(threat_type) %>%
+    tally(sort = TRUE)
+    
+
+# Dendogram: Flowering Plants by Continents + Binomial name ----
+
+# 6 distinct continents and 6 groups
+plants %>%
+    summarize(
+        distinct_continents = n_distinct(continent),
+        distinct_groups = n_distinct(group)
+        )
+
+
+# plant continent
+plants_per_continent <- plants %>%
+    select(continent, binomial_name, group) %>%
+    filter(group=='Flowering Plant') %>%
+    arrange(continent) %>% 
+    select(continent, binomial_name) %>%
+    mutate(
+        level1 = 'center',
+        level2 = continent,
+        level3 = binomial_name
+    ) %>%
+    select(level1:level3) 
+
+plants_per_continent
+
+
+# transform it to an edge list
+ppc_edges_level1_2 <- plants_per_continent %>% 
+    select(level1, level2) %>% 
+    unique %>% 
+    rename(from=level1, to=level2)
+
+ppc_edges_level2_3 <- plants_per_continent %>% 
+    select(level2, level3) %>% 
+    unique %>% 
+    rename(from=level2, to=level3)
+
+ppc_edge_list=rbind(ppc_edges_level1_2, ppc_edges_level2_3)
+
+ppc_edge_list
+
+# plot plant dendogram
+ppc_graph <- graph_from_data_frame(ppc_edge_list)
+
+ppc_graph
+
+# Distinct Continent Names
+plants %>%
+    group_by(continent) %>%
+    tally(sort = TRUE)
+
+
+
+# ggraph
+ggraph(ppc_graph, layout = "dendrogram", circular = TRUE) +
+    geom_edge_diagonal(aes(edge_colour = ppc_edge_list$from)) +
+    geom_node_text(aes(label = name, filter=leaf, color="red"), hjust = 1, size = 3) +
+    geom_node_point() +
+    theme(
+        plot.background = element_rect(fill = '#343d46'),
+        panel.background = element_rect(fill = '#343d46'),
+        legend.position = 'none',
+        plot.title = element_text(colour = 'orange', face = 'bold'),
+        plot.caption = element_text(color = 'orange', face = 'italic')
+    ) +
+    labs(
+        title = 'Disco Fire',
+        caption = '@paulapivat'
+    )
+
+?element_text
+
+## Dendrogram Individual Continent x Plants x Threat Type ----
+
+# distinct threat
+threats %>%
+    group_by(threat_type) %>%
+    tally(sort = TRUE)
+
+
+plants %>%
+    # select all 'known' threats (exclude: threat_NA)
+    select(continent, binomial_name, threat_AA:threat_GE) %>%
+    pivot_longer(cols = threat_AA:threat_GE, names_to = 'threats') %>%
+    filter(value==1) %>%
+    select(threats, binomial_name, continent) 
+    
+
+# OCEANIA ----
+
+plants %>%
+    # select all 'known' threats (exclude: threat_NA)
+    select(continent, binomial_name, threat_AA:threat_GE) %>%
+    pivot_longer(cols = threat_AA:threat_GE, names_to = 'threats') %>%
+    filter(value==1) %>%
+    select(continent, threats, binomial_name) %>%
+    filter(continent=='Oceania') %>%
+    arrange(threats)
+
+
 
