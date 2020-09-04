@@ -433,10 +433,10 @@ oceania_graph <- graph_from_data_frame(oceania_edge_list)
 oceania_graph
 
 # ggraph
-ggraph(oceania_graph, layout = "dendrogram", circular = TRUE) +
-    #geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from, label = oceania_edge_list$from)) +
-    geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from, label = oceania_edge_list$from)) +
-    geom_node_text(aes(label = name, filter=leaf, color='red'), hjust = 1, size = 3) +
+ggraph(oceania_graph, layout = "dendrogram", circular = FALSE) +
+    #geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from)) +
+    geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from, label = oceania_edge_list$from, angle = 45)) +
+    geom_node_text(aes(label = name, filter=leaf, color='red'), hjust = 1.1, size = 3) +
     geom_node_point() +
     theme(
         plot.background = element_rect(fill = '#343d46'),
@@ -448,4 +448,34 @@ ggraph(oceania_graph, layout = "dendrogram", circular = TRUE) +
     labs(
         title = 'OCEANIA: Threats to Plants',
         caption = '@paulapivat'
-    )
+    ) +
+    expand_limits(x = c(-1.1, 1.1), y = c(-0.5, 0.5)) +
+    coord_flip() +
+    annotate("text", x = 4, y = 1, label = "Agriculture & Aquaculture", color = 'orange') +
+    annotate("text", x = 13, y = 1, label = "Biological Resource Use", color = "yellow") +
+    annotate("text", x = 18, y = 1, label = "Climate Change", color = "light green") +
+    annotate("text", x = 23, y = 1, label = "Energy Production & Mining", color = "green") +
+    annotate("text", x = 27, y = 1, label = "Geological Events", color = "white") +
+    annotate("text", x = 30, y = 1, label = "Human Intrusion", color = "white") +
+    annotate("text", x = 33, y = 1, label = "Invasive Species", color = "white") +
+    annotate("text", x = 41, y = 1, label = "Natural System Modification", color = "white") +
+    annotate("text", x = 47, y = 1, label = "Polution", color = "white") +
+    annotate("text", x = 50, y = 1, label = "Commercial Development", color = "white") +
+    annotate("text", x = 54, y = 1, label = "Transportation Cooridor", color = "white") +
+    annotate("text", x = 29, y = 2, label = "Oceania", color = "white")
+
+threats %>%
+    filter(continent=='Oceania') %>%
+    group_by(threat_type) %>%
+    tally(sort = TRUE)
+
+?scale_fill_hue
+
+# Extract Default
+
+
+
+
+
+
+
