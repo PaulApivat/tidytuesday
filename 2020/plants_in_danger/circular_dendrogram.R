@@ -15,7 +15,7 @@ vertices = data.frame(
     value = runif(111)
 ) 
 
-?runif
+
 
 # Let's add a column with the group of each name. It will be useful later to color points
 vertices$group = edges$from[ match( vertices$name, edges$to ) ]
@@ -27,14 +27,14 @@ vertices$id=NA
 myleaves=which(is.na( match(vertices$name, edges$from) ))
 nleaves=length(myleaves)
 vertices$id[ myleaves ] = seq(1:nleaves)
-vertices$angle= 90 - 360 * vertices$id / nleaves
+vertices$angle = ((90 - 360) * (vertices$id / nleaves))
 
 # calculate the alignment of labels: right or left
 # If I am on the left part of the plot, my labels have currently an angle < -90
-vertices$hjust<-ifelse( vertices$angle < -90, 1, 0)
+vertices$hjust <- ifelse( vertices$angle < -90, 1, 0)
 
 # flip angle BY to make them readable
-vertices$angle <- ifelse(vertices$angle < -90, (vertices$angle +45), vertices$angle)
+vertices$angle <- ifelse(vertices$angle < -90, (vertices$angle + 180), vertices$angle)
 
 # Create a graph object
 mygraph <- graph_from_data_frame( edges, vertices=vertices )
