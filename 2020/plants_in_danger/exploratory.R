@@ -550,16 +550,16 @@ ggraph(asia_graph, layout = "dendrogram", circular = FALSE) +
     ) +
     expand_limits(x = c(-1.1, 1.1), y = c(-0.5, 0.5)) +
     coord_flip() +
-    annotate("text", x = 4, y = 1, label = "Agriculture & Aquaculture", color = '#DE8C00') +
-    annotate("text", x = 13, y = 1, label = "Biological Resource Use", color = "#B79F00") +
-    annotate("text", x = 18, y = 1, label = "Climate Change", color = "#7CAE00") +
-    annotate("text", x = 23, y = 1, label = "Energy Production & Mining", color = "#00BA38") +
-    annotate("text", x = 27, y = 1, label = "Geological Events", color = "#00C08B") +
-    annotate("text", x = 30, y = 1, label = "Human Intrusion", color = "#00BFC4") +
-    annotate("text", x = 33, y = 1, label = "Invasive Species", color = "#00B4F0") +
-    annotate("text", x = 41, y = 1, label = "Natural System Modification", color = "#619CFF") +
-    annotate("text", x = 47, y = 1, label = "Polution", color = "#C77CFF") +
-    annotate("text", x = 50, y = 1, label = "Commercial Development", color = "#F564E3") +
-    annotate("text", x = 54, y = 1, label = "Transportation Cooridor", color = "#FF64B0") +
-    annotate("text", x = 29, y = 2, label = "Oceania", color = "#F8766D")
+    annotate("text", x = 12, y = 1, label = "Agriculture & Aquaculture", color = '#DE8C00') +
+    annotate("text", x = 34, y = 1, label = "Biological Resource Use", color = "#B79F00") +
+    annotate("text", x = 45, y = 1, label = "Climate Change", color = "#7CAE00") +
+    annotate("text", x = 51, y = 1, label = "Energy Production & Mining", color = "#00BA38") +
+    annotate("text", x = 55, y = 1, label = "Geological Events", color = "#00C08B") +
+    annotate("text", x = 57, y = 1, label = "Human Intrusion", color = "#00BFC4") +
+    annotate("text", x = 61, y = 1, label = "Invasive Species", color = "#00B4F0") +
+    annotate("text", x = 65, y = 1, label = "Natural System Modification", color = "#619CFF") +
+    annotate("text", x = 70, y = 1, label = "Polution", color = "#C77CFF") +
+    annotate("text", x = 80, y = 1, label = "Commercial Development", color = "#F564E3") +
+    annotate("text", x = 88, y = 1, label = "Transportation Cooridor", color = "#FF64B0") +
+    annotate("text", x = 48, y = 2, label = "Asia", color = "#F8766D")
 
