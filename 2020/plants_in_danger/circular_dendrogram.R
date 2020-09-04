@@ -15,6 +15,8 @@ vertices = data.frame(
     value = runif(111)
 ) 
 
+?runif
+
 # Let's add a column with the group of each name. It will be useful later to color points
 vertices$group = edges$from[ match( vertices$name, edges$to ) ]
 
