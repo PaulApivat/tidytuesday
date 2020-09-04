@@ -27,11 +27,13 @@ vertices$id=NA
 myleaves=which(is.na( match(vertices$name, edges$from) ))
 nleaves=length(myleaves)
 vertices$id[ myleaves ] = seq(1:nleaves)
-vertices$angle = ((90 - 360) * (vertices$id / nleaves))
+vertices$angle = 90 - 360 * (vertices$id - 0.5) / nleaves
 
 # calculate the alignment of labels: right or left
 # If I am on the left part of the plot, my labels have currently an angle < -90
 vertices$hjust <- ifelse( vertices$angle < -90, 1, 0)
+
+
 
 # flip angle BY to make them readable
 vertices$angle <- ifelse(vertices$angle < -90, (vertices$angle + 180), vertices$angle)
