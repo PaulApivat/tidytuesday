@@ -563,3 +563,84 @@ ggraph(asia_graph, layout = "dendrogram", circular = FALSE) +
     annotate("text", x = 88, y = 1, label = "Transportation Cooridor", color = "#FF64B0") +
     annotate("text", x = 48, y = 2, label = "Asia", color = "#F8766D")
 
+# NORTH AMERICA ----
+
+# data wrangling
+namerica_threat <- plants %>%
+    # select all 'known' threats (exclude: threat_NA)
+    select(continent, binomial_name, threat_AA:threat_GE) %>%
+    pivot_longer(cols = threat_AA:threat_GE, names_to = 'threats') %>%
+    filter(value==1) %>%
+    select(continent, threats, binomial_name) %>%
+    filter(continent=='North America') %>%
+    arrange(threats) %>%
+    mutate(
+        level1 = continent,
+        level2 = threats,
+        level3 = binomial_name
+    ) %>%
+    select(level1:level3) 
+
+# transform it to an edge list
+namerica_level1_2 <- namerica_threat %>% 
+    select(level1, level2) %>% 
+    unique %>% 
+    rename(from=level1, to=level2)
+
+namerica_level2_3 <- namerica_threat %>% 
+    select(level2, level3) %>% 
+    unique %>% 
+    rename(from=level2, to=level3)
+
+namerica_edge_list=rbind(namerica_level1_2, namerica_level2_3)
+
+namerica_edge_list
+
+# create graph_from_data_frame
+namerica_graph <- graph_from_data_frame(namerica_edge_list)
+
+namerica_graph
+
+# plot Asia ggraph
+
+ggraph(namerica_graph, layout = "dendrogram", circular = FALSE) +
+    geom_edge_diagonal(aes(edge_colour = namerica_edge_list$from)) +
+    #geom_edge_diagonal(aes(edge_colour = oceania_edge_list$from, label = oceania_edge_list$from, angle = 45)) +
+    geom_node_text(aes(label = name, filter=leaf, color='red'), hjust = 1.1, size = 2.2) +
+    geom_node_point(color = 'whitesmoke') +
+    theme(
+        plot.background = element_rect(fill = '#343d46'),
+        panel.background = element_rect(fill = '#343d46'),
+        legend.position = 'none',
+        plot.title = element_text(colour = 'whitesmoke', face = 'bold'),
+        plot.subtitle = element_text(colour = 'whitesmoke'),
+        plot.caption = element_text(color = 'whitesmoke', face = 'italic')
+    ) +
+    labs(
+        title = 'NORTH AMERICA',
+        subtitle = 'Contributors to Plant Extinction',
+        caption = '@paulapivat'
+    ) +
+    expand_limits(x = c(-1.5, 1.5), y = c(-0.5, 0.5)) +
+    coord_flip() +
+    annotate("text", x = 11, y = 1, label = "Agriculture & Aquaculture", color = '#DE8C00') +
+    annotate("text", x = 23, y = 1, label = "Biological Resource Use", color = "#B79F00") +
+    annotate("text", x = 38, y = 1, label = "Climate Change", color = "#7CAE00") +
+    #annotate("text", x = 51, y = 1, label = "Energy Production & Mining", color = "#00BA38") +
+    annotate("text", x = 53, y = 1, label = "Geological Events", color = "#00C08B") +
+    annotate("text", x = 60, y = 1, label = "Human Intrusion", color = "#00BFC4") +
+    annotate("text", x = 86, y = 1, label = "Invasive Species", color = "#00B4F0") +
+    annotate("text", x = 119, y = 1, label = "Natural System Modification", color = "#619CFF") +
+    annotate("text", x = 127, y = 1, label = "Polution", color = "#C77CFF") +
+    annotate("text", x = 134, y = 1, label = "Commercial Development", color = "#F564E3") +
+    annotate("text", x = 141, y = 1, label = "Transportation Cooridor", color = "#FF64B0") +
+    annotate("text", x = 68, y = 2, label = "N. America", color = "#F8766D")
+
+
+
+
+
+
+
+
+
