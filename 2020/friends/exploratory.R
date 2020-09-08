@@ -40,6 +40,29 @@ friends_info %>%
     geom_hline(yintercept = 8.46, color = 'red')
 
 
+# Is there a relationship between Views & Ratings?
+friends_info %>%
+    select(air_date, us_views_millions, imdb_rating) %>%
+    ggplot(aes(x = us_views_millions, y = imdb_rating)) +
+    geom_point() +
+    geom_smooth(method = 'lm')
+
+# Which season/episode contains the outlier in terms of Views?
+# Season 2 in 1996
+friends_info %>%
+    select(season, episode, us_views_millions) %>%
+    mutate(
+        season_fct = as.factor(season)
+    ) %>%
+    group_by(season_fct) %>%
+    ggplot(aes(x = season_fct, y = us_views_millions, color = episode)) +
+    geom_boxplot() +
+    scale_fill_viridis_d() +
+    geom_jitter()
+
+
+
+
 
 
 
