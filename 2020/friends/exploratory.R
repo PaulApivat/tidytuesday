@@ -16,7 +16,7 @@ glimpse(friends)
 glimpse(friends_emotions)
 glimpse(friends_info)
 
-# Exploratory Viz ----
+# Exploratoring friends_info ----
 
 # Explore user views across all season, including average views
 friends_info %>%
@@ -81,4 +81,20 @@ friends_info %>%
     view()
 
 
+# Exploratoring friends_emotion ----
+
+friends_emotions %>%
+    group_by(emotion) %>%
+    tally(sort = TRUE)
+
+# Exploratoring friends ----
+
+friends %>%
+    group_by(speaker) %>%
+    tally(sort = TRUE) %>% view()
+    
+    
+    
+    
+    
 
