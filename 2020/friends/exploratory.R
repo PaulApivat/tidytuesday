@@ -60,7 +60,16 @@ friends_info %>%
     scale_fill_viridis_d() +
     geom_jitter()
 
-
+# Let's filter for season 2 to see which episode was the outlier?
+# Season 2, Episode 12, 13
+friends_info %>%
+    select(season, episode, us_views_millions) %>%
+    filter(season==2) %>%
+    mutate(
+        episode_fct = as.factor(episode)
+    ) %>%
+    ggplot(aes(x = episode_fct, y = us_views_millions)) +
+    geom_point()
 
 
 
