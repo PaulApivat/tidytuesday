@@ -3,20 +3,20 @@
 #Running under: macOS Catalina 10.15.5
 sessionInfo()
 
-# Library
+# Library ----
 library(tidyverse)
 
-# Read data directly
+# Read data directly ----
 friends <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv')
 friends_emotions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_emotions.csv')
 friends_info <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_info.csv')
 
-# Exploratory
+# Exploratory ----
 glimpse(friends)
 glimpse(friends_emotions)
 glimpse(friends_info)
 
-# Exploratory Viz
+# Exploratory Viz ----
 
 # Explore user views across all season, including average views
 friends_info %>%
@@ -72,7 +72,13 @@ friends_info %>%
     geom_point()
 
 
-
+# filter for all episode above 50 million views
+# note: 
+friends_info %>%
+    select(season, episode, us_views_millions) %>%
+    # filter for 50 million or 30 million
+    filter(us_views_millions > 30) %>%
+    view()
 
 
 
