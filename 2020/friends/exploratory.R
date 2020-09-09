@@ -29,6 +29,24 @@ friends_info %>%
     geom_hline(yintercept = 25.4, color = 'red')
 
 
+# If 25.4 is the average, what's the standard deviation?
+friends_info %>%
+    select(air_date, us_views_millions, imdb_rating) %>%
+    mutate(
+        average_views = mean(us_views_millions),
+        one_sd_views = sd(us_views_millions),
+        two_sd_views = one_sd_views * 2,
+        three_sd_views = one_sd_views * 3
+    ) %>%
+    ggplot(aes(x = air_date, y = us_views_millions)) + 
+    geom_line() +
+    geom_hline(yintercept = 25.4, color = 'green') +
+    geom_hline(yintercept = 25.4+10.5, color = 'orange') +
+    geom_hline(yintercept = 25.4+5.23, color = 'yellow') +
+    geom_hline(yintercept = 25.4-5.23, color = 'yellow') +
+    geom_hline(yintercept = 25.4+15.7, color = 'red')
+
+
 # Explore imdb ratings across all seasons
 friends_info %>%
     select(air_date, us_views_millions, imdb_rating) %>%
