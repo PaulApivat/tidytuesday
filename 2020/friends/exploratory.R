@@ -5,6 +5,7 @@ sessionInfo()
 
 # Library ----
 library(tidyverse)
+library(zoo) # calculate moving range
 
 # Read data directly ----
 friends <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv')
@@ -29,7 +30,7 @@ friends_info %>%
     geom_hline(yintercept = 25.4, color = 'red')
 
 
-# If 25.4 is the average, what's the standard deviation?
+# If 25.4 is the average, what's the standard deviation(s)?
 friends_info %>%
     select(air_date, us_views_millions, imdb_rating) %>%
     mutate(
@@ -45,6 +46,40 @@ friends_info %>%
     geom_hline(yintercept = 25.4+5.23, color = 'yellow') +
     geom_hline(yintercept = 25.4-5.23, color = 'yellow') +
     geom_hline(yintercept = 25.4+15.7, color = 'red')
+
+
+# What's the Business Process Chart for this?
+library(zoo)
+
+friends_info %>%
+    select(air_date, us_views_millions, imdb_rating) %>%
+    mutate(
+        average_views = mean(us_views_millions),
+        # calculate lagging difference
+        moving_range = diff(as.zoo(us_views_millions), na.pad=TRUE),
+        # get absolute value of lagging difference
+        moving_range = abs(moving_range),
+        # Change NA to 0
+        moving_range = ifelse(row_number()==1, 0, moving_range),
+        avg_moving_range = mean(moving_range),
+        lnpl = average_views - (2.66*avg_moving_range),
+        lower_25 = average_views - (1.33*avg_moving_range),
+        upper_25 = average_views + (1.33*avg_moving_range),
+        unpl = average_views + (2.66*avg_moving_range)
+    ) %>%
+    ggplot(aes(x = air_date, y = us_views_millions)) + 
+    geom_line() +
+    geom_hline(yintercept = 25.4, color = 'green') +
+    geom_hline(yintercept = 30.9, color = 'red') +
+    geom_hline(yintercept = 19.9, color = 'red') +
+    geom_hline(yintercept = 28.1, color = 'orange') +
+    geom_hline(yintercept = 22.6, color = 'orange')
+
+
+
+
+
+
 
 
 # Explore imdb ratings across all seasons
