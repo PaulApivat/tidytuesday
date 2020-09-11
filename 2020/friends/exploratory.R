@@ -237,37 +237,12 @@ friends_segview_emo %>%
     tally(sort = TRUE)
 
 
-# A tibble: 8 x 2
-emotion      n
-<chr>    <int>
-1 Neutral    205
-2 Joyful      99
-3 Mad         60
-4 Scared      46
-5 Sad         26
-6 Powerful    25
-7 Peaceful    15
-8 NA          15
-
-
 # Lower 25(%), group by Emotions
 friends_segview_emo %>%
     filter(spc=='lower25') %>%
     group_by(emotion) %>%
     tally(sort = TRUE)
 
-
-# A tibble: 8 x 2
-emotion      n
-<chr>    <int>
-1 Neutral    269
-2 Joyful     181
-3 Scared     107
-4 Mad         94
-5 Powerful    90
-6 Peaceful    88
-7 Sad         65
-8 NA          40
 
 # Upper 25(%), group by Emotions
 friends_segview_emo %>%
@@ -276,37 +251,13 @@ friends_segview_emo %>%
     tally(sort = TRUE)
 
 
-# A tibble: 8 x 2
-emotion      n
-<chr>    <int>
-1 Neutral    968
-2 Joyful     567
-3 Scared     367
-4 Mad        311
-5 Peaceful   261
-6 Powerful   211
-7 Sad        195
-8 NA          11
-
-
-
 # Upper Natural Process Limit, group by Emotions
 friends_segview_emo %>%
     filter(spc=='unpl') %>%
     group_by(emotion) %>%
     tally(sort = TRUE)
 
-# A tibble: 8 x 2
-emotion      n
-<chr>    <int>
-1 Neutral    513
-2 Joyful     379
-3 Scared     272
-4 Peaceful   190
-5 Mad        187
-6 Powerful   149
-7 Sad        109
-8 NA           7
+
 
 # Total Rows by each SPC Segment ----
 # Counting Rows by SPC segment
@@ -335,25 +286,58 @@ friends_segview_emo %>%
 friends_segview_emo %>%
     summarise_all(~ sum(is.na(.)))
 
-# Visualize Views & Emotion by SPC facets
+# Visualize Views & Emotion by SPC facets ----
 friends_segview_emo %>%
     ggplot(aes(x = emotion)) +
     geom_histogram(stat = 'count') +
     facet_wrap(~ spc)
 
 
-# Join Views & Speaker ----
+# Join Ratings & Speaker ----
 
 # Join friends_segmented_views with friends (speaker)
 # filter by various segment
-# group_by emotions
+# group_by speaker
 
 friends %>%
     group_by(speaker) %>%
     tally(sort = TRUE)
 
 
-friends_segmented_views %>%
-    left_join(friends, by = c('season', 'episode')) 
+friends_segrate_speaker <- friends_segmented_ratings %>%
+    left_join(friends, by = c('season', 'episode')) %>%
+    select(season, episode, imdb_rating, spc, speaker)
 
+# Visualize Rating & Speaker ----
+friends_segrate_speaker %>%
+    filter(speaker %in% c('	Monica Geller', 'Chandler Bing', 'Joey Tribbiani', 'Ross Geller', 'Rachel Green', 'Phoebe Buffay')) %>%
+    filter(spc != 'AVG') %>%
+    ggplot(aes(x = speaker)) +
+    geom_histogram(stat = 'count') +
+    facet_wrap(~ spc)
+
+# JOIN Emotion & Speaker ----
+
+friends %>%
+    left_join(friends_emotions, by = c('season', 'episode', 'scene', 'utterance')) %>%
+    view()
+
+
+# join, then visualize emotions by speaker
+friends %>%
+    left_join(friends_emotions, by = c('season', 'episode', 'scene', 'utterance')) %>%
+    filter(!is.na(emotion)) %>%
+    filter(speaker %in% c('Monica Geller', 'Chandler Bing', 'Joey Tribbiani', 'Ross Geller', 'Rachel Green', 'Phoebe Buffay')) %>%
+    ggplot(aes(x = speaker)) +
+    geom_histogram(stat = 'count') +
+    facet_wrap(~ emotion, scales = 'free_y')
+
+# join, then visualize speaker by emotion
+friends %>%
+    left_join(friends_emotions, by = c('season', 'episode', 'scene', 'utterance')) %>%
+    filter(!is.na(emotion)) %>%
+    filter(speaker %in% c('Monica Geller', 'Chandler Bing', 'Joey Tribbiani', 'Ross Geller', 'Rachel Green', 'Phoebe Buffay')) %>%
+    ggplot(aes(x = emotion)) +
+    geom_histogram(stat = 'count') +
+    facet_wrap(~ speaker)
 
