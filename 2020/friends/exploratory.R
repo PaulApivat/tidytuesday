@@ -125,7 +125,7 @@ friends_info %>%
         unpl = average_rating + (2.66*avg_moving_range)
     ) %>%
     ggplot(aes(x = air_date, y = imdb_rating)) + 
-    geom_line() +
+    geom_point() +
     geom_hline(yintercept = 8.46, color = 'green') +
     geom_hline(yintercept = 9.47, color = 'red') +
     geom_hline(yintercept = 7.45, color = 'red') +
@@ -340,4 +340,23 @@ friends %>%
     ggplot(aes(x = emotion)) +
     geom_histogram(stat = 'count') +
     facet_wrap(~ speaker)
+
+
+# Filter ----
+
+# for Upper25 Rating
+friends_segmented_ratings %>%
+    filter(spc %in% c('upper25', 'unpl')) %>% 
+    group_by(season, episode) %>%
+    tally(sort = TRUE) %>% view()
+
+
+# for Lower25 Rating
+friends_segmented_ratings %>%
+    filter(spc %in% c('lower25', 'lnpl')) %>% 
+    group_by(season, episode) %>%
+    tally(sort = TRUE) %>% view()
+
+
+
 
