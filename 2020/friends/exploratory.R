@@ -398,11 +398,46 @@ friends_emo_tree <- total_data %>%
 
 treemap(friends_emo_tree, index = c('speaker', 'emotion'), vSize = 'n', 
         type = 'index',
-        palette = 'Set1'
+        palette = 'Set3'
         )
 
+# TREEMAPIFY ----
+install.packages('treemapify')
+library(treemapify)
+
+ggplot(friends_emo_tree, aes(area = n, fill = n, label = emotion, subgroup = speaker)) +
+    geom_treemap() +
+    geom_treemap_text(fontface = 'italic', color = 'white', place = 'centre', grow = TRUE)
+
+# predominantly dodgerblue
+ggplot(friends_emo_tree, aes(area = n, fill = n, label = speaker, subgroup = emotion)) +
+    geom_treemap(aes(alpha = n), fill = 'dodgerblue') +
+    geom_treemap_subgroup_border(color = 'white') +
+    geom_treemap_subgroup_text(place = 'bottom', grow = T, alpha = 0.5, color = 'black',
+                               fontface = 'italic', min.size = 0) +
+    geom_treemap_text(color = 'white', place = 'centre', reflow = T, alpha = 0.5)
 
 
+# color by emotion
+ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
+    geom_treemap(aes(fill = emotion, alpha = n)) +
+    geom_treemap_subgroup_border(color = 'white') +
+    geom_treemap_subgroup_text(place = 'bottom', grow = T, alpha = 0.3, color = 'black',
+                                min.size = 0) +
+    geom_treemap_text(color = 'white', fontface = 'italic', place = 'centre', reflow = T) +
+    scale_fill_manual(values = c('#FF4238', '#FFDC00', '#42A2D6', '#9A0006', '#FFF580', '#00009E')) +
+    theme(legend.position = 'none') +
+    labs(
+        title = 'Dominant emotions associated with each Friend'
+    )
+
+# HEATMAP ----
+ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
+    geom_tile() +
+    #scale_fill_distiller(palette = 'RdPu') +
+    #scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
+    scale_fill_viridis_b() +
+    theme_classic()
 
 
 
