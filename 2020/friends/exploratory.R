@@ -180,13 +180,18 @@ friends_segmented_views
 # filter by various segment
 # group_by emotions
 
-# Lower Natural Process Limit, group by Emotions
-friends_segmented_views %>%
+friends_segview_emo <- friends_segmented_views %>%
     left_join(friends_emotions, by = c('season', 'episode')) %>%
-    select(season, episode, us_views_millions, spc, emotion) %>%
+    select(season, episode, us_views_millions, spc, emotion)
+
+
+
+# Lower Natural Process Limit, group by Emotions
+friends_segview_emo %>%
     filter(spc=='lnpl') %>%
     group_by(emotion) %>%
     tally(sort = TRUE)
+
 
 # A tibble: 8 x 2
 emotion      n
@@ -202,9 +207,7 @@ emotion      n
 
 
 # Lower 25(%), group by Emotions
-friends_segmented_views %>%
-    left_join(friends_emotions, by = c('season', 'episode')) %>%
-    select(season, episode, us_views_millions, spc, emotion) %>%
+friends_segview_emo %>%
     filter(spc=='lower25') %>%
     group_by(emotion) %>%
     tally(sort = TRUE)
@@ -223,9 +226,7 @@ emotion      n
 8 NA          40
 
 # Upper 25(%), group by Emotions
-friends_segmented_views %>%
-    left_join(friends_emotions, by = c('season', 'episode')) %>%
-    select(season, episode, us_views_millions, spc, emotion) %>%
+friends_segview_emo %>%
     filter(spc=='upper25') %>%
     group_by(emotion) %>%
     tally(sort = TRUE)
@@ -246,9 +247,7 @@ emotion      n
 
 
 # Upper Natural Process Limit, group by Emotions
-friends_segmented_views %>%
-    left_join(friends_emotions, by = c('season', 'episode')) %>%
-    select(season, episode, us_views_millions, spc, emotion) %>%
+friends_segview_emo %>%
     filter(spc=='unpl') %>%
     group_by(emotion) %>%
     tally(sort = TRUE)
@@ -266,7 +265,7 @@ emotion      n
 8 NA           7
 
 
-#
+
 
 
 
