@@ -73,13 +73,28 @@ friends_info %>%
     geom_hline(yintercept = 30.9, color = 'red') +
     geom_hline(yintercept = 19.9, color = 'red') +
     geom_hline(yintercept = 28.1, color = 'orange') +
-    geom_hline(yintercept = 22.6, color = 'orange')
+    geom_hline(yintercept = 22.6, color = 'orange') 
 
 
+# Filter for all episodes where us_views_million > 30.9
+# n = 20
+friends_info %>%
+    filter(us_views_millions >= 30.9)
 
+# Fitler for all episodes where us_views_million < 19.9
+# n = 19
+friends_info %>%
+    filter(us_views_millions < 19.9)
 
+# Filter for all episodes in upper 25% in us_views_millions
+# n = 56 rows
+friends_info %>%
+    filter(us_views_millions >= 28.1)
 
-
+# Filter for all episodes in lower 25% in us_views_millions
+# n = 68 rows
+friends_info %>%
+    filter(us_views_millions <= 22.6)
 
 
 # Explore imdb ratings across all seasons
@@ -147,7 +162,19 @@ friends %>%
     tally(sort = TRUE) %>% view()
     
     
-    
-    
-    
+# Wrangling friends_info ----
+
+# Create Column Binning for lower 25, lower natural process limit (lnpl), upper 25 and upper natural process limit (unpl)
+friends_segmented_views <- friends_info %>%
+    select(season, episode, us_views_millions) %>%
+    mutate(
+        spc = ifelse(us_views_millions > 30.9, 'unpl', 
+                     ifelse(us_views_millions < 19.9, 'lnpl',
+                            ifelse(us_views_millions > 28.1 & us_views_millions <= 30.9, 'upper25',
+                                   ifelse(us_views_millions < 22.6 & us_views_millions >= 19.9, 'lower25', 'AVG'))))
+    ) 
+
+friends_segmented_views
+
+
 
