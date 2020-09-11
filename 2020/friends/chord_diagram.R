@@ -36,3 +36,24 @@ library(circlize)
 # Make the circular plot
 chordDiagram(adjacencyData, transparency = 0.5)
 
+# 2D Density Plot ----
+library(tidyverse)
+
+# Data
+a <- data.frame( x=rnorm(20000, 10, 1.9), y=rnorm(20000, 10, 1.2) )
+b <- data.frame( x=rnorm(20000, 14.5, 1.9), y=rnorm(20000, 14.5, 1.9) )
+c <- data.frame( x=rnorm(20000, 9.5, 1.9), y=rnorm(20000, 15.5, 1.9) )
+data3 <- rbind(a,b,c)
+
+# Basic scatterplot
+ggplot(data = data3, mapping = aes(x=x, y=y)) +
+    geom_point()
+
+# 2D Histogram with default option
+ggplot(data3, aes(x=x, y=y)) +
+    geom_bin2d()
+
+# Bin size control + viridis color
+ggplot(data3, aes(x=x, y=y)) +
+    geom_bin2d(bins = 70) +
+    scale_fill_continuous(type = 'viridis')
