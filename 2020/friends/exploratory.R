@@ -316,11 +316,11 @@ friends_segrate_speaker %>%
     geom_histogram(stat = 'count') +
     facet_wrap(~ spc)
 
-# JOIN Emotion & Speaker ----
+# JOIN ALL DATA ----
 
-friends %>%
+total_data <- friends %>%
     left_join(friends_emotions, by = c('season', 'episode', 'scene', 'utterance')) %>%
-    view()
+    left_join(friends_info, by = c('season', 'episode')) 
 
 
 # join, then visualize emotions by speaker
