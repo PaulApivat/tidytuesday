@@ -335,6 +335,14 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
     geom_hline(yintercept = 8.97, color = 'orange') 
     
 
+# Filter total_data for highest views and ratings
+total_data %>% 
+    filter(us_views_millions >= 28.1) %>%
+    filter(imdb_rating >= 8.97) %>%
+    group_by(season, episode) %>%
+    tally(sort = TRUE)
+
+
 
 
 # join, then visualize emotions by speaker
@@ -370,6 +378,33 @@ friends_segmented_ratings %>%
     filter(spc %in% c('lower25', 'lnpl')) %>% 
     group_by(season, episode) %>%
     tally(sort = TRUE) %>% view()
+
+# TREEMAP ----
+install.packages('treemap')
+library(treemap)
+
+friends_emo_tree <- total_data %>%
+    select(speaker, emotion) %>%
+    # filter out 'NA' emotions
+    filter(!is.na(emotion)) %>%
+    # filter out 'Neutral' emotions
+    filter(emotion != 'Neutral') %>%
+    # filter out all characters except the main
+    filter(speaker %in% c('Monica Geller', 'Chandler Bing', 'Joey Tribbiani', 'Ross Geller', 'Rachel Green', 'Phoebe Buffay')) %>%
+    group_by(speaker, emotion) %>%
+    tally(sort = TRUE) %>% 
+    arrange(speaker)
+
+
+treemap(friends_emo_tree, index = c('speaker', 'emotion'), vSize = 'n', 
+        type = 'index',
+        palette = 'Set1'
+        )
+
+
+
+
+
 
 
 
