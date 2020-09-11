@@ -323,6 +323,20 @@ total_data <- friends %>%
     left_join(friends_info, by = c('season', 'episode')) 
 
 
+# 2d histogram
+library(ggrepel)
+
+ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = 'viridis') +
+    # upper 25% of natural process limit (by views)
+    geom_vline(xintercept = 28.1, color = 'orange') +
+    # upper 25% of natural process limit (by ratings)
+    geom_hline(yintercept = 8.97, color = 'orange') 
+    
+
+
+
 # join, then visualize emotions by speaker
 friends %>%
     left_join(friends_emotions, by = c('season', 'episode', 'scene', 'utterance')) %>%
