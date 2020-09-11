@@ -162,7 +162,7 @@ friends %>%
     tally(sort = TRUE) %>% view()
     
     
-# Wrangling friends_info ----
+# Wrangling ----
 
 # Create Column Binning for lower 25, lower natural process limit (lnpl), upper 25 and upper natural process limit (unpl)
 friends_segmented_views <- friends_info %>%
@@ -175,6 +175,8 @@ friends_segmented_views <- friends_info %>%
     ) 
 
 friends_segmented_views
+
+# Join Views & Emotions ----
 
 # Join friends_segmented_views with friends_emotions
 # filter by various segment
@@ -264,9 +266,48 @@ emotion      n
 7 Sad        109
 8 NA           7
 
+# Total Rows by each SPC Segment ----
+# Counting Rows by SPC segment
+
+# lnpl = 491 rows
+friends_segview_emo %>%
+    filter(spc=='lnpl')
+
+# lower25 = 934 rows
+friends_segview_emo %>%
+    filter(spc=='lower25')
+
+# AVG = 6,613 rows
+friends_segview_emo %>%
+    filter(spc=='AVG')
+
+# upper25 = 2,881 rows
+friends_segview_emo %>%
+    filter(spc=='upper25')
+
+# unpl = 1,796
+friends_segview_emo %>%
+    filter(spc=='unpl')
+
+# No missing data except for 'emotion' (n = 139 missing)
+friends_segview_emo %>%
+    summarise_all(~ sum(is.na(.)))
+
+# Visualize Views & Emotion by SPC facets
+friends_segview_emo %>%
+    ggplot(aes(x = emotion)) +
+    geom_histogram(stat = 'count') +
+    facet_wrap(~ spc)
 
 
+# Join Views &  ----
 
+# Join friends_segmented_views with friends_emotions
+# filter by various segment
+# group_by emotions
 
+friends_segview_emo <- friends_segmented_views %>%
+    left_join(friends_emotions, by = c('season', 'episode')) %>%
+    select(season, episode, us_views_millions, spc, emotion)
 
 
