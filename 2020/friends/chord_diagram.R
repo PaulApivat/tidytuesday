@@ -19,3 +19,20 @@ chordDiagram(data, transparency = 0.5)
 
 
 
+
+# Chord Diagram from Edge List ----
+
+# Create Edge List
+origin <- paste0("orig ", sample(c(1:10), 20, replace = T))
+destination <- paste0("dest ", sample(c(1:10), 20, replace = T))
+data2 <- data.frame(origin, destination)
+
+# Transform input data in a adjacency matrix
+adjacencyData <- with(data2, table(origin, destination))
+
+# Charge the circlize library
+library(circlize)
+
+# Make the circular plot
+chordDiagram(adjacencyData, transparency = 0.5)
+
