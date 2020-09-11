@@ -107,6 +107,32 @@ friends_info %>%
     geom_line() +
     geom_hline(yintercept = 8.46, color = 'red')
 
+# Divide imdb ratings into Statistical Process Control Segments
+friends_info %>%
+    select(air_date, imdb_rating) %>%
+    mutate(
+        average_rating = mean(imdb_rating),
+        # lagging difference
+        moving_range = diff(as.zoo(imdb_rating), na.pad=TRUE),
+        # get absolute value of lagging difference
+        moving_range = abs(moving_range),
+        # Change NA to 0
+        moving_range = ifelse(row_number()==1, 0, moving_range),
+        avg_moving_range = mean(moving_range),
+        lnpl = average_rating - (2.66*avg_moving_range),
+        lower_25 = average_rating - (1.33*avg_moving_range),
+        upper_25 = average_rating + (1.33*avg_moving_range),
+        unpl = average_rating + (2.66*avg_moving_range)
+    ) %>%
+    ggplot(aes(x = air_date, y = imdb_rating)) + 
+    geom_line() +
+    geom_hline(yintercept = 8.46, color = 'green') +
+    geom_hline(yintercept = 9.47, color = 'red') +
+    geom_hline(yintercept = 7.45, color = 'red') +
+    geom_hline(yintercept = 8.97, color = 'orange') +
+    geom_hline(yintercept = 7.96, color = 'orange') 
+
+
 
 # Is there a relationship between Views & Ratings?
 friends_info %>%
@@ -165,6 +191,7 @@ friends %>%
 # Wrangling ----
 
 # Create Column Binning for lower 25, lower natural process limit (lnpl), upper 25 and upper natural process limit (unpl)
+# us_views_millions
 friends_segmented_views <- friends_info %>%
     select(season, episode, us_views_millions) %>%
     mutate(
@@ -175,6 +202,21 @@ friends_segmented_views <- friends_info %>%
     ) 
 
 friends_segmented_views
+
+# imdb_rating
+friends_segmented_ratings <- friends_info %>%
+    select(season, episode, imdb_rating) %>%
+    mutate(
+        spc = ifelse(imdb_rating > 9.47, 'unpl', 
+                     ifelse(imdb_rating < 7.45, 'lnpl',
+                            ifelse(imdb_rating > 8.97 & imdb_rating <= 9.47, 'upper25',
+                                   ifelse(imdb_rating < 7.96 & imdb_rating >= 7.45, 'lower25', 'AVG'))))
+    )
+
+
+friends_segmented_ratings %>% view()
+
+
 
 # Join Views & Emotions ----
 
@@ -300,14 +342,18 @@ friends_segview_emo %>%
     facet_wrap(~ spc)
 
 
-# Join Views &  ----
+# Join Views & Speaker ----
 
-# Join friends_segmented_views with friends_emotions
+# Join friends_segmented_views with friends (speaker)
 # filter by various segment
 # group_by emotions
 
-friends_segview_emo <- friends_segmented_views %>%
-    left_join(friends_emotions, by = c('season', 'episode')) %>%
-    select(season, episode, us_views_millions, spc, emotion)
+friends %>%
+    group_by(speaker) %>%
+    tally(sort = TRUE)
+
+
+friends_segmented_views %>%
+    left_join(friends, by = c('season', 'episode')) 
 
 
