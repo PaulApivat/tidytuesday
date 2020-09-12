@@ -337,7 +337,7 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
     geom_text(aes(label=ifelse(us_views_millions >= 28.1 & imdb_rating >= 8.97, season, "")), 
               nudge_y = 0.05,
               check_overlap = FALSE) +
-    geom_smooth(method = 'lm', se = FALSE, color = '#FF4238') +
+    #geom_smooth(method = 'lm', se = FALSE, color = '#FF4238') +
     theme(
         plot.background = element_rect(fill = '#36454F'),
         panel.background = element_rect(fill = '#36454F'),
@@ -356,18 +356,18 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         x = 'Views (Millions)',
         y = 'IMDB Rating'
     ) +
-    annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
+    #annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
     annotate("text", x = 15, y = 9.3, label = "S3E16:...the \n Morning After.", color = '#FF4238') +
     annotate("text", x = 19, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = '#FFDC00') +
     annotate("text", x = 21, y = 9.8, label = "S6E25:...the Proposal.", color = '#42A2D6') +
-    annotate("text", x = 25, y = 10, label = "S2E14:...the Prom Video.", color = '#9A0006') +
+    annotate("text", x = 25, y = 10, label = "S2E14:...the Prom Video.", color = '#FF4238') +
     annotate("text", x = 35, y = 8.3, label = "S2E7:...\nWhere Ross Finds Out.", color = '#FFF580') +
     annotate("text", x = 42, y = 8.8, label = "S4E24:...Ross' Wedding.", color = '#42A2D6') +
     annotate("text", x = 40, y = 8.6, label = "S8E2:...the Red Sweater.", color = '#FF4238') +
     geom_curve(x = 28.3, xend = 17, y = 9.1, yend = 9.2, color = '#FF4238', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30, xend = 23, y = 9.2, yend = 9.4, color = '#FFDC00', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30.7, xend = 24, y = 9.3, yend = 9.7, color = '#42A2D6', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 33.6, xend = 31, y = 9.4, yend = 9.9, color = '#9A0006', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 33.6, xend = 31, y = 9.4, yend = 9.9, color = '#FF4238', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30.5, xend = 33, y = 9, yend = 8.4, color = '#FFF580', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 31.6, xend = 38, y = 9.2, yend = 8.9, color = '#42A2D6', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30, xend = 35, y = 9.1, yend = 8.7, color = '#FF4238', curvature = 0.0, stat = 'identity')
