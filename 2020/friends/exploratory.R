@@ -351,7 +351,13 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         axis.title.x = element_text(colour = 'white'),
         axis.text.y = element_text(colour = 'white'),
         axis.title.y = element_text(color = 'white')
-    )
+    ) +
+    labs(
+        x = 'Views (Millions)',
+        y = 'IMDB Rating'
+    ) +
+    annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
+    geom_curve(x = 28.3, xend = 24, y = 9.1, yend = 9.4, color = 'white')
     
 
 cor(total_data$us_views_millions, total_data$imdb_rating)
@@ -361,7 +367,7 @@ cor(total_data$us_views_millions, total_data$imdb_rating)
 total_data %>% 
     filter(us_views_millions >= 28.1) %>%
     filter(imdb_rating >= 8.97) %>%
-    group_by(season, episode) %>%
+    group_by(season, episode, title, us_views_millions, imdb_rating) %>%
     tally(sort = TRUE)
 
 
