@@ -357,22 +357,25 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         y = 'IMDB Rating'
     ) +
     annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
-    annotate("text", x = 15, y = 9.3, label = "S3E16:...the \n Morning After.", color = 'white') +
-    annotate("text", x = 19, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = 'green') +
-    annotate("text", x = 21, y = 9.8, label = "S6E25:...the Proposal.", color = 'pink') +
-    annotate("text", x = 25, y = 10, label = "S2E14:...the Prom Video.", color = 'blue') +
-    annotate("text", x = 35, y = 8.3, label = "S2E7:...\nWhere Ross Finds Out.", color = 'purple') +
-    annotate("text", x = 42, y = 8.8, label = "S4E24:...Ross' Wedding.", color = 'orange') +
-    annotate("text", x = 40, y = 8.6, label = "S8E2:...the Red Sweater.", color = 'brown') +
-    geom_curve(x = 28.3, xend = 17, y = 9.1, yend = 9.2, color = 'white', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 30, xend = 23, y = 9.2, yend = 9.4, color = 'green', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 30.7, xend = 24, y = 9.3, yend = 9.7, color = 'pink', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 33.6, xend = 31, y = 9.4, yend = 9.9, color = 'blue', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 30.5, xend = 33, y = 9, yend = 8.4, color = 'purple', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 31.6, xend = 38, y = 9.2, yend = 8.9, color = 'orange', curvature = 0.0, stat = 'identity') +
-    geom_curve(x = 30, xend = 35, y = 9.1, yend = 8.7, color = 'brown', curvature = 0.0, stat = 'identity')
+    annotate("text", x = 15, y = 9.3, label = "S3E16:...the \n Morning After.", color = '#FF4238') +
+    annotate("text", x = 19, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = '#FFDC00') +
+    annotate("text", x = 21, y = 9.8, label = "S6E25:...the Proposal.", color = '#42A2D6') +
+    annotate("text", x = 25, y = 10, label = "S2E14:...the Prom Video.", color = '#9A0006') +
+    annotate("text", x = 35, y = 8.3, label = "S2E7:...\nWhere Ross Finds Out.", color = '#FFF580') +
+    annotate("text", x = 42, y = 8.8, label = "S4E24:...Ross' Wedding.", color = '#42A2D6') +
+    annotate("text", x = 40, y = 8.6, label = "S8E2:...the Red Sweater.", color = '#FF4238') +
+    geom_curve(x = 28.3, xend = 17, y = 9.1, yend = 9.2, color = '#FF4238', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30, xend = 23, y = 9.2, yend = 9.4, color = '#FFDC00', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30.7, xend = 24, y = 9.3, yend = 9.7, color = '#42A2D6', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 33.6, xend = 31, y = 9.4, yend = 9.9, color = '#9A0006', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30.5, xend = 33, y = 9, yend = 8.4, color = '#FFF580', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 31.6, xend = 38, y = 9.2, yend = 8.9, color = '#42A2D6', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30, xend = 35, y = 9.1, yend = 8.7, color = '#FF4238', curvature = 0.0, stat = 'identity')
     
 
+# scale_fill_manual(values = c('#FF4238', '#FFDC00', '#42A2D6', '#9A0006', '#FFF580', '#00009E')) +
+
+# Correlation between IMDB Rating & Views (r = 0.396)
 cor(total_data$us_views_millions, total_data$imdb_rating)
 
 
@@ -467,9 +470,13 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
                                 min.size = 0) +
     geom_treemap_text(color = 'white', fontface = 'italic', place = 'centre', reflow = T) +
     scale_fill_manual(values = c('#FF4238', '#FFDC00', '#42A2D6', '#9A0006', '#FFF580', '#00009E')) +
-    theme(legend.position = 'none') +
+    theme(
+        plot.background = element_rect(fill = '#36454F'),
+        legend.position = 'none',
+        title = element_text(colour = 'white')
+        ) +
     labs(
-        title = 'Dominant emotions associated with each Friend'
+        title = 'The One with the Dominant Emotions'
     )
 
 # HEATMAP ----
