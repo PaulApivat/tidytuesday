@@ -334,8 +334,7 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
     #geom_vline(xintercept = 28.1, color = 'orange') +
     # upper 25% of natural process limit (by ratings)
     #geom_hline(yintercept = 8.97, color = 'orange') +
-    geom_text(position = position_dodge(0.9), aes(label=ifelse(us_views_millions >= 28.1 & imdb_rating >= 8.97, title, ""))) +
-    geom_text_repel() +
+    geom_text(position = 'identity', aes(label=ifelse(us_views_millions >= 28.1 & imdb_rating >= 8.97, "green", "")), check_overlap = FALSE) +
     geom_smooth(method = 'lm', se = FALSE, color = '#FF4238') +
     theme(
         plot.background = element_rect(fill = '#36454F'),
