@@ -357,7 +357,13 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         y = 'IMDB Rating'
     ) +
     annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
-    geom_curve(x = 28.3, xend = 24, y = 9.1, yend = 9.4, color = 'white')
+    geom_curve(x = 28.3, xend = 17, y = 9.1, yend = 9.2, color = 'white', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30, xend = 23, y = 9.2, yend = 9.4, color = 'green', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30.7, xend = 24, y = 9.3, yend = 9.7, color = 'pink', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 33.6, xend = 31, y = 9.4, yend = 9.9, color = 'blue', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30.5, xend = 33, y = 9, yend = 8.4, color = 'purple', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 31.6, xend = 38, y = 9.2, yend = 8.9, color = 'orange', curvature = 0.0, stat = 'identity') +
+    geom_curve(x = 30, xend = 35, y = 9.1, yend = 8.7, color = 'brown', curvature = 0.0, stat = 'identity')
     
 
 cor(total_data$us_views_millions, total_data$imdb_rating)
