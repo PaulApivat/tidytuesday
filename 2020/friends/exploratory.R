@@ -357,13 +357,13 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         y = 'IMDB Rating'
     ) +
     #annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
-    annotate("text", x = 15, y = 9.3, label = "S3E16:...the \n Morning After.", color = '#FF4238') +
-    annotate("text", x = 19, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = '#FFDC00') +
-    annotate("text", x = 21, y = 9.8, label = "S6E25:...the Proposal.", color = '#42A2D6') +
-    annotate("text", x = 25, y = 10, label = "S2E14:...the Prom Video.", color = '#FF4238') +
-    annotate("text", x = 35, y = 8.3, label = "S2E7:...\nWhere Ross Finds Out.", color = '#FFF580') +
-    annotate("text", x = 42, y = 8.8, label = "S4E24:...Ross' Wedding.", color = '#42A2D6') +
-    annotate("text", x = 40, y = 8.6, label = "S8E2:...the Red Sweater.", color = '#FF4238') +
+    annotate("text", x = 16, y = 9.3, label = "S3E16:...the \n Morning After.", color = '#FF4238') +
+    annotate("text", x = 21, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = '#FFDC00') +
+    annotate("text", x = 22, y = 9.8, label = "S6E25:...the Proposal.", color = '#42A2D6') +
+    annotate("text", x = 30, y = 10, label = "S2E14:...the Prom Video.", color = '#FF4238') +
+    annotate("text", x = 34, y = 8.3, label = "S2E7:...\nWhere Ross Finds Out.", color = '#FFF580') +
+    annotate("text", x = 40, y = 8.8, label = "S4E24:...Ross' Wedding.", color = '#42A2D6') +
+    annotate("text", x = 38, y = 8.6, label = "S8E2:...the Red Sweater.", color = '#FF4238') +
     geom_curve(x = 28.3, xend = 17, y = 9.1, yend = 9.2, color = '#FF4238', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30, xend = 23, y = 9.2, yend = 9.4, color = '#FFDC00', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30.7, xend = 24, y = 9.3, yend = 9.7, color = '#42A2D6', curvature = 0.0, stat = 'identity') +
@@ -485,6 +485,7 @@ ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
     #scale_fill_distiller(palette = 'RdPu') +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     #scale_fill_viridis_b() +
+    scale_x_continuous(breaks = seq(1,10, by = 1)) + 
     theme_classic()
 
 
@@ -493,6 +494,7 @@ ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
     #scale_fill_distiller(palette = 'RdPu') +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     #scale_fill_viridis_b() +
+    scale_x_continuous(breaks = seq(1,10, by = 1)) + 
     theme_classic()
 
 
