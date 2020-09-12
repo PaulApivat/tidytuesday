@@ -328,12 +328,31 @@ library(ggrepel)
 
 ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
     geom_bin2d(bins = 60) +
-    scale_fill_continuous(type = 'viridis') +
+    #scale_fill_continuous(type = 'viridis') +
+    scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     # upper 25% of natural process limit (by views)
-    geom_vline(xintercept = 28.1, color = 'orange') +
+    #geom_vline(xintercept = 28.1, color = 'orange') +
     # upper 25% of natural process limit (by ratings)
-    geom_hline(yintercept = 8.97, color = 'orange') 
+    #geom_hline(yintercept = 8.97, color = 'orange') +
+    geom_text(position = position_dodge(0.9), aes(label=ifelse(us_views_millions >= 28.1 & imdb_rating >= 8.97, title, ""))) +
+    geom_text_repel() +
+    geom_smooth(method = 'lm', se = FALSE, color = '#FF4238') +
+    theme(
+        plot.background = element_rect(fill = '#36454F'),
+        panel.background = element_rect(fill = '#36454F'),
+        legend.background = element_rect(fill = '#36454F'),
+        legend.title = element_text(color = 'white'),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_text(colour = 'white'),
+        axis.title.x = element_text(colour = 'white'),
+        axis.text.y = element_text(colour = 'white'),
+        axis.title.y = element_text(color = 'white')
+    )
     
+
+cor(total_data$us_views_millions, total_data$imdb_rating)
+
 
 # Filter total_data for highest views and ratings
 total_data %>% 
@@ -435,12 +454,17 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
 ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
     geom_tile() +
     #scale_fill_distiller(palette = 'RdPu') +
-    #scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
-    scale_fill_viridis_b() +
+    scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
+    #scale_fill_viridis_b() +
     theme_classic()
 
 
-
+ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
+    geom_tile() +
+    #scale_fill_distiller(palette = 'RdPu') +
+    scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
+    #scale_fill_viridis_b() +
+    theme_classic()
 
 
 
