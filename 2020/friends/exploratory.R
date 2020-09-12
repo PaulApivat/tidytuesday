@@ -357,6 +357,10 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         y = 'IMDB Rating'
     ) +
     annotate("text", x = 50, y = 9.1, label = "r = 0.396", color = "#FF4238") +
+    annotate("text", x = 15, y = 9.3, label = "S3E16:...the \n Morning After.", color = 'white') +
+    annotate("text", x = 19, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = 'green') +
+    annotate("text", x = 21, y = 9.8, label = "S6E25:...the Proposal.", color = 'pink') +
+    annotate("text", x = 25, y = 10, label = "S2E14:...the Prom Video.", color = 'blue') +
     geom_curve(x = 28.3, xend = 17, y = 9.1, yend = 9.2, color = 'white', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30, xend = 23, y = 9.2, yend = 9.4, color = 'green', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30.7, xend = 24, y = 9.3, yend = 9.7, color = 'pink', curvature = 0.0, stat = 'identity') +
