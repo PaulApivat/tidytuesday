@@ -326,7 +326,7 @@ total_data <- friends %>%
 # 2d histogram
 library(ggrepel)
 
-ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
+p1 <- ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
     geom_bin2d(bins = 60) +
     #scale_fill_continuous(type = 'viridis') +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
@@ -372,6 +372,8 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
     geom_curve(x = 31.6, xend = 38, y = 9.2, yend = 8.9, color = '#42A2D6', curvature = 0.0, stat = 'identity') +
     geom_curve(x = 30, xend = 35, y = 9.1, yend = 8.7, color = '#FF4238', curvature = 0.0, stat = 'identity')
     
+p1
+
 
 # scale_fill_manual(values = c('#FF4238', '#FFDC00', '#42A2D6', '#9A0006', '#FFF580', '#00009E')) +
 
@@ -463,7 +465,7 @@ ggplot(friends_emo_tree, aes(area = n, fill = n, label = speaker, subgroup = emo
 
 
 # color by emotion
-ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
+p2 <- ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
     geom_treemap(aes(fill = emotion, alpha = n)) +
     geom_treemap_subgroup_border(color = 'white') +
     geom_treemap_subgroup_text(place = 'bottom', grow = T, alpha = 0.3, color = 'black',
@@ -479,8 +481,10 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
         title = 'The One with the Dominant Emotions'
     )
 
+p2
+
 # HEATMAP ----
-ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
+p3 <- ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
     geom_tile() +
     #scale_fill_distiller(palette = 'RdPu') +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
@@ -507,11 +511,11 @@ ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
         title = 'The One with the Ratings'
     )
 
-
+p3
     
     
     
-ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
+p4 <- ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
     geom_tile() +
     #scale_fill_distiller(palette = 'RdPu') +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
@@ -538,5 +542,12 @@ ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
         title = 'The One with the Views'
     )
 
+p4
+
+# PATCHWORK ----
+install.packages('patchwork')
+library(patchwork)
+
+(p1 | p2) / (p3 | p4)
 
 
