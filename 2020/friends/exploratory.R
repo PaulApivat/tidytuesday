@@ -495,7 +495,26 @@ ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     #scale_fill_viridis_b() +
     scale_x_continuous(breaks = seq(1,10, by = 1)) + 
-    theme_classic()
+    theme_classic() +
+    theme(
+        plot.background = element_rect(fill = '#36454F'),
+        panel.background = element_rect(fill = '#36454F'),
+        axis.text.x = element_text(colour = 'white'),
+        axis.title.x = element_text(colour = 'white'),
+        axis.text.y = element_text(colour = 'white'),
+        axis.title.y = element_text(color = 'white'),
+        legend.background = element_rect(fill = '#36454F'),
+        legend.title = element_text(color = 'white'),
+        legend.text = element_text(color = 'white'),
+        legend.position = 'bottom',
+        title = element_text(colour = 'white')
+    ) +
+    labs(
+        x = 'Seasons',
+        y = 'Episodes',
+        fill = 'Views(Millions)',
+        title = 'The One with the Views'
+    )
 
 
 
