@@ -46,7 +46,8 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
     labs(
         x = 'Views (Millions)',
         y = 'IMDB Rating',
-        title = 'The One with the Seminal Episodes'
+        title = 'The One with the Seminal Episodes',
+        caption = 'Viz: @paulapivat | Data: #TidyTuesday'
     ) +
     annotate("text", x = 16, y = 9.3, label = "S3E16:...the \n Morning After.", color = '#FF4238') +
     annotate("text", x = 21, y = 9.5, label = "S7E24:...Monica and \nChandler's wedding.", color = '#FFDC00') +
@@ -92,7 +93,8 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
         title = element_text(colour = 'white')
     ) +
     labs(
-        title = 'The One with the Dominant Emotions'
+        title = 'The One with the Dominant Emotions',
+        caption = 'Viz: @paulapivat | Data: #TidyTuesday'
     )
 
 # Heatmap
@@ -118,7 +120,34 @@ ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
         x = 'Seasons',
         y = 'Episodes',
         fill = 'IMDB Rating',
-        title = 'The One with the Ratings'
+        title = 'The One with the Ratings',
+        caption = 'Viz: @paulapivat | Data: #TidyTuesday'
     )
 
+
+ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
+    geom_tile() +
+    scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
+    scale_x_continuous(breaks = seq(1,10, by = 1)) + 
+    theme_classic() +
+    theme(
+        plot.background = element_rect(fill = '#36454F'),
+        panel.background = element_rect(fill = '#36454F'),
+        axis.text.x = element_text(colour = 'white'),
+        axis.title.x = element_text(colour = 'white'),
+        axis.text.y = element_text(colour = 'white'),
+        axis.title.y = element_text(color = 'white'),
+        legend.background = element_rect(fill = '#36454F'),
+        legend.title = element_text(color = 'white'),
+        legend.text = element_text(color = 'white'),
+        legend.position = 'bottom',
+        title = element_text(colour = 'white')
+    ) +
+    labs(
+        x = 'Seasons',
+        y = 'Episodes',
+        fill = 'Views(Millions)',
+        title = 'The One with the Views',
+        caption = 'Viz: @paulapivat | Data: #TidyTuesday'
+    )
 
