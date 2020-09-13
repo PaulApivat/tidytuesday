@@ -27,7 +27,7 @@ total_data <- friends %>%
     left_join(friends_info, by = c('season', 'episode')) 
 
 # 2D Density Plot ----
-ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
+p1 <- ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
     geom_bin2d(bins = 60) +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     theme(
@@ -82,7 +82,7 @@ friends_emo_tree <- total_data %>%
     arrange(speaker)
 
 
-ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
+p2 <- ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
     geom_treemap(aes(fill = emotion, alpha = n)) +
     geom_treemap_subgroup_border(color = 'white') +
     geom_treemap_subgroup_text(place = 'bottom', grow = T, alpha = 0.3, color = 'black',
@@ -100,7 +100,7 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
     )
 
 # Heatmap ----
-ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
+p3 <- ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
     geom_tile() +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     scale_x_continuous(breaks = seq(1,10, by = 1)) + 
@@ -127,7 +127,7 @@ ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
     )
 
 
-ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
+p4 <- ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
     geom_tile() +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
     scale_x_continuous(breaks = seq(1,10, by = 1)) + 
@@ -153,4 +153,7 @@ ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
         caption = 'Viz: @paulapivat | Data: #TidyTuesday'
     )
 
+# PATCHWORK ----
+
+(p3 | p4) / (p1 | p2) 
 
