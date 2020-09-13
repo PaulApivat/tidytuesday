@@ -8,6 +8,7 @@ library(tidyverse)
 library(zoo) # calculate moving range
 library(treemapify)
 library(patchwork)
+library(showtext) #custom fonts
 
 # Read data directly ----
 friends <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv')
@@ -19,12 +20,13 @@ glimpse(friends)
 glimpse(friends_emotions)
 glimpse(friends_info)
 
+
 # Create total_data 
 total_data <- friends %>%
     left_join(friends_emotions, by = c('season', 'episode', 'scene', 'utterance')) %>%
     left_join(friends_info, by = c('season', 'episode')) 
 
-# 2D Density Plot
+# 2D Density Plot ----
 ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, label=title)) +
     geom_bin2d(bins = 60) +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
@@ -41,7 +43,7 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
         axis.title.x = element_text(colour = 'white'),
         axis.text.y = element_text(colour = 'white'),
         axis.title.y = element_text(color = 'white'),
-        title = element_text(colour = 'white')
+        title = element_text(colour = 'white', family = 'Friends')
     ) +
     labs(
         x = 'Views (Millions)',
@@ -65,7 +67,7 @@ ggplot(data = total_data, mapping = aes(x=us_views_millions, y=imdb_rating, labe
     geom_curve(x = 30, xend = 35, y = 9.1, yend = 8.7, color = '#FF4238', curvature = 0.0, stat = 'identity')
 
 
-# Treemap
+# Treemap ----
 
 friends_emo_tree <- total_data %>%
     select(speaker, emotion) %>%
@@ -90,14 +92,14 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
     theme(
         plot.background = element_rect(fill = '#36454F'),
         legend.position = 'none',
-        title = element_text(colour = 'white')
+        title = element_text(colour = 'white', family = 'Friends')
     ) +
     labs(
         title = 'The One with the Dominant Emotions',
         caption = 'Viz: @paulapivat | Data: #TidyTuesday'
     )
 
-# Heatmap
+# Heatmap ----
 ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
     geom_tile() +
     scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
@@ -114,7 +116,7 @@ ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
         legend.title = element_text(color = 'white'),
         legend.text = element_text(color = 'white'),
         legend.position = 'bottom',
-        title = element_text(colour = 'white')
+        title = element_text(colour = 'white', family = 'Friends')
     ) +
     labs(
         x = 'Seasons',
@@ -141,7 +143,7 @@ ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
         legend.title = element_text(color = 'white'),
         legend.text = element_text(color = 'white'),
         legend.position = 'bottom',
-        title = element_text(colour = 'white')
+        title = element_text(colour = 'white', family = 'Friends')
     ) +
     labs(
         x = 'Seasons',
@@ -150,4 +152,5 @@ ggplot(total_data, aes(x = season, y = episode, fill=us_views_millions)) +
         title = 'The One with the Views',
         caption = 'Viz: @paulapivat | Data: #TidyTuesday'
     )
+
 
