@@ -95,6 +95,30 @@ ggplot(friends_emo_tree, aes(area = n, label = speaker, subgroup = emotion)) +
         title = 'The One with the Dominant Emotions'
     )
 
-
+# Heatmap
+ggplot(total_data, aes(x = season, y = episode, fill=imdb_rating)) +
+    geom_tile() +
+    scale_fill_gradient(low = '#FFF580', high = '#FF4238') +
+    scale_x_continuous(breaks = seq(1,10, by = 1)) + 
+    theme_classic() +
+    theme(
+        plot.background = element_rect(fill = '#36454F'),
+        panel.background = element_rect(fill = '#36454F'),
+        axis.text.x = element_text(colour = 'white'),
+        axis.title.x = element_text(colour = 'white'),
+        axis.text.y = element_text(colour = 'white'),
+        axis.title.y = element_text(color = 'white'),
+        legend.background = element_rect(fill = '#36454F'),
+        legend.title = element_text(color = 'white'),
+        legend.text = element_text(color = 'white'),
+        legend.position = 'bottom',
+        title = element_text(colour = 'white')
+    ) +
+    labs(
+        x = 'Seasons',
+        y = 'Episodes',
+        fill = 'IMDB Rating',
+        title = 'The One with the Ratings'
+    )
 
 
