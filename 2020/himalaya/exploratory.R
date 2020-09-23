@@ -34,9 +34,67 @@ peaks %>%
     arrange(desc(height_metres)) 
 
 
+# Members ----
+
+# How many unique individuals are represented in the data?
+# 76,518 unique people
+
+members %>%
+    summarize(unique_individual = unique(member_id))
     
-    
-    
+members %>%
+    group_by(member_id) %>%
+    tally(sort = TRUE)
+
+# How many people have failed vs succeeded?
+# 47320 fail (), 29199 success
+members %>%
+    group_by(success) %>%
+    tally()
+
+# Proportion of Success-to-Failure
+# 47320 fail (62%), 29199 success (38%)
+members %>%
+    group_by(success) %>%
+    summarize(n = n()) %>%
+    mutate(freq = n / sum(n))
+
+# Expedition ----
+
+# When was the first expedition? Most recent?
+# 1905 - 2019 (in over a century, 76,518 have risked their lives)
+summary(expeditions$year)
+
+# Table Idea ----
+
+# Table of Peaks by Height 
+# Number of people attempt
+# % Success or Failed
+
+# join members & peaks
+
+table <- members %>%
+    left_join(peaks, by = 'peak_id') %>%
+    select(peak_id, peak_name.y, height_metres, climbing_status, member_id, success, died, injured) %>%
+    rename(
+        peak = peak_name.y,
+        height = height_metres,
+        status = climbing_status
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
