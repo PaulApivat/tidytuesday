@@ -128,9 +128,106 @@ fail_pct <- table %>%
 
 # Join Attempts & Fail Rates ----
 
-attempts %>%
+# join attemps and fail_pct; filter by top 20 by number of attemps
+df <- attempts %>%
     left_join(fail_pct, by = 'peak') %>%
-    view()
+    mutate(across(is.numeric, round, 3)) %>%
+    rename(
+        attempts = number_of_attempt,
+        fail_rate = failure_rate
+    ) %>%
+    head(20)
+
+
+# reactable tutorial ----
+
+install.packages('reactable')
+library(reactable)
+
+# Step 1: create a basic table ----
+reactable(df)
+
+
+# Step 2: Customize table heading ----
+
+# Change column Names
+# Set default column to sort
+# Set order to descending
+# Change number format for both columns
+reactable(
+    df,
+    defaultSorted = "attempts",
+    columns = list(
+        peak = colDef(
+            name = "Peak"
+        ),
+        attempts = colDef(
+            name = "Attempts (#)",
+            defaultSortOrder = "desc",
+            format = colFormat(separators = TRUE)
+        ),
+        fail_rate = colDef(
+            name = "Fail (%)",
+            defaultSortOrder = "desc",
+            format = colFormat(percent = TRUE, digits = 1)
+        )
+    )
+)
+
+# Step 3: Add Bar Charts ----
+
+library(htmltools)
+
+bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL){
+    bar <- div(style = list(background = fill, width = width, height = height))
+    chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
+    div(style = list(display = "flex", alignItems = "center"), label, chart)
+}
+
+
+
+reactable(
+    df,
+    defaultSorted = "attempts",
+    columns = list(
+        peak = colDef(
+            name = "Peak"
+        ),
+        attempts = colDef(
+            name = "Attempts (#)",
+            defaultSortOrder = "desc",
+            #format = colFormat(separators = TRUE),
+            
+            # Render Bar charts using a custom cell render function
+            cell = function(value){
+                width <- paste0(value * 100)
+                # Add thousands separators
+                value <- format(value, big.mark = ",")
+                bar_chart(value, width = width, fill = "#3fc1c9")
+            },
+            # And left-align the columns
+            align = "left"
+        ),
+        fail_rate = colDef(
+            name = "Fail (%)",
+            defaultSortOrder = "desc",
+            #format = colFormat(percent = TRUE, digits = 1)
+            
+            # Render Bar charts using a custom cell render function
+            cell = function(value){
+                # Format as percentage with 1 decimal place
+                value <- paste0(format(value * 100, nsmall = 1), "%")
+                bar_chart(value, width = value, fill = "$fc5185", background = "#e1e1e1")
+            },
+            # And left-align the columns
+            align = "left"
+        )
+    )
+)
+
+
+
+
 
 
 
