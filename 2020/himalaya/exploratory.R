@@ -200,7 +200,7 @@ reactable(
             
             # Render Bar charts using a custom cell render function
             cell = function(value){
-                width <- paste0(value * 100)
+                width <- paste0(value * 100 / max(df$attempts), "%")
                 # Add thousands separators
                 value <- format(value, big.mark = ",")
                 bar_chart(value, width = width, fill = "#3fc1c9")
@@ -217,7 +217,7 @@ reactable(
             cell = function(value){
                 # Format as percentage with 1 decimal place
                 value <- paste0(format(value * 100, nsmall = 1), "%")
-                bar_chart(value, width = value, fill = "$fc5185", background = "#e1e1e1")
+                bar_chart(value, width = value, fill = "#fc5185", background = "#e1e1e1")
             },
             # And left-align the columns
             align = "left"
