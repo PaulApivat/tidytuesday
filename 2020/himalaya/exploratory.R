@@ -103,10 +103,34 @@ table %>%
 
 # Get number of attempts per peak
 # get success/failure rate per peak
+# note: Everest number of attempt 21813
+
+attempts <- table %>%
+    select(peak, height, status, success, died, injured) %>%
+    group_by(peak) %>%
+    summarize(number_of_attempt = n()) %>%
+    arrange(desc(number_of_attempt)) %>%
+    ungroup() 
+
+# note: Everest success (10036), failure (11777), total (21813)
+fail_pct <- table %>%
+    select(peak, height, status, success, died, injured) %>%
+    group_by(peak, success) %>%
+    summarize(number_of_attempt = n()) %>%
+    mutate(pct = number_of_attempt / sum(number_of_attempt)) %>% 
+    filter(success==FALSE) %>%
+    select(peak, pct) %>%
+    rename(
+        failure_rate = pct
+    ) %>%
+    ungroup()
 
 
+# Join Attempts & Fail Rates
 
-
+attempts %>%
+    left_join(fail_pct, by = 'peak') %>%
+    view()
 
 
 
