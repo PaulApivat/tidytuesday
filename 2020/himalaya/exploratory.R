@@ -175,6 +175,10 @@ reactable(
 )
 
 # Step 3: Add Bar Charts ----
+# also give each numeric the same width
+
+# note: fail(%) makes sense to have a background color gray, while attemps(#) does not
+
 
 library(htmltools)
 
@@ -191,7 +195,7 @@ reactable(
     defaultSorted = "attempts",
     columns = list(
         peak = colDef(
-            name = "Peak"
+            name = "Peaks"
         ),
         attempts = colDef(
             name = "Attempts (#)",
