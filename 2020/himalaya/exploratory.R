@@ -12,7 +12,9 @@ members <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 expeditions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/expeditions.csv')
 peaks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/peaks.csv')
 
-# Peaks ----
+# Exploratory ----
+
+# Peaks 
 
 # How many unique peaks are there? (468)
 peaks %>%
@@ -34,7 +36,7 @@ peaks %>%
     arrange(desc(height_metres)) 
 
 
-# Members ----
+# Members 
 
 # How many unique individuals are represented in the data?
 # 76,518 unique people
@@ -59,7 +61,7 @@ members %>%
     summarize(n = n()) %>%
     mutate(freq = n / sum(n))
 
-# Expedition ----
+# Expedition 
 
 # When was the first expedition? Most recent?
 # 1905 - 2019 (in over a century, 76,518 have risked their lives)
@@ -105,12 +107,15 @@ table %>%
 # get success/failure rate per peak
 # note: Everest number of attempt 21813
 
+# attempts ----
 attempts <- table %>%
     select(peak, height, status, success, died, injured) %>%
     group_by(peak) %>%
     summarize(number_of_attempt = n()) %>%
     arrange(desc(number_of_attempt)) %>%
     ungroup() 
+
+# fail_pct ----
 
 # note: Everest success (10036), failure (11777), total (21813)
 fail_pct <- table %>%
@@ -126,7 +131,7 @@ fail_pct <- table %>%
     ungroup()
 
 
-# Join Attempts & Fail Rates ----
+# df (join) ----
 
 # join attemps and fail_pct; filter by top 20 by number of attemps
 df <- attempts %>%
@@ -175,7 +180,7 @@ reactable(
 )
 
 # Step 3: Add Bar Charts ----
-# also give each numeric the same width
+# also: change font to "monospace" and change numeric column width
 
 # note: fail(%) makes sense to have a background color gray, while attemps(#) does not
 
@@ -207,10 +212,15 @@ reactable(
                 width <- paste0(value * 100 / max(df$attempts), "%")
                 # Add thousands separators
                 value <- format(value, big.mark = ",")
+                # Fix each label using the width of the widest number (incl. thousands separators)
+                value <- format(value, width = 9, justify = 'right')
                 bar_chart(value, width = width, fill = "#3fc1c9")
             },
             # And left-align the columns
-            align = "left"
+            align = "left",
+            # Use the operating system's default monospace font, and
+            # preserve the white space to prevent it from being collapsed by default
+            style = list(fontFamily = "monospace", whiteSpace = "pre")
         ),
         fail_rate = colDef(
             name = "Fail (%)",
@@ -221,10 +231,13 @@ reactable(
             cell = function(value){
                 # Format as percentage with 1 decimal place
                 value <- paste0(format(value * 100, nsmall = 1), "%")
+                # Fix width here to align single and double-digit percentages
+                value <- format(value, width = 5, justify = "right")
                 bar_chart(value, width = value, fill = "#fc5185", background = "#e1e1e1")
             },
             # And left-align the columns
-            align = "left"
+            align = "left",
+            style = list(fontFamily = "monospace", whiteSpace = "pre")
         )
     )
 )
