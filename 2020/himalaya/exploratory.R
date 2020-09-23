@@ -126,7 +126,7 @@ fail_pct <- table %>%
     ungroup()
 
 
-# Join Attempts & Fail Rates
+# Join Attempts & Fail Rates ----
 
 attempts %>%
     left_join(fail_pct, by = 'peak') %>%
