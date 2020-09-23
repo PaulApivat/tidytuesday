@@ -83,9 +83,26 @@ table <- members %>%
     )
 
 
+# See all peaks by success status
+table %>%
+    select(peak, height, status, success, died, injured) %>%
+    group_by(peak, success) %>%
+    tally()
+
+# Get Success & Failure Percentages by Peak
+# note: all failed attemps arranged by attempt & failure rate
+table %>%
+    select(peak, height, status, success, died, injured) %>%
+    group_by(peak, success) %>%
+    summarize(n = n()) %>%
+    mutate(pct = n / sum(n)) %>%
+    filter(success == FALSE) %>% 
+    arrange(desc(n)) %>%
+    arrange(desc(pct)) %>% view()
 
 
-
+# Get number of attempts per peak
+# get success/failure rate per peak
 
 
 
