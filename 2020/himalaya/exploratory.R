@@ -246,19 +246,16 @@ reactable(
 )
 
 
-# Step 4: Dynamic Formatting ----
+# Step 4: Dynamic Formatting & Finishing ----
 # NOTE: Dynamic formatting requires switching to javascript render function to 
 # access client-side (browser) state of the table, to know which row is first after sorting
-
-bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL){
-    bar <- div(style = list(background = fill, width = width, height = height))
-    chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
-    div(style = list(display = "flex", alignItems = "center"), label, chart)
-}
+# add pagination = FALSE to view all rows at once
+# add compact = TRUE to reduce white space
 
 
 reactable(
     df,
+    pagination = FALSE,
     defaultSorted = "attempts",
     columns = list(
         peak = colDef(
@@ -295,7 +292,7 @@ reactable(
                 )
             }"),
             
-            # --- replace previous R code --- #
+            # --- replace previous R code with Javascript (above) --- #
             
             #cell = function(value){
             #    value <- paste0(format(value * 100, nsmall = 1), "%")
@@ -310,7 +307,8 @@ reactable(
             align = "left",
             #style = list(fontFamily = "monospace", whiteSpace = "pre")
         )
-    )
+    ),
+    compact = TRUE
 )
 
 
