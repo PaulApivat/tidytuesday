@@ -26,6 +26,19 @@ head(df)
 
 ```{r final_table, echo=FALSE}
 
+options(reactable.theme = reactableTheme(
+    color = "hsl(233, 9%, 87%)",
+    backgroundColor = "hsl(233, 9%, 19%)",
+    borderColor = "hsl(233, 9%, 22%)",
+    stripedColor = "hsl(233, 12%, 22%)",
+    highlightColor = "hsl(233, 12%, 24%)",
+    inputStyle = list(backgroundColor = "hsl(233, 9%, 25%)"),
+    selectStyle = list(backgroundColor = "hsl(233, 9%, 25%)"),
+    pageButtonHoverStyle = list(backgroundColor = "hsl(233, 9%, 25%)"),
+    pageButtonActiveStyle = list(backgroundColor = "hsl(233, 9%, 28%)")
+))
+
+
 tbl <- reactable(
     df,
     pagination = FALSE,
@@ -47,7 +60,7 @@ tbl <- reactable(
                 bar <- div(
                     class = "bar-chart",
                     style = list(marginRight = "6px"),
-                    div(class = "bar", style = list(width = width, backgroundColor = "#3fc1c9"))
+                    div(class = "bar", style = list(width = width, backgroundColor = "#00b58c"))
                 )
                 div(class = "bar-cell", span(class = "number", value), bar)
             },
@@ -68,7 +81,7 @@ tbl <- reactable(
                     '<div class=\"bar-cell\">' +
                         '<span class=\"number\">' + value + '</span>' +
                         '<div class=\"bar-chart\" style=\"background-color: #e1e1e1\">' +
-                            '<div class=\"bar\" style=\"width: ' + pct + '; background-color: #fc5185\"></div>' +
+                            '<div class=\"bar\" style=\"width: ' + pct + '; background-color: #f47983\"></div>' +
                         '</div>' +
                     '</div>'
                 )
@@ -84,27 +97,6 @@ tbl <- reactable(
 
 ```
 
-## Styles for Table Container, Title and Subtitle
-
-```{css}
-
-.twitter-followers {
-  margin: 0 auto;
-  width: 575px;
-  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.followers-header {
-  margin: 8px 0;
-  font-size: 16px;
-}
-
-.followers-title {
-  font-size: 50px;
-  font-weight: 600;
-}
-
-```
 
 ## Add title and subtitle
 
@@ -112,8 +104,8 @@ tbl <- reactable(
 
 div(class = "twitter-followers",
     div(class = "followers-header",
-        div(class = "followers-title", "The Most Attempted Peaks of the Himalayas"),
-        "And the Most Challenging Among Them."
+        div(class = "followers-title", "The Most Popular Peaks in the Himalayas"),
+        "Sort by Attempts and Fail Rate"
         ),
     tbl
 )
@@ -124,6 +116,8 @@ div(class = "twitter-followers",
 ## CSS for R Markdown
 
 ```{css}
+
+/* Styles for the table container, title, and subtitle */
 
 .twitter-followers {
   margin: 0 auto;
@@ -146,6 +140,7 @@ div(class = "twitter-followers",
   font-size: 14px;
   line-height: 18px;
 }
+
 .followers-tbl a {
   color: inherit;
 }
