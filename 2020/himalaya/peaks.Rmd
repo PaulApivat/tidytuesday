@@ -30,9 +30,11 @@ tbl <- reactable(
     df,
     pagination = FALSE,
     defaultSorted = "attempts",
+    defaultColDef = colDef(headerClass = "header", align = "left"),
     columns = list(
         peak = colDef(
-            name = "Peaks"
+            name = "Peaks",
+            width = 150
         ),
         attempts = colDef(
             name = "Attempts (#)",
@@ -41,10 +43,16 @@ tbl <- reactable(
                 width <- paste0(value * 100 / max(df$attempts), "%")
                 value <- format(value, big.mark = ",")
                 value <- format(value, width = 9, justify = 'right')
-                bar_chart(value, width = width, fill = "#3fc1c9")
+                #bar_chart(value, width = width, fill = "#3fc1c9")
+                bar <- div(
+                    class = "bar-chart",
+                    style = list(marginRight = "6px"),
+                    div(class = "bar", style = list(width = width, backgroundColor = "#3fc1c9"))
+                )
+                div(class = "bar-cell", span(class = "number", value), bar)
             },
-            align = "left",
-            style = list(fontFamily = "monospace", whiteSpace = "pre")
+            #align = "left",
+            #style = list(fontFamily = "monospace", whiteSpace = "pre")
         ),
         fail_rate = colDef(
             name = "Fail (%)",
@@ -56,17 +64,18 @@ tbl <- reactable(
                 if (cellInfo.viewIndex > 0){
                     value = value.replace('%', ' ')
                 }
-                return(
-                '<div style=\"display: flex; align-items: center;\">' +
-                    '<span style=\"font-family: monospace; white-space: pre;\">' + value + '</span>' +
-                    '<div style=\"flex-grow: 1; margin-left: 6px; height: 14px; background-color: #e1e1e1\">' +
-                        '<div style=\"height: 100%; width: ' + pct + '; background-color: #fc5185\"></div>' +
+                return (
+                    '<div class=\"bar-cell\">' +
+                        '<span class=\"number\">' + value + '</span>' +
+                        '<div class=\"bar-chart\" style=\"background-color: #e1e1e1\">' +
+                            '<div class=\"bar\" style=\"width: ' + pct + '; background-color: #fc5185\"></div>' +
+                        '</div>' +
                     '</div>'
                 )
             }"),
-            
             # Render this column as HTML
-            html = TRUE
+            html = TRUE,
+            #align = "left"
         )
     ),
     compact = TRUE,
@@ -75,9 +84,31 @@ tbl <- reactable(
 
 ```
 
+## Styles for Table Container, Title and Subtitle
+
+```{css}
+
+.twitter-followers {
+  margin: 0 auto;
+  width: 575px;
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.followers-header {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.followers-title {
+  font-size: 50px;
+  font-weight: 600;
+}
+
+```
+
 ## Add title and subtitle
 
-```{r, final_demo, eval=FALSE}
+```{r, final_demo, eval=TRUE}
 
 div(class = "twitter-followers",
     div(class = "followers-header",
@@ -87,4 +118,93 @@ div(class = "twitter-followers",
     tbl
 )
 
+```
+
+
+## CSS for R Markdown
+
+```{css}
+
+.twitter-followers {
+  margin: 0 auto;
+  width: 575px;
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.followers-header {
+  margin: 8px 0;
+  font-size: 16px;
+}
+.followers-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Styles for the table */
+    
+.followers-tbl {
+  font-size: 14px;
+  line-height: 18px;
+}
+.followers-tbl a {
+  color: inherit;
+}
+
+/* Styles for the column headers */
+    
+.header {
+  border-bottom: 2px solid #555;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+.header:hover {
+  background-color: #eee;
+}
+
+/* Styles for the bar charts */
+    
+.bar-cell {
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  font-family: "Fira Mono", Consolas, Monaco, monospace;
+  font-size: 13.5px;
+  white-space: pre;
+}
+
+.bar-chart {
+  flex-grow: 1;
+  margin-left: 6px;
+  height: 14px;
+}
+
+.bar {
+  height: 100%;
+}
+
+```
+
+## R Markdown html documents
+
+```{css echo=FALSE}
+
+.main-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.main-container blockquote {
+  font-size: inherit;
+}
+/* pkgdown articles */
+.contents {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.contents blockquote {
+  font-size: inherit;
+}
+.reactable {
+  font-size: 14px;
+}
 ```
