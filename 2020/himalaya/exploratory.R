@@ -6,6 +6,8 @@ sessionInfo()
 
 # load libraries
 library(tidyverse)
+library(reactable)
+library(htmltools)
 
 # read in data 
 members <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/members.csv')
@@ -75,6 +77,7 @@ summary(expeditions$year)
 
 # join members & peaks
 
+# table ----
 table <- members %>%
     left_join(peaks, by = 'peak_id') %>%
     select(peak_id, peak_name.y, height_metres, climbing_status, member_id, success, died, injured) %>%
@@ -243,8 +246,72 @@ reactable(
 )
 
 
+# Step 4: Dynamic Formatting ----
+# NOTE: Dynamic formatting requires switching to javascript render function to 
+# access client-side (browser) state of the table, to know which row is first after sorting
+
+bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL){
+    bar <- div(style = list(background = fill, width = width, height = height))
+    chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
+    div(style = list(display = "flex", alignItems = "center"), label, chart)
+}
 
 
+reactable(
+    df,
+    defaultSorted = "attempts",
+    columns = list(
+        peak = colDef(
+            name = "Peaks"
+        ),
+        attempts = colDef(
+            name = "Attempts (#)",
+            defaultSortOrder = "desc",
+            cell = function(value){
+                width <- paste0(value * 100 / max(df$attempts), "%")
+                value <- format(value, big.mark = ",")
+                value <- format(value, width = 9, justify = 'right')
+                bar_chart(value, width = width, fill = "#3fc1c9")
+            },
+            align = "left",
+            style = list(fontFamily = "monospace", whiteSpace = "pre")
+        ),
+        fail_rate = colDef(
+            name = "Fail (%)",
+            defaultSortOrder = "desc",
+            # Format and render the cell with a javascript render function
+            cell = JS("function(cellInfo) {
+                const pct = (cellInfo.value * 100).toFixed(1) + '%'
+                let value = pct.padStart(5)
+                if (cellInfo.viewIndex > 0){
+                    value = value.replace('%', ' ')
+                }
+                return(
+                '<div style=\"display: flex; align-items: center;\">' +
+                    '<span style=\"font-family: monospace; white-space: pre;\">' + value + '</span>' +
+                    '<div style=\"flex-grow: 1; margin-left: 6px; height: 14px; background-color: #e1e1e1\">' +
+                        '<div style=\"height: 100%; width: ' + pct + '; background-color: #fc5185\"></div>' +
+                    '</div>'
+                )
+            }"),
+            
+            # --- replace previous R code --- #
+            
+            #cell = function(value){
+            #    value <- paste0(format(value * 100, nsmall = 1), "%")
+            #    value <- format(value, width = 5, justify = "right")
+            #    bar_chart(value, width = value, fill = "#fc5185", background = "#e1e1e1")
+            #},
+            
+            # ------------------------------- #
+            
+            # Render this column as HTML
+            html = TRUE,
+            align = "left",
+            #style = list(fontFamily = "monospace", whiteSpace = "pre")
+        )
+    )
+)
 
 
 
