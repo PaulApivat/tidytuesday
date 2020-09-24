@@ -134,7 +134,7 @@ fail_pct <- table %>%
     ungroup()
 
 
-# df (join) ----
+# df (join) & write to csv ----
 
 # join attemps and fail_pct; filter by top 20 by number of attemps
 df <- attempts %>%
@@ -146,6 +146,7 @@ df <- attempts %>%
     ) %>%
     head(20)
 
+write_csv(df, "df.csv")
 
 # reactable tutorial ----
 
@@ -311,8 +312,8 @@ reactable(
     compact = TRUE
 )
 
-# Step 5: Finishing & CSS ----
-
+# Step 5: Finishing ----
+# see peaks.Rmd for final finishing and css
 
 reactable(
     df,
@@ -360,14 +361,8 @@ reactable(
     compact = TRUE
 )
 
-# Add title and subtitle
-div(class = "popular-peaks",
-    div(class = "attempts-header",
-        div(class = "table-title", "The Most Attempted Peaks of the Himalayas"),
-        "And the Most Challenging Among Them."
-        ),
-    tbl
-)
+
+
 
 
 
