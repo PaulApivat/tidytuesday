@@ -311,10 +311,63 @@ reactable(
     compact = TRUE
 )
 
+# Step 5: Finishing & CSS ----
 
 
+reactable(
+    df,
+    pagination = FALSE,
+    defaultSorted = "attempts",
+    columns = list(
+        peak = colDef(
+            name = "Peaks"
+        ),
+        attempts = colDef(
+            name = "Attempts (#)",
+            defaultSortOrder = "desc",
+            cell = function(value){
+                width <- paste0(value * 100 / max(df$attempts), "%")
+                value <- format(value, big.mark = ",")
+                value <- format(value, width = 9, justify = 'right')
+                bar_chart(value, width = width, fill = "#3fc1c9")
+            },
+            align = "left",
+            style = list(fontFamily = "monospace", whiteSpace = "pre")
+        ),
+        fail_rate = colDef(
+            name = "Fail (%)",
+            defaultSortOrder = "desc",
+            # Format and render the cell with a javascript render function
+            cell = JS("function(cellInfo) {
+                const pct = (cellInfo.value * 100).toFixed(1) + '%'
+                let value = pct.padStart(5)
+                if (cellInfo.viewIndex > 0){
+                    value = value.replace('%', ' ')
+                }
+                return(
+                '<div style=\"display: flex; align-items: center;\">' +
+                    '<span style=\"font-family: monospace; white-space: pre;\">' + value + '</span>' +
+                    '<div style=\"flex-grow: 1; margin-left: 6px; height: 14px; background-color: #e1e1e1\">' +
+                        '<div style=\"height: 100%; width: ' + pct + '; background-color: #fc5185\"></div>' +
+                    '</div>'
+                )
+            }"),
+            
+            # Render this column as HTML
+            html = TRUE
+        )
+    ),
+    compact = TRUE
+)
 
-
+# Add title and subtitle
+div(class = "popular-peaks",
+    div(class = "attempts-header",
+        div(class = "table-title", "The Most Attempted Peaks of the Himalayas"),
+        "And the Most Challenging Among Them."
+        ),
+    tbl
+)
 
 
 
