@@ -18,6 +18,7 @@ jump <- fromJSON("jumpdata.json", flatten = TRUE)
 str(jump)
 
 # change date
+# change datatypes
 jump <- jump %>%
     mutate(date = c("2018-11-01")) %>%
     mutate(
@@ -27,6 +28,8 @@ jump <- jump %>%
         respondents = as.numeric(respondents)
     )
 
+# orange palette
+orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
 
 # basic react table
 reactable(jump, 
@@ -62,7 +65,14 @@ reactable(jump,
                       color <- "#777"
                   }
                   list(color = color, fontWeight = "bold")
-              })
+              }),
+              alert = colDef(
+                  style = function(value){
+                      normalized <- (value - min(jump$alert)) / (max(jump$alert) - min(jump$alert))
+                      color <- orange_pal(normalized)
+                      list(background = color)
+                  }
+              )
           ))
 
 
