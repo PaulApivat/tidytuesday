@@ -30,6 +30,8 @@ jump <- jump %>%
 
 # basic react table
 reactable(jump, 
+          borderless = TRUE,
+          outlined = TRUE,
           filterable = TRUE, 
           searchable = TRUE, 
           minRows = 10, 
@@ -41,6 +43,14 @@ reactable(jump,
                   list(background = "rgba(0,0,0,0.05)")
               }
           },
+          theme = reactableTheme(
+              borderColor = "#dfe2e5",
+              stripedColor = "#f6f8fa",
+              highlightColor = "#f0f5f9",
+              cellPadding = "8px 12px",
+              style = list(fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"),
+              searchInputStyle = list(width = "100%")
+          ),
           columns = list(
               date = colDef(format = colFormat(date = TRUE, locales = 'en-GB')),
               score = colDef(style = function(value){
