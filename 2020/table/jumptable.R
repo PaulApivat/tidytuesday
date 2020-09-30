@@ -26,7 +26,9 @@ jump <- jump %>%
         score = as.numeric(score),
         alert = as.numeric(alert),
         respondents = as.numeric(respondents)
-    )
+    ) %>%
+    mutate(respondents = (jump$respondents)/26) %>%
+    select(driver, score, alert, group, respondents, date)
 
 # orange palette
 orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
@@ -35,17 +37,16 @@ orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorVal
 reactable(jump, 
           borderless = TRUE,
           outlined = TRUE,
-          filterable = TRUE, 
           searchable = TRUE, 
           minRows = 10, 
           showPageSizeOptions = TRUE,
           pageSizeOptions = c(10, 15, 20),
           defaultPageSize = 15,
-          rowStyle = function(index){
-              if(jump[index, "score"] < 50){
-                  list(background = "rgba(0,0,0,0.05)")
-              }
-          },
+          #rowStyle = function(index){
+          #    if(jump[index, "score"] < 50){
+          #        list(background = "rgba(0,0,0,0.05)")
+          #    }
+          #},
           theme = reactableTheme(
               borderColor = "#dfe2e5",
               stripedColor = "#f6f8fa",
@@ -72,7 +73,8 @@ reactable(jump,
                       color <- orange_pal(normalized)
                       list(background = color)
                   }
-              )
+              ),
+              respondents = colDef(format = colFormat(percent = TRUE, digits = 0))
           ))
 
 
