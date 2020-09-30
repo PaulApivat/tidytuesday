@@ -14,6 +14,15 @@ library(reactable)
 
 jump <- fromJSON("jumpdata.json", flatten = TRUE)
 
+# explore
+str(jump)
+
+# change date
+jump <- jump %>%
+    mutate(date = c("2018-11-01")) %>%
+    mutate(date = as.Date(date))
+
+
 # basic react table
 reactable(jump, 
           filterable = TRUE, 
@@ -21,12 +30,15 @@ reactable(jump,
           minRows = 10, 
           showPageSizeOptions = TRUE,
           pageSizeOptions = c(10, 15, 20),
-          defaultPageSize = 15)
+          defaultPageSize = 15,
+          columns = list(
+              date = colDef(format = colFormat(date = TRUE, locales = 'en-GB'))
+          ))
 
 
 # option: GroupBy 'driver
 reactable(jump, 
-          groupBy = "driver", columns = list(
+          groupBy = "group", columns = list(
               score = colDef(aggregate = "mean"),
               alert = colDef(aggregate = "max"),
               group = colDef(aggregate = "unique"),
