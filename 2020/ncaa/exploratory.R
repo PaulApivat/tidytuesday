@@ -83,6 +83,31 @@ tournament %>%
     geom_hline(yintercept = 74, color = 'black')
 
 
+# two shade ribbon
+tournament %>%
+    select(year, school, full_percent) %>%
+    filter(school %in% name_vector) %>%
+    mutate(direction = ifelse(full_percent > 74.2, 'up', 'down')) %>%
+    ggplot(aes(x=year, y=full_percent)) +
+    geom_line() +
+    geom_point() +
+    geom_ribbon(aes(x = year, ymin = 74.2, ymax=full_percent, fill="red"), alpha = 0.15) +
+    geom_ribbon(aes(x = year, ymin = full_percent, ymax = 74.2, fill="blue"), alpha = 0.15) +
+    facet_wrap(~school) +
+    geom_hline(yintercept = 74, color = 'black')
+
+# ifelse ribbon
+tournament %>%
+    select(year, school, full_percent) %>%
+    filter(school %in% name_vector) %>%
+    mutate(direction = ifelse(full_percent > 74.2, 'up', 'down')) %>%
+    ggplot(aes(x=year, y=full_percent)) +
+    geom_line() +
+    #geom_point() +
+    geom_ribbon(aes(x = year, ymin = 74.2, ymax = full_percent, fill=ifelse(direction=='up', 'red', 'blue')), alpha = 0.15) +
+    geom_ribbon(aes(x = year, ymin = full_percent, ymax = 74.2, fill=ifelse(direction=='up', 'red', 'blue')), alpha = 0.15) +
+    facet_wrap(~school) +
+    geom_hline(yintercept = 74, color = 'black')
 
 
 
