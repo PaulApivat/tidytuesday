@@ -26,3 +26,52 @@ tournament %>%
     filter(year==1990) %>%
     arrange(desc(full_percent)) %>% 
     view()
+
+
+tournament %>%
+    select(year, school, full_percent) %>%
+    group_by(school) %>%
+    summary()
+
+# quick visualizations ----
+library(lubridate)
+tournament %>%
+    select(year, school, full_percent) %>%
+    group_by(school) %>%
+    tally(sort = TRUE) %>% 
+    ungroup() %>%
+    head(30) %>%
+    pull(school) -> name_vector
+
+# facet wrap with horizontal median line
+tournament %>%
+    select(year, school, full_percent) %>%
+    filter(school %in% name_vector) %>%
+    ggplot(aes(x=year, y=full_percent)) +
+    geom_line(aes(color=school)) +
+    facet_wrap(~school) +
+    geom_hline(yintercept = 74, color = 'red')
+
+
+ 
+
+
+# select full_percent, year, program
+# long-to-wide pivot_wider
+# were there some years where schools were below 50%?
+
+tournament %>%
+    select(year, school, full_percent) %>%
+    pivot_wider(names_from = year, values_from = full_percent) %>% 
+    view()
+
+library(data.table)
+class(tournament)
+
+
+
+
+
+
+
+
