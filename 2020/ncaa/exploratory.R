@@ -150,16 +150,47 @@ tournament %>%
     filter(school %in% name_vector) %>%
     mutate(
         median_percent = median(full_percent),
+        # key to having two shades between two lines
         z = ifelse(full_percent > median_percent, full_percent, median_percent)
     ) %>%
     ggplot(aes(x=year, y=full_percent)) +
     geom_line() +
     geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='red', color='red') +
+    # using z as ymax is the key to having two shaded colors
     geom_ribbon(aes(ymin=median_percent, ymax=z), fill='blue', color='blue') +
     geom_hline(yintercept = 76.7) +
     facet_wrap(~school)
 
-
+# polish two lines two color plot
+tournament %>%
+    select(year, school, full_percent) %>%
+    filter(school %in% name_vector) %>%
+    mutate(
+        median_percent = 74.2,
+        # key to having two shades between two lines
+        z = ifelse(full_percent > median_percent, full_percent, median_percent)
+    ) %>%
+    ggplot(aes(x=year, y=full_percent)) +
+    geom_line() +
+    geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='red', alpha=.5) +
+    # using z as ymax is the key to having two shaded colors
+    geom_ribbon(aes(ymin=median_percent, ymax=z), fill='blue') +
+    geom_hline(yintercept = 74.2) +
+    facet_wrap(~school) +
+    theme(
+        strip.text.x = element_text(face = 'bold', size = 10),
+        strip.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank()
+    ) +
+    labs(
+        x = 'Years',
+        y = 'Total sum win/loss percent',
+        caption = 'Visualization: Psul Apivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06'
+    )
+    
+    
 
 
 
