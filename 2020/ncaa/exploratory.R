@@ -172,9 +172,9 @@ tournament %>%
     ) %>%
     ggplot(aes(x=year, y=full_percent)) +
     geom_line() +
-    geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='red', alpha=.5) +
+    geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='#46edc8') +
     # using z as ymax is the key to having two shaded colors
-    geom_ribbon(aes(ymin=median_percent, ymax=z), fill='blue') +
+    geom_ribbon(aes(ymin=median_percent, ymax=z), fill='#374d7c') +
     geom_hline(yintercept = 74.2) +
     facet_wrap(~school) +
     theme(
@@ -182,12 +182,14 @@ tournament %>%
         strip.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.border = element_blank()
+        panel.border = element_blank(),
+        plot.background = element_rect(fill = 'whitesmoke'),
+        panel.background = element_rect(fill = 'whitesmoke')
     ) +
     labs(
         x = 'Years',
-        y = 'Total sum win/loss percent',
-        caption = 'Visualization: Psul Apivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06'
+        y = 'Total Sum Win / Loss Percent (%)',
+        caption = 'Visualization: Paul Apivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06'
     )
     
     
