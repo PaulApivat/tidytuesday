@@ -34,8 +34,10 @@ tournament %>%
     summary()
 
 
-# quick visualizations ----
+
 library(lubridate)
+
+# name_vector ----
 tournament %>%
     select(year, school, full_percent) %>%
     group_by(school) %>%
@@ -43,6 +45,8 @@ tournament %>%
     ungroup() %>%
     head(30) %>%
     pull(school) -> name_vector
+
+# quick visualizations ----
 
 # facet wrap with horizontal median line
 tournament %>%
@@ -178,7 +182,7 @@ tournament %>%
     geom_hline(yintercept = 74.2) +
     facet_wrap(~school) +
     theme(
-        strip.text.x = element_text(face = 'bold', size = 10),
+        strip.text.x = element_text(face = 'bold', size = 10, family = 'Lato'),
         strip.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -189,7 +193,9 @@ tournament %>%
     labs(
         x = 'Years',
         y = 'Total Sum Win / Loss Percent (%)',
-        caption = 'Visualization: Paul Apivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06'
+        caption = 'Visualization: Paul Apivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06',
+        title = "Sustained Excellence of NCAA Women's College Basketball Programs\n",
+        subtitle = "These 30 programs were chosen based on data availability. They are benchmarked against the median win / loss percentages (%)\nof all programs. UConn is the clear standard for sustained excellence as is Stanford, Tennesee and Louisiana Tech.\nThese programs are consistently above the median, in some cases achieving high win/loss percentages over decades."
     )
     
     
