@@ -166,6 +166,8 @@ tournament %>%
     facet_wrap(~school)
 
 # polish two lines two color plot
+
+
 tournament %>%
     select(year, school, full_percent) %>%
     filter(school %in% name_vector) %>%
@@ -188,14 +190,15 @@ tournament %>%
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         plot.background = element_rect(fill = 'whitesmoke'),
-        panel.background = element_rect(fill = 'whitesmoke')
+        panel.background = element_rect(fill = 'whitesmoke'),
+        plot.title = element_text(face = 'bold', family = 'Lato', size = 20)
     ) +
     labs(
         x = 'Years',
         y = 'Total Sum Win / Loss Percent (%)',
-        caption = 'Visualization: Paul Apivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06',
-        title = "Sustained Excellence of NCAA Women's College Basketball Programs\n",
-        subtitle = "These 30 programs were chosen based on data availability. They are benchmarked against the median win / loss percentages (%)\nof all programs. UConn is the clear standard for sustained excellence as is Stanford, Tennesee and Louisiana Tech.\nThese programs are consistently above the median, in some cases achieving high win/loss percentages over decades."
+        caption = "Visualization: @paulapivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06",
+        title = "Sustained Excellence among NCAA Women's College Basketball Programs",
+        subtitle = "These 30 programs were chosen based on data availability. They are benchmarked against the median win / loss percentages (%)\namong all programs. UConn is the gold standard for sustained excellence as is Stanford, Tennesee and Louisiana Tech.\nThese programs are consistently above the median, in some cases achieving high win/loss percentages over decades.\n"
     )
     
     
