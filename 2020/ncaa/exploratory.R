@@ -167,9 +167,10 @@ tournament %>%
 
 # polish two lines two color plot
 
-
+# final plot
 tournament %>%
     select(year, school, full_percent) %>%
+    # use name_vector to filter for programs with most data availability
     filter(school %in% name_vector) %>%
     mutate(
         median_percent = 74.2,
