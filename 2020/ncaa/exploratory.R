@@ -128,6 +128,7 @@ class(tournament)
 
 # Data Wrangling to fit geom_ribbon ----
 
+# one color
 tournament %>%
     select(year, school, full_percent) %>%
     filter(school %in% name_vector) %>%
@@ -139,8 +140,23 @@ tournament %>%
         ) %>%
     ggplot(aes(x=year, y=median_percent)) +
     geom_ribbon(aes(x=year, ymax=full_percent, ymin=median_percent), fill='blue', alpha=.5) +
-    
     #geom_ribbon(aes(x=year, ymax=median_percent, ymin=full_percent), fill='red', alpha=.5) +
+    facet_wrap(~school)
+
+
+# two color, two lines
+tournament %>%
+    select(year, school, full_percent) %>%
+    filter(school %in% name_vector) %>%
+    mutate(
+        median_percent = median(full_percent),
+        z = ifelse(full_percent > median_percent, full_percent, median_percent)
+    ) %>%
+    ggplot(aes(x=year, y=full_percent)) +
+    geom_line() +
+    geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='red', color='red') +
+    geom_ribbon(aes(ymin=median_percent, ymax=z), fill='blue', color='blue') +
+    geom_hline(yintercept = 76.7) +
     facet_wrap(~school)
 
 
@@ -148,8 +164,6 @@ tournament %>%
 
 
 
-
-    mutate(direction = ifelse(full_percent > 74.2, 'up', 'down'))
 
 
 
