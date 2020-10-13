@@ -266,6 +266,22 @@ selected_school <- tournament %>%
 tournamemt2 <- selected_school %>%
     left_join(year_range, by = 'school')
 
+# Adjusted panel label ----
+
+# rename the factors of the variable used for faceting
+tournamemt2 
+tournamemt2$school <- as.factor(tournamemt2$school)
+levels(tournamemt2$school) <- c("Auburn, 1982-2017", "DePaul, 1990-2018", "Duke, 1987-2018", "George W., 1991-2018",
+                                "Georgia, 1982-2018", "Green Bay, 1994-2018", "Iowa, 1986-2018", "Louisiana T., 1982-2011",
+                                "Louisville, 1983-2018", "LSU, 1984-2018", "Maryland, 1982-2018", "Montana, 1983-2015",
+                                "NC State, 1982-2018", "North Carolina, 1983-2015", "Notre Dame, 1992-2018", "Ohio St., 1982-2018",
+                                "Oklahoma, 1986-2018", "Old Dominion, 1982-2008", "Penn St., 1982-2014", "Purdue, 1989-2017",
+                                "Rutgers, 1986-2015", "Stanford, 1982-2018", "Tennessee, 1982-2018", "Texas, 1983-2018",
+                                "Texas Tech, 1984-2013", "UConn, 1989-2018", "Vanderbilt, 1986-2014", "Virginia, 1984-2018",
+                                "Washington, 1985-2017", "Western Ky., 1985-2018")
+levels(tournamemt2$school)
+
+
 # join year_range and selected_school
 tournamemt2 %>%
     ggplot(aes(x=year, y=full_percent)) +
@@ -274,7 +290,7 @@ tournamemt2 %>%
     geom_ribbon(aes(ymin=median_percent, ymax=z), fill='#374d7c') +
     geom_hline(yintercept = 74.2) +
     #facet_wrap(~school, scales = 'free_x') +
-    facet_wrap(~school, scales = 'free_x', labeller = label_value) +
+    facet_wrap(~school, scales = 'free_x') +
     theme(
         strip.text.x = element_text(face = 'bold', size = 10, family = 'Lato'),
         strip.background = element_blank(),
@@ -294,4 +310,16 @@ tournamemt2 %>%
         title = "Sustained Excellence among NCAA Women's College Basketball Programs",
         subtitle = "These 30 programs were chosen based on data availability. They are benchmarked against the median win / loss percentages (%)\namong all programs. UConn is the gold standard for sustained excellence as is Stanford, Tennesee and Louisiana Tech.\nThese programs are consistently above the median, in some cases achieving high win/loss percentages over decades.\n"
     )
+
+
+
+
+
+
+
+
+
+
+
+
 
