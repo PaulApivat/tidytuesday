@@ -208,22 +208,18 @@ library(lubridate)
 
 tournament %>%
     select(year, school, full_percent) %>%
-    # use name_vector to filter for programs with most data availability
     filter(school %in% name_vector) %>%
     mutate(
         median_percent = 74.2,
-        # key to having two shades between two lines
         z = ifelse(full_percent > median_percent, full_percent, median_percent)
     ) %>%
     ggplot(aes(x=year, y=full_percent)) +
     geom_line() +
     geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='#46edc8') +
-    # using z as ymax is the key to having two shaded colors
     geom_ribbon(aes(ymin=median_percent, ymax=z), fill='#374d7c') +
     geom_hline(yintercept = 74.2) +
     facet_wrap(~school, scales = 'free_x') +
-    scale_x_continuous(breaks = scales::extended_breaks(3), limits = c(1980, 2020)) +
-    #scale_x_continuous(breaks = scales::pretty_breaks(2), limits = c(1980, 2020)) +
+    #facet_wrap(~school, scales = 'free_x', labeller = label_bquote(.(school)-.(range(year)))) +
     theme(
         strip.text.x = element_text(face = 'bold', size = 10, family = 'Lato'),
         strip.background = element_blank(),
@@ -232,7 +228,9 @@ tournament %>%
         panel.border = element_blank(),
         plot.background = element_rect(fill = 'whitesmoke'),
         panel.background = element_rect(fill = 'whitesmoke'),
-        plot.title = element_text(face = 'bold', family = 'Lato', size = 20)
+        plot.title = element_text(face = 'bold', family = 'Lato', size = 20),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
     ) +
     labs(
         x = 'Years',
@@ -243,13 +241,57 @@ tournament %>%
     )
 
 
-tournament %>%
+
+# calculate min and max years (year_range)
+year_range <- tournament %>%
     select(year, school, full_percent) %>%
-    # use name_vector to filter for programs with most data availability
     filter(school %in% name_vector) %>%
-    slice(which.min(year))
+    group_by(school) %>%
+    summarize(
+        min_year = min(year), 
+        max_year = max(year)
+    ) %>%
+    ungroup() 
 
+# create a dataframe of selected schools to join with year_range
+selected_school <- tournament %>%
+    select(year, school, full_percent) %>%
+    filter(school %in% name_vector) %>%
+    mutate(
+        median_percent = 74.2,
+        z = ifelse(full_percent > median_percent, full_percent, median_percent)
+    )
 
+# join year_range and selected_school
+tournamemt2 <- selected_school %>%
+    left_join(year_range, by = 'school')
 
-
+# join year_range and selected_school
+tournamemt2 %>%
+    ggplot(aes(x=year, y=full_percent)) +
+    geom_line() +
+    geom_ribbon(aes(ymin=median_percent, ymax=full_percent), fill='#46edc8') +
+    geom_ribbon(aes(ymin=median_percent, ymax=z), fill='#374d7c') +
+    geom_hline(yintercept = 74.2) +
+    #facet_wrap(~school, scales = 'free_x') +
+    facet_wrap(~school, scales = 'free_x', labeller = label_value) +
+    theme(
+        strip.text.x = element_text(face = 'bold', size = 10, family = 'Lato'),
+        strip.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        plot.background = element_rect(fill = 'whitesmoke'),
+        panel.background = element_rect(fill = 'whitesmoke'),
+        plot.title = element_text(face = 'bold', family = 'Lato', size = 20),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
+    ) +
+    labs(
+        x = 'Years',
+        y = 'Total Sum Win / Loss Percent (%)',
+        caption = "Visualization: @paulapivat, Data: FiveThirtyEight,\n TidyTuesday 2020-10-06",
+        title = "Sustained Excellence among NCAA Women's College Basketball Programs",
+        subtitle = "These 30 programs were chosen based on data availability. They are benchmarked against the median win / loss percentages (%)\namong all programs. UConn is the gold standard for sustained excellence as is Stanford, Tennesee and Louisiana Tech.\nThese programs are consistently above the median, in some cases achieving high win/loss percentages over decades.\n"
+    )
 
