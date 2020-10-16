@@ -35,6 +35,9 @@ raptor_table <- df %>%
 # reactable
 # can save some number format and prefixes for reactable
 
+# conditional styling
+orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
+
 reactable(
     raptor_table,
     height = 600,
@@ -71,9 +74,23 @@ reactable(
                      minWidth = 100,
                 ),
         TOTAL = colDef(format = colFormat(prefix = "+", digits = 1), minWidth = 100),
-        WAR = colDef(format = colFormat(digits = 1), minWidth = 100),
-        PLAYOFF_WAR = colDef(format = colFormat(digits = 1), minWidth = 100)
-    ),
+        WAR = colDef(format = colFormat(digits = 1), 
+                     minWidth = 100, 
+                     style = function(value){
+                        normalized <- (value - min(raptor_table$WAR)) / (max(raptor_table$WAR) - min(raptor_table$WAR))
+                        color <- orange_pal(normalized)
+                        list(background = color)
+                        }
+                     ),
+        PLAYOFF_WAR = colDef(format = colFormat(digits = 1), 
+                             minWidth = 100,
+                             style = function(value){
+                                 normalized <- (value - min(raptor_table$PLAYOFF_WAR)) / (max(raptor_table$PLAYOFF_WAR) - min(raptor_table$PLAYOFF_WAR))
+                                 color <- orange_pal(normalized)
+                                 list(background = color)
+                             }
+                    )
+        ),
     showSortIcon = TRUE,
     searchable = TRUE,
     minRows = 10,
