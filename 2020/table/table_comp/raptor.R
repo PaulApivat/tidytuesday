@@ -37,19 +37,50 @@ raptor_table <- df %>%
 
 reactable(
     raptor_table,
+    height = 600,
+    defaultColDef = colDef(header = function(value) gsub("_", " ", value, fixed = TRUE),
+                           footer = function(values, name) htmltools::div(name, style = list(fontWeight = 600))),
     columns = list(
-        SEASON = colDef(format = colFormat(digits = 0)),
-        OFF = colDef(format = colFormat(prefix = "+", digits = 1)),
-        DEF = colDef(format = colFormat(prefix = "+", digits = 1)),
-        TOTAL = colDef(format = colFormat(prefix = "+", digits = 1)),
-        WAR = colDef(format = colFormat(digits = 1)),
-        PLAYOFF_WAR = colDef(format = colFormat(digits = 1))
+        NAME = colDef(minWidth = 100),
+        SEASON = colDef(format = colFormat(digits = 0), minWidth = 200),
+        MIN_PLAYED = colDef(format = colFormat(separators = TRUE), minWidth = 200),
+        OFF = colDef(format = colFormat(prefix = "+", digits = 1), 
+                     style = function(value){
+                         if(value > 0){
+                             color <- "#008000"
+                         } else if (value < 0){
+                             color <- "#e00000"
+                         } else {
+                             color <- "#777"
+                         }
+                         list(color = color, fontWeight = "bold")
+                     },
+                     minWidth = 100,
+                ),
+        DEF = colDef(format = colFormat(prefix = "+", digits = 1),
+                     style = function(value){
+                         if(value > 0){
+                             color <- "#008000"
+                         } else if (value < 0){
+                             color <- "#e00000"
+                         } else {
+                             color <- "#777"
+                         }
+                         list(color = color, fontWeight = "bold")
+                     },
+                     minWidth = 100,
+                ),
+        TOTAL = colDef(format = colFormat(prefix = "+", digits = 1), minWidth = 100),
+        WAR = colDef(format = colFormat(digits = 1), minWidth = 100),
+        PLAYOFF_WAR = colDef(format = colFormat(digits = 1), minWidth = 100)
     ),
     showSortIcon = TRUE,
     searchable = TRUE,
     minRows = 10,
     pagination = FALSE,
-    showPageInfo = FALSE
+    showPageInfo = FALSE,
+    highlight = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", noData = "No matches")
 )
 
 
