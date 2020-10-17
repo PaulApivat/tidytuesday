@@ -36,7 +36,11 @@ raptor_table <- df %>%
 # can save some number format and prefixes for reactable
 
 # conditional styling
-orange_pal <- function(x) rgb(colorRamp(c("#ffefed", "#ff2c0f"))(x), maxColorValue = 255)
+#orange_pal <- function(x) rgb(colorRamp(c("#ffefed", "#ff2c0f"))(x), maxColorValue = 255)
+
+# note: color require two shade (blue & red), not different gradients of one shade (red only)
+orange_pal <- function(x) rgb(colorRamp(c("#edfeff", "#ff2c0f"))(x), maxColorValue = 255)
+
 
 reactable(
     raptor_table,
@@ -63,7 +67,7 @@ reactable(
                      },
                      minWidth = 100,
                 ),
-        TOTAL = colDef(format = colFormat(prefix = "+", digits = 1), minWidth = 100),
+        TOTAL = colDef(format = colFormat(prefix = "+", digits = 1), minWidth = 100, style = list(backgroundColor = '#F5F5F5')),
         WAR = colDef(format = colFormat(digits = 1), 
                      minWidth = 100, 
                      ),
