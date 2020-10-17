@@ -49,46 +49,26 @@ reactable(
         MIN_PLAYED = colDef(format = colFormat(separators = TRUE), minWidth = 200),
         OFF = colDef(format = colFormat(prefix = "+", digits = 1), 
                      style = function(value){
-                         if(value > 0){
-                             color <- "#008000"
-                         } else if (value < 0){
-                             color <- "#e00000"
-                         } else {
-                             color <- "#777"
-                         }
-                         list(color = color, fontWeight = "bold")
+                         normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
+                         color <- orange_pal(normalized)
+                         list(background = color, fontWeight = "bold")
                      },
                      minWidth = 100,
                 ),
         DEF = colDef(format = colFormat(prefix = "+", digits = 1),
                      style = function(value){
-                         if(value > 0){
-                             color <- "#008000"
-                         } else if (value < 0){
-                             color <- "#e00000"
-                         } else {
-                             color <- "#777"
-                         }
-                         list(color = color, fontWeight = "bold")
+                         normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
+                         color <- orange_pal(normalized)
+                         list(background = color, fontWeight = "bold")
                      },
                      minWidth = 100,
                 ),
         TOTAL = colDef(format = colFormat(prefix = "+", digits = 1), minWidth = 100),
         WAR = colDef(format = colFormat(digits = 1), 
                      minWidth = 100, 
-                     style = function(value){
-                        normalized <- (value - min(raptor_table$WAR)) / (max(raptor_table$WAR) - min(raptor_table$WAR))
-                        color <- orange_pal(normalized)
-                        list(background = color)
-                        }
                      ),
         PLAYOFF_WAR = colDef(format = colFormat(digits = 1), 
                              minWidth = 100,
-                             style = function(value){
-                                 normalized <- (value - min(raptor_table$PLAYOFF_WAR)) / (max(raptor_table$PLAYOFF_WAR) - min(raptor_table$PLAYOFF_WAR))
-                                 color <- orange_pal(normalized)
-                                 list(background = color)
-                             }
                     )
         ),
     showSortIcon = TRUE,
