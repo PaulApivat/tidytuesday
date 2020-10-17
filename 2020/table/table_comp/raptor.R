@@ -36,7 +36,7 @@ raptor_table <- df %>%
 # can save some number format and prefixes for reactable
 
 # conditional styling
-orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
+orange_pal <- function(x) rgb(colorRamp(c("#ffefed", "#ff2c0f"))(x), maxColorValue = 255)
 
 reactable(
     raptor_table,
