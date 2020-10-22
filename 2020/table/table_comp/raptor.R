@@ -41,29 +41,39 @@ raptor_table <- df %>%
 # note: color require two shade (blue & red), not different gradients of one shade (red only)
 orange_pal <- function(x) rgb(colorRamp(c("#edfeff", "#ff2c0f"))(x), maxColorValue = 255)
 
+library(htmltools)
+
+bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL){
+    bar <- div(style = list(background = fill, width = width, height = height))
+    chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
+    div(style = list(display = "flex", alignItems = "center"), label, chart)
+}
+
+
 
 reactable(
     raptor_table,
     height = 600,
     defaultColDef = colDef(
-        header = function(value) gsub("_", " ", value, fixed = TRUE)
+        header = function(value) gsub("_", " ", value, fixed = TRUE),
+        headerStyle = list(fontFamily = "monospace", fontSize = 16)
         ),
     columns = list(
         NAME = colDef(
-            minWidth = 120, 
+            minWidth = 200, 
             style = list(fontFamily = "monospace", fontSize = 14)
             ),
         SEASON = colDef(
                     format = colFormat(digits = 0), 
-                    minWidth = 200,
+                    minWidth = 120,
                     style = list(fontFamily = "monospace", fontSize = 14),
-                    align = 'center'
+                    align = 'left'
             ),
         MIN_PLAYED = colDef(
                     format = colFormat(separators = TRUE), 
-                    minWidth = 200,
+                    minWidth = 120,
                     style = list(fontFamily = "monospace", fontSize = 14),
-                    align = 'center'
+                    align = 'right'
             ),
         OFF = colDef(format = colFormat(prefix = "", digits = 1), 
                      style = function(value){
@@ -92,10 +102,17 @@ reactable(
                     align = 'center'
             ),
         WAR = colDef(
-                     format = colFormat(digits = 1), 
+                     format = colFormat(digits = 0), 
                      minWidth = 100, 
                      style = list(fontFamily = "monospace", fontSize = 14),
-                     align = 'center'
+                     align = 'center',
+                     # render bar charts
+                     #cell = function(value){
+                     #    width <- paste0(value * 100 / max(raptor_table$WAR), '%')
+                     #    value <- format(value, big.mark = ".")
+                     #    value <- format(value, width = 5, justify = 'right')
+                     #    bar_chart(value, width = width, fill = "#3fc1c9")
+                     #}
                      ),
         PLAYOFF_WAR = colDef(
                     format = colFormat(digits = 1), 
@@ -105,13 +122,17 @@ reactable(
                     align = 'center'
                     )
         ),
+    #columnGroups = list(
+    #    colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
+    #),
     showSortIcon = TRUE,
     searchable = TRUE,
     minRows = 10,
     pagination = FALSE,
     showPageInfo = FALSE,
     highlight = TRUE,
-    language = reactableLang(searchPlaceholder = "Search...", noData = "No matches")
+    language = reactableLang(searchPlaceholder = "Search...", noData = "No matches"),
+    compact = TRUE
 )
 
 
