@@ -41,13 +41,6 @@ raptor_table <- df %>%
 # note: color require two shade (blue & red), not different gradients of one shade (red only)
 orange_pal <- function(x) rgb(colorRamp(c("#edfeff", "#ff2c0f"))(x), maxColorValue = 255)
 
-library(htmltools)
-
-bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL){
-    bar <- div(style = list(background = fill, width = width, height = height))
-    chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
-    div(style = list(display = "flex", alignItems = "center"), label, chart)
-}
 
 
 
@@ -102,17 +95,10 @@ reactable(
                     align = 'center'
             ),
         WAR = colDef(
-                     format = colFormat(digits = 0), 
-                     minWidth = 100, 
-                     style = list(fontFamily = "monospace", fontSize = 14),
-                     align = 'center',
-                     # render bar charts
-                     #cell = function(value){
-                     #    width <- paste0(value * 100 / max(raptor_table$WAR), '%')
-                     #    value <- format(value, big.mark = ".")
-                     #    value <- format(value, width = 5, justify = 'right')
-                     #    bar_chart(value, width = width, fill = "#3fc1c9")
-                     #}
+                     format = colFormat(digits = 1), 
+                     minWidth = 130, 
+                     style = list(fontFamily = "monospace", whiteSpace = "pre", fontSize = 14),
+                     align = 'center'
                      ),
         PLAYOFF_WAR = colDef(
                     format = colFormat(digits = 1), 
