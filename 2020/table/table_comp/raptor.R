@@ -45,34 +45,52 @@ orange_pal <- function(x) rgb(colorRamp(c("#edfeff", "#ff2c0f"))(x), maxColorVal
 reactable(
     raptor_table,
     height = 600,
-    defaultColDef = colDef(header = function(value) gsub("_", " ", value, fixed = TRUE),
-                           footer = function(values, name) htmltools::div(name, style = list(fontWeight = 600))),
+    defaultColDef = colDef(
+        header = function(value) gsub("_", " ", value, fixed = TRUE)
+        ),
     columns = list(
-        NAME = colDef(minWidth = 100),
-        SEASON = colDef(format = colFormat(digits = 0), minWidth = 200),
-        MIN_PLAYED = colDef(format = colFormat(separators = TRUE), minWidth = 200),
+        NAME = colDef(
+            minWidth = 120, 
+            style = list(fontFamily = "monospace", fontSize = 14)
+            ),
+        SEASON = colDef(
+            format = colFormat(digits = 0), 
+            minWidth = 200,
+            style = list(fontFamily = "monospace", fontSize = 14)
+            ),
+        MIN_PLAYED = colDef(
+            format = colFormat(separators = TRUE), 
+            minWidth = 200,
+            style = list(fontFamily = "monospace", fontSize = 14)
+            ),
         OFF = colDef(format = colFormat(prefix = "+", digits = 1), 
                      style = function(value){
                          normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
                          color <- orange_pal(normalized)
-                         list(background = color, fontWeight = "bold")
+                         list(background = color, fontWeight = "bold", fontFamily = "monospace", fontSize = 14)
                      },
                      minWidth = 100,
                 ),
-        DEF = colDef(format = colFormat(prefix = "+", digits = 1),
+        DEF = colDef(format = colFormat(prefix = "", digits = 1),
                      style = function(value){
                          normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
                          color <- orange_pal(normalized)
-                         list(background = color, fontWeight = "bold")
+                         list(background = color, fontWeight = "bold", fontFamily = "monospace", fontSize = 14)
                      },
                      minWidth = 100,
                 ),
-        TOTAL = colDef(format = colFormat(prefix = "+", digits = 1), minWidth = 100, style = list(backgroundColor = '#F5F5F5')),
+        TOTAL = colDef(
+            format = colFormat(prefix = "+", digits = 1), 
+            minWidth = 100, 
+            style = list(backgroundColor = '#F5F5F5', fontFamily = "monospace", fontSize = 14)
+            ),
         WAR = colDef(format = colFormat(digits = 1), 
                      minWidth = 100, 
+                     style = list(fontFamily = "monospace", fontSize = 14)
                      ),
         PLAYOFF_WAR = colDef(format = colFormat(digits = 1), 
                              minWidth = 100,
+                             style = list(fontFamily = "monospace", fontSize = 14)
                     )
         ),
     showSortIcon = TRUE,
