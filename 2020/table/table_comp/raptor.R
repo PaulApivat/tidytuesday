@@ -54,43 +54,55 @@ reactable(
             style = list(fontFamily = "monospace", fontSize = 14)
             ),
         SEASON = colDef(
-            format = colFormat(digits = 0), 
-            minWidth = 200,
-            style = list(fontFamily = "monospace", fontSize = 14)
+                    format = colFormat(digits = 0), 
+                    minWidth = 200,
+                    style = list(fontFamily = "monospace", fontSize = 14),
+                    align = 'center'
             ),
         MIN_PLAYED = colDef(
-            format = colFormat(separators = TRUE), 
-            minWidth = 200,
-            style = list(fontFamily = "monospace", fontSize = 14)
+                    format = colFormat(separators = TRUE), 
+                    minWidth = 200,
+                    style = list(fontFamily = "monospace", fontSize = 14),
+                    align = 'center'
             ),
-        OFF = colDef(format = colFormat(prefix = "+", digits = 1), 
+        OFF = colDef(format = colFormat(prefix = "", digits = 1), 
                      style = function(value){
                          normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
                          color <- orange_pal(normalized)
                          list(background = color, fontWeight = "bold", fontFamily = "monospace", fontSize = 14)
                      },
                      minWidth = 100,
+                     align = 'center'
                 ),
-        DEF = colDef(format = colFormat(prefix = "", digits = 1),
+        DEF = colDef(
+                     format = colFormat(prefix = "", digits = 1),
+                     name = "DEF",
                      style = function(value){
                          normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
                          color <- orange_pal(normalized)
                          list(background = color, fontWeight = "bold", fontFamily = "monospace", fontSize = 14)
                      },
                      minWidth = 100,
+                     align = 'center'
                 ),
         TOTAL = colDef(
-            format = colFormat(prefix = "+", digits = 1), 
-            minWidth = 100, 
-            style = list(backgroundColor = '#F5F5F5', fontFamily = "monospace", fontSize = 14)
+                    format = colFormat(prefix = "+", digits = 1), 
+                    minWidth = 100, 
+                    style = list(backgroundColor = '#F5F5F5', fontFamily = "monospace", fontSize = 14),
+                    align = 'center'
             ),
-        WAR = colDef(format = colFormat(digits = 1), 
+        WAR = colDef(
+                     format = colFormat(digits = 1), 
                      minWidth = 100, 
-                     style = list(fontFamily = "monospace", fontSize = 14)
+                     style = list(fontFamily = "monospace", fontSize = 14),
+                     align = 'center'
                      ),
-        PLAYOFF_WAR = colDef(format = colFormat(digits = 1), 
-                             minWidth = 100,
-                             style = list(fontFamily = "monospace", fontSize = 14)
+        PLAYOFF_WAR = colDef(
+                    format = colFormat(digits = 1), 
+                    name = 'P/O WAR',
+                    minWidth = 100,
+                    style = list(fontFamily = "monospace", fontSize = 14),
+                    align = 'center'
                     )
         ),
     showSortIcon = TRUE,
