@@ -1,5 +1,6 @@
 library(tidyverse)
 library(reactable)
+library(htmltools)
 
 # read data
 df <- read_csv("historical_RAPTOR_by_player.csv")
@@ -54,30 +55,30 @@ reactable(
     height = 600,
     defaultColDef = colDef(
         header = function(value) gsub("_", " ", value, fixed = TRUE),
-        headerStyle = list(fontFamily = "monospace", fontSize = 16)
+        headerStyle = list(fontFamily = "liberation mono", fontSize = 16)
         ),
     columns = list(
         NAME = colDef(
             minWidth = 200, 
-            style = list(fontFamily = "monospace", fontSize = 14)
+            style = list(fontFamily = "liberation mono", fontSize = 14)
             ),
         SEASON = colDef(
                     format = colFormat(digits = 0), 
                     minWidth = 120,
-                    style = list(fontFamily = "monospace", fontSize = 14),
+                    style = list(fontFamily = "liberation mono", fontSize = 14),
                     align = 'left'
             ),
         MIN_PLAYED = colDef(
                     format = colFormat(separators = TRUE), 
                     minWidth = 120,
-                    style = list(fontFamily = "monospace", fontSize = 14),
+                    style = list(fontFamily = "liberation mono", fontSize = 14),
                     align = 'right'
             ),
         OFF = colDef(format = colFormat(prefix = "", digits = 1), 
                      style = function(value){
                          normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
                          color <- orange_pal(normalized)
-                         list(background = color, fontWeight = "bold", fontFamily = "monospace", fontSize = 14)
+                         list(background = color, fontWeight = "bold", fontFamily = "liberation mono", fontSize = 14)
                      },
                      minWidth = 100,
                      align = 'center'
@@ -88,7 +89,7 @@ reactable(
                      style = function(value){
                          normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
                          color <- orange_pal(normalized)
-                         list(background = color, fontWeight = "bold", fontFamily = "monospace", fontSize = 14)
+                         list(background = color, fontWeight = "bold", fontFamily = "liberation mono", fontSize = 14)
                      },
                      minWidth = 100,
                      align = 'center'
@@ -96,20 +97,20 @@ reactable(
         TOTAL = colDef(
                     format = colFormat(prefix = "+", digits = 1), 
                     minWidth = 100, 
-                    style = list(backgroundColor = '#F5F5F5', fontFamily = "monospace", fontSize = 14),
+                    style = list(backgroundColor = '#F5F5F5', fontFamily = "liberation mono", fontSize = 14),
                     align = 'center'
             ),
         WAR = colDef(
                      format = colFormat(digits = 1), 
                      minWidth = 100, 
-                     style = list(fontFamily = "monospace", whiteSpace = "pre", fontSize = 14),
+                     style = list(fontFamily = "liberation mono", whiteSpace = "pre", fontSize = 14),
                      align = 'center'
                      ),
         PLAYOFF_WAR = colDef(
                     #format = colFormat(digits = 1), 
                     name = 'P/O WAR',
                     minWidth = 130,
-                    style = list(fontFamily = "monospace", whiteSpace = "pre", fontSize = 14),
+                    style = list(fontFamily = "liberation mono", whiteSpace = "pre", fontSize = 14),
                     align = 'center',
                     # render bar chart
                     cell = function(value){
