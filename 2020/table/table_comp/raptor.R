@@ -134,7 +134,19 @@ reactable(
 )
 
 
+### Test Group Columns ----
 
+reactable(
+    raptor_table[1:5,],
+    columns = list(
+        OFF = colDef(name = "Offense"),
+        DEF = colDef(name = "Defense"),
+        TOTAL = colDef(name = "Total")
+    ),
+    columnGroups = list(
+        colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
 
 
 
