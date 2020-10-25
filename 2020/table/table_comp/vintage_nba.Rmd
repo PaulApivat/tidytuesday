@@ -223,7 +223,9 @@ reactable(
                        minWidth = 60, 
                        align = 'right',
                        format = colFormat(prefix = "+", 
-                                          digits = 1)), 
+                                          digits = 1),
+                       style = list(fontFamily = "liberation mono", 
+                                         fontSize = 14)), 
         WAR = colDef(minWidth = 60, 
                      align = "right",
                      format = colFormat(digits = 1), 
@@ -244,7 +246,7 @@ reactable(
 )
 ```
 
-## Add Color for OFF & DEF
+## Add Color for OFF, DEF & TOTAL
 
 We'll visualize differences in offensive (OFF) and defensive (DEF) ratings for each NBA player for the regular season and playoffs. 
 
@@ -318,7 +320,10 @@ reactable(
                        minWidth = 60, 
                        align = 'right',
                        format = colFormat(prefix = "+", 
-                                          digits = 1)), 
+                                          digits = 1),
+                       style = list(backgroundColor = '#F5F5F5',
+                                    fontFamily = "liberation mono", 
+                                    fontSize = 14)), 
         WAR = colDef(minWidth = 60, 
                      align = "right",
                      format = colFormat(digits = 1), 
@@ -417,7 +422,10 @@ reactable(
                        minWidth = 60, 
                        align = 'right',
                        format = colFormat(prefix = "+", 
-                                          digits = 1)), 
+                                          digits = 1), 
+                       style = list(backgroundColor = '#F5F5F5',
+                                    fontFamily = "liberation mono", 
+                                    fontSize = 14)), 
         WAR = colDef(minWidth = 60, 
                      align = "right",
                      format = colFormat(digits = 1), 
@@ -448,6 +456,9 @@ reactable(
 ```
 
 ## Table Header Styling
+
+We're putting the finishing touches on this table. We'll change all column header font to "liberation mono" and we'll set the
+`defaultPageSize` to 15. 
 
 ```{r header}
 
@@ -514,7 +525,10 @@ reactable(
                        minWidth = 60, 
                        align = 'right',
                        format = colFormat(prefix = "+", 
-                                          digits = 1)), 
+                                          digits = 1),
+                       style = list(backgroundColor = '#F5F5F5',
+                                    fontFamily = "liberation mono", 
+                                    fontSize = 14)), 
         WAR = colDef(minWidth = 60, 
                      align = "right",
                      format = colFormat(digits = 1), 
@@ -540,6 +554,7 @@ reactable(
         colGroup(name = "RAPTOR", 
                  columns = c("OFF", "DEF", "TOTAL"),
                  headerStyle = list(fontFamily = "liberation mono", fontSize = 16))
-    )
+    ),
+    defaultPageSize = 15
 )
 ```
