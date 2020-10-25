@@ -32,7 +32,8 @@ df %>% head()
 
 Here's what the 538 table looks like (**note**: we'll add an extra column not shown in this picture.) This table features 538's most updated NBA statistic, RAPTOR, which stands for Robust Algorithm (using) Player Tracking (and) On/Off Ratings. 
 
-The attempts to rank indiviual (player's) seasons, rather than individual players themselves. 
+It attempts to rank indiviual (player's) seasons, rather than individual players *themselves*, because a player's career, like any career, has ebbs and flows. 
+
 Our objective is to re-create this table and give it a fresh makeover. 
 
 ![538 Raptor Table](./538_raptor.png)
@@ -67,7 +68,7 @@ raptor_table <- df %>%
 
 ## Major Structure and Columns
 
-First, we'll wrap our `raptor_table` within the `reactable()` function. You'll note in the original table that OFF, DEF and TOTAL are *grouped* under RAPTOR. We'll add this structure to the table heading first. 
+First, we'll wrap our `raptor_table` within the `reactable()` function, which is the reactable package with many parameters for styling and customization, as we'll explore. You'll note in the original table that OFF, DEF and TOTAL are *grouped* under RAPTOR. We'll add this structure to the table heading first. 
 
 ```{r major}
 reactable(
@@ -85,7 +86,7 @@ reactable(
 
 ## Major Table Structural Details
 
-Next, we'll add prominent table structural details including its height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`.
+Next, we'll add prominent structural details including table height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`, when any column name is clicked. 
 
 We *won't* disable pagination because that will over write our `column grouping` (i.e., RAPTOR).
 
@@ -112,7 +113,7 @@ reactable(
 
 ## Add Search Box
 
-Next, we'll add a search box as well as placeholder text for readability. You can type in a fake name in the search box and if there are no matches, the text will render "No matches". 
+Next, we'll add a search box, `searchable`, as well as placeholder text for readability (`langauge`). You can type in a fake name in the search box and if there are no matches, the text will render "No matches". 
 
 ```{r search}
 
@@ -173,4 +174,169 @@ reactable(
         colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
     )
 )
+```
+
+## Code Edit
+
+Let's pause to make the code more readable by adding comments to better structure the code. 
+
+```{r edit}
+
+reactable(
+    # data
+    raptor_table,
+    # styling for entire table
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    searchable = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", 
+                             noData = "No matches"),
+    # styling individual columns
+    # columns start
+    columns = list(
+        NAME = colDef(minWidth = 120, 
+                      style = list(fontFamily = "liberation mono", 
+                                   fontSize = 14)),
+        SEASON = colDef(minWidth = 60, 
+                        align = "left",
+                        style = list(fontFamily = "liberation mono", 
+                                     fontSize = 14)), 
+        MIN_PLAYED = colDef(name = 'MIN. PLAYED', 
+                            minWidth = 60, 
+                            align = 'right',
+                            format = colFormat(separators = TRUE), 
+                            style = list(fontFamily = "liberation mono", 
+                                         fontSize = 14)), 
+        OFF = colDef(name = "OFF.", 
+                     minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1)), 
+        DEF = colDef(name = "DEF.", 
+                      minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1)), 
+        TOTAL = colDef(name = "TOTAL", 
+                       minWidth = 60, 
+                       align = 'right',
+                       format = colFormat(prefix = "+", 
+                                          digits = 1)), 
+        WAR = colDef(minWidth = 60, 
+                     align = "right",
+                     format = colFormat(digits = 1), 
+                     style = list(fontFamily = "liberation mono", 
+                                  fontSize = 14)), 
+        PLAYOFF_WAR = colDef(name = "P/O WAR", 
+                             minWidth = 100, align = 'center', 
+                             format = colFormat(digits = 1), 
+                             style = list(fontFamily = "liberation mono", 
+                                          whiteSpace = "pre", 
+                                          fontSize = 14))
+    ), #columns end
+    # grouping OFF,DEF,TOTAL under RAPTOR
+    columnGroups = list(
+        colGroup(name = "RAPTOR", 
+                 columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+```
+
+## Add Color for OFF & DEF
+
+We'll visualize differences in offensive (OFF) and defensive (DEF) ratings for each NBA player for the regular season and playoffs. 
+
+```{r color}
+
+# note: For contrast, we use two colors shade (blue & red).
+# this function
+color_palette <- function(x) rgb(colorRamp(c("#edfeff", "#ff2c0f"))(x), maxColorValue = 255)
+
+# Now we'll add color to the OFF and DEF columns
+
+
+reactable(
+    # data
+    raptor_table,
+    # styling for entire table
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    searchable = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", 
+                             noData = "No matches"),
+    # styling individual columns
+    # columns start
+    columns = list(
+        NAME = colDef(minWidth = 120, 
+                      style = list(fontFamily = "liberation mono", 
+                                   fontSize = 14)),
+        SEASON = colDef(minWidth = 60, 
+                        align = "left",
+                        style = list(fontFamily = "liberation mono", 
+                                     fontSize = 14)), 
+        MIN_PLAYED = colDef(name = 'MIN. PLAYED', 
+                            minWidth = 60, 
+                            align = 'right',
+                            format = colFormat(separators = TRUE), 
+                            style = list(fontFamily = "liberation mono", 
+                                         fontSize = 14)), 
+        OFF = colDef(name = "OFF.", 
+                     minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1),
+                     style = function(value){
+                         # normalization is based on a cell's value in relation to the range of values in the column
+                         normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
+                         color <- color_palette(normalized)
+                         # with color set based on the color_palette function, we can feed it to the background parameter
+                         list(background = color, fontWeight = "bold", 
+                              fontFamily = "liberation mono",
+                              fontSize = 14)
+                     }
+        ), 
+        DEF = colDef(name = "DEF.", 
+                      minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1),
+                     style = function(value){
+                         # normalization is based on a cell's value in relation to the range of values in the column
+                         normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
+                         color <- color_palette(normalized)
+                         # with color set based on the color_palette function, we can feed it to the background parameter
+                         list(background = color, fontWeight = "bold", 
+                              fontFamily = "liberation mono",
+                              fontSize = 14)
+                     }
+        ), 
+        TOTAL = colDef(name = "TOTAL", 
+                       minWidth = 60, 
+                       align = 'right',
+                       format = colFormat(prefix = "+", 
+                                          digits = 1)), 
+        WAR = colDef(minWidth = 60, 
+                     align = "right",
+                     format = colFormat(digits = 1), 
+                     style = list(fontFamily = "liberation mono", 
+                                  fontSize = 14)), 
+        PLAYOFF_WAR = colDef(name = "P/O WAR", 
+                             minWidth = 100, align = 'center', 
+                             format = colFormat(digits = 1), 
+                             style = list(fontFamily = "liberation mono", 
+                                          whiteSpace = "pre", 
+                                          fontSize = 14))
+    ), #columns end
+    # grouping OFF,DEF,TOTAL under RAPTOR
+    columnGroups = list(
+        colGroup(name = "RAPTOR", 
+                 columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+
+
 ```
