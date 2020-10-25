@@ -59,18 +59,18 @@ reactable(
         ),
     columns = list(
         NAME = colDef(
-            minWidth = 200, 
+            minWidth = 120, 
             style = list(fontFamily = "liberation mono", fontSize = 14)
             ),
         SEASON = colDef(
                     format = colFormat(digits = 0), 
-                    minWidth = 120,
+                    minWidth = 60,
                     style = list(fontFamily = "liberation mono", fontSize = 14),
                     align = 'left'
             ),
         MIN_PLAYED = colDef(
                     format = colFormat(separators = TRUE), 
-                    minWidth = 120,
+                    minWidth = 60,
                     style = list(fontFamily = "liberation mono", fontSize = 14),
                     align = 'right'
             ),
@@ -80,7 +80,7 @@ reactable(
                          color <- orange_pal(normalized)
                          list(background = color, fontWeight = "bold", fontFamily = "liberation mono", fontSize = 14)
                      },
-                     minWidth = 100,
+                     minWidth = 60,
                      align = 'center'
                 ),
         DEF = colDef(
@@ -91,25 +91,25 @@ reactable(
                          color <- orange_pal(normalized)
                          list(background = color, fontWeight = "bold", fontFamily = "liberation mono", fontSize = 14)
                      },
-                     minWidth = 100,
+                     minWidth = 60,
                      align = 'center'
                 ),
         TOTAL = colDef(
                     format = colFormat(prefix = "+", digits = 1), 
-                    minWidth = 100, 
+                    minWidth = 60, 
                     style = list(backgroundColor = '#F5F5F5', fontFamily = "liberation mono", fontSize = 14),
                     align = 'center'
             ),
         WAR = colDef(
                      format = colFormat(digits = 1), 
-                     minWidth = 100, 
+                     minWidth = 60, 
                      style = list(fontFamily = "liberation mono", whiteSpace = "pre", fontSize = 14),
                      align = 'center'
                      ),
         PLAYOFF_WAR = colDef(
                     #format = colFormat(digits = 1), 
                     name = 'P/O WAR',
-                    minWidth = 130,
+                    minWidth = 100,
                     style = list(fontFamily = "liberation mono", whiteSpace = "pre", fontSize = 14),
                     align = 'center',
                     # render bar chart
