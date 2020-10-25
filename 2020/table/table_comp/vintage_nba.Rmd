@@ -340,3 +340,110 @@ reactable(
 
 
 ```
+
+## Add Bars to P/O WAR
+
+Now we'll style the `P/O WAR` column to contrast with WAR, which includes regular season and playoffs. Basketball is nearly a completely different game between the regular season and playoffs, so it's worth knowing wins above replacement from the playoffs, *only* to see which NBA star takes their game up another level during the playoffs. 
+
+```{r bars}
+
+# define a function to define the attributes of bar charts
+bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL) {
+    bar <- div(style = list(background = fill, width = width, height = height))
+    chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
+    div(style = list(display = "flex", alignItems = "center"), label, chart)
+}
+
+
+
+reactable(
+    # data
+    raptor_table,
+    # styling for entire table
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    searchable = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", 
+                             noData = "No matches"),
+    # styling individual columns
+    # columns start
+    columns = list(
+        NAME = colDef(minWidth = 120, 
+                      style = list(fontFamily = "liberation mono", 
+                                   fontSize = 14)),
+        SEASON = colDef(minWidth = 60, 
+                        align = "left",
+                        style = list(fontFamily = "liberation mono", 
+                                     fontSize = 14)), 
+        MIN_PLAYED = colDef(name = 'MIN. PLAYED', 
+                            minWidth = 60, 
+                            align = 'right',
+                            format = colFormat(separators = TRUE), 
+                            style = list(fontFamily = "liberation mono", 
+                                         fontSize = 14)), 
+        OFF = colDef(name = "OFF.", 
+                     minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1),
+                     style = function(value){
+                         # normalization is based on a cell's value in relation to the range of values in the column
+                         normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
+                         color <- color_palette(normalized)
+                         # with color set based on the color_palette function, we can feed it to the background parameter
+                         list(background = color, fontWeight = "bold", 
+                              fontFamily = "liberation mono",
+                              fontSize = 14)
+                     }
+        ), 
+        DEF = colDef(name = "DEF.", 
+                      minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1),
+                     style = function(value){
+                         # normalization is based on a cell's value in relation to the range of values in the column
+                         normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
+                         color <- color_palette(normalized)
+                         # with color set based on the color_palette function, we can feed it to the background parameter
+                         list(background = color, fontWeight = "bold", 
+                              fontFamily = "liberation mono",
+                              fontSize = 14)
+                     }
+        ), 
+        TOTAL = colDef(name = "TOTAL", 
+                       minWidth = 60, 
+                       align = 'right',
+                       format = colFormat(prefix = "+", 
+                                          digits = 1)), 
+        WAR = colDef(minWidth = 60, 
+                     align = "right",
+                     format = colFormat(digits = 1), 
+                     style = list(fontFamily = "liberation mono", 
+                                  fontSize = 14)), 
+        PLAYOFF_WAR = colDef(name = "P/O WAR", 
+                             minWidth = 100, 
+                             align = 'center', 
+                             format = colFormat(digits = 1), 
+                             style = list(fontFamily = "liberation mono", 
+                                          whiteSpace = "pre", 
+                                          fontSize = 14),
+                             # render bar chart
+                             cell = function(value){
+                                width <- paste0(value * 100 / max(raptor_table$PLAYOFF_WAR), "%")
+                                value <- format(value, width = 9, justify = "right")
+                                bar_chart(value, width = width, fill = "#3fc1c9")
+                             }
+        )
+    ), #columns end
+    # grouping OFF,DEF,TOTAL under RAPTOR
+    columnGroups = list(
+        colGroup(name = "RAPTOR", 
+                 columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+
+```
+
