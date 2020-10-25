@@ -107,7 +107,7 @@ reactable(
                      align = 'center'
                      ),
         PLAYOFF_WAR = colDef(
-                    #format = colFormat(digits = 1), 
+                    format = colFormat(digits = 1), 
                     name = 'P/O WAR',
                     minWidth = 100,
                     style = list(fontFamily = "liberation mono", whiteSpace = "pre", fontSize = 14),

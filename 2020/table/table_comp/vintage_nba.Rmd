@@ -69,7 +69,7 @@ raptor_table <- df %>%
 
 First, we'll wrap our `raptor_table` within the `reactable()` function. You'll note in the original table that OFF, DEF and TOTAL are *grouped* under RAPTOR. We'll add this structure to the table heading first. 
 
-```{r column}
+```{r major}
 reactable(
     raptor_table,
     columns = list(
@@ -85,9 +85,9 @@ reactable(
 
 ## Major Table Structural Details
 
-Next, we'll add prominent table structural details including its height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`,
+Next, we'll add prominent table structural details including its height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`.
 
-We won't disable pagination because that will interfere with our `column grouping` (i.e., RAPTOR).
+We *won't* disable pagination because that will over write our `column grouping` (i.e., RAPTOR).
 
 ```{r features}
 
@@ -130,6 +130,44 @@ reactable(
         OFF = colDef(name = "OFF."),
         DEF = colDef(name = "DEF."),
         TOTAL = colDef(name = "TOTAL")
+    ),
+    columnGroups = list(
+        colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+```
+
+## Format Individual Columns
+
+Now we'll add some formatting and styling to each of the individual columns. This will include **column width** and **font** used within the columns. The bulk of this process will be within the `columns` parameter. In addition to the `OFF`, `DEF` and `TOTAL` columns, we'll add formating for the rest of the columns. 
+
+This includes customizing name, customizing digits (i.e., making sure commas are placed for minutes played), font and font sizes. 
+
+We'll also add a "+" prefix for the `TOTAL` column. Althought we had previously formatted our data to one decimal place, we'll need to explicitly re-state with `format = colFormat(digits = 1)` to make sure all digits line up properly. You'll note that the `style` for `PLAYOFF_WAR` has a `whiteSpace` parameter set to pre - this will be apparent why when we add visuals to this particular column below.
+
+We will style `OFF`, `DEF` and `TOTAL` separately in the next section.
+
+```{r columns}
+
+reactable(
+    raptor_table,
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    searchable = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", noData = "No matches"),
+    columns = list(
+        NAME = colDef(minWidth = 120, style = list(fontFamily = "liberation mono", fontSize = 14)),
+        SEASON = colDef(minWidth = 60, style = list(fontFamily = "liberation mono", fontSize = 14), align = "left"),
+        MIN_PLAYED = colDef(name = 'MIN. PLAYED', format = colFormat(separators = TRUE), minWidth = 60, style = list(fontFamily = "liberation mono", fontSize = 14), align = 'right'),
+        OFF = colDef(name = "OFF.", format = colFormat(digits = 1), minWidth = 60, align = 'right'),
+        DEF = colDef(name = "DEF.", format = colFormat(digits = 1), minWidth = 60, align = 'right'),
+        TOTAL = colDef(name = "TOTAL", format = colFormat(prefix = "+", digits = 1), minWidth = 60, align = 'right'),
+        WAR = colDef(format = colFormat(digits = 1), minWidth = 60, style = list(fontFamily = "liberation mono", fontSize = 14), align = "right"),
+        PLAYOFF_WAR = colDef(name = "P/O WAR", format = colFormat(digits = 1), minWidth = 100, align = 'center', style = list(fontFamily = "liberation mono", whiteSpace = "pre", fontSize = 14))
     ),
     columnGroups = list(
         colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
