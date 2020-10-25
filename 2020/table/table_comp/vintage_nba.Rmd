@@ -1,5 +1,5 @@
 ---
-title: "Vintage NBA Seasons with {reactable}"
+title: "Top-100 Vintage NBA Seasons with {reactable}"
 author: "Paul Apivat Hanvongse"
 date: "10/25/2020"
 output: 
@@ -12,22 +12,127 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Preparing the Data
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+We'll start off with the raw data from 538. The data accompanies this Rmarkdown file or, alternatively, can be downloaded directly from their [github repository](https://github.com/fivethirtyeight/data/tree/master/nba-raptor). The file we're using is called 'historical_RAPTOR_by_player.csv'. Background information on the RAPTOR metric can be found [here](https://fivethirtyeight.com/features/how-our-raptor-metric-works/). 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+We'll load the libraries, then the raw data.
 
-```{r cars}
-summary(cars)
+```{r libraries}
+library(tidyverse)
+library(reactable)
+library(htmltools)
+
+# read data
+df <- read_csv("historical_RAPTOR_by_player.csv")
+df %>% head()
 ```
 
-## Including Plots
+## Objective
 
-You can also embed plots, for example:
+Here's what the 538 table looks like (**note**: we'll add an extra column not shown in this picture.) This table features 538's most updated NBA statistic, RAPTOR, which stands for Robust Algorithm (using) Player Tracking (and) On/Off Ratings. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+The attempts to rank indiviual (player's) seasons, rather than individual players themselves. 
+Our objective is to re-create this table and give it a fresh makeover. 
+
+![538 Raptor Table](./538_raptor.png)
+
+## Data Wrangling
+
+We will wrangle the data to be a close to what we need *before* using the `reactable` package. We'll first select the columns we're interested in. Then we'll filter for players who played for more than 1000 minutes (mp), as done in the original. We'll arrange the data in descending order by WAR - wins above replacement. 
+
+Next, we'll rename the columns to match the names used by 538. Then we'll format all columns with decimal numbers to be rounded to one decimal place. Finally, we'll choose the top 100 rows (after filtering) to keep our data manageable.
+
+We'll save this to a variable called `raptor_table`.
+
+```{r raptor_table, echo=TRUE}
+
+raptor_table <- df %>%
+    select(player_name, season, mp, raptor_offense, raptor_defense, raptor_total, war_total, war_playoffs) %>%
+    filter(mp > 1000) %>%
+    arrange(desc(war_total)) %>%
+    rename(
+        NAME = player_name,
+        SEASON = season,
+        MIN_PLAYED = mp,
+        OFF = raptor_offense,
+        DEF = raptor_defense,
+        TOTAL = raptor_total,
+        WAR = war_total,
+        PLAYOFF_WAR = war_playoffs
+    ) %>%
+    mutate_at(4:8, funs(round(., 1))) %>% 
+    head(100) 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Major Structure and Columns
+
+First, we'll wrap our `raptor_table` within the `reactable()` function. You'll note in the original table that OFF, DEF and TOTAL are *grouped* under RAPTOR. We'll add this structure to the table heading first. 
+
+```{r column}
+reactable(
+    raptor_table,
+    columns = list(
+        OFF = colDef(name = "OFF."),
+        DEF = colDef(name = "DEF."),
+        TOTAL = colDef(name = "TOTAL")
+    ),
+    columnGroups = list(
+        colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+```
+
+## Major Table Structural Details
+
+Next, we'll add prominent table structural details including its height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`,
+
+We won't disable pagination because that will interfere with our `column grouping` (i.e., RAPTOR).
+
+```{r features}
+
+reactable(
+    raptor_table,
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    columns = list(
+        OFF = colDef(name = "OFF."),
+        DEF = colDef(name = "DEF."),
+        TOTAL = colDef(name = "TOTAL")
+    ),
+    columnGroups = list(
+        colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+```
+
+## Add Search Box
+
+Next, we'll add a search box as well as placeholder text for readability. You can type in a fake name in the search box and if there are no matches, the text will render "No matches". 
+
+```{r search}
+
+reactable(
+    raptor_table,
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    searchable = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", noData = "No matches"),
+    columns = list(
+        OFF = colDef(name = "OFF."),
+        DEF = colDef(name = "DEF."),
+        TOTAL = colDef(name = "TOTAL")
+    ),
+    columnGroups = list(
+        colGroup(name = "RAPTOR", columns = c("OFF", "DEF", "TOTAL"))
+    )
+)
+```
