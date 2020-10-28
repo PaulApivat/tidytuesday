@@ -18,7 +18,7 @@ We'll start off with the raw data from 538. The data accompanies this Rmarkdown 
 
 We'll load the libraries, then the raw data.
 
-```{r libraries}
+```{r libraries, include=FALSE}
 library(tidyverse)
 library(reactable)
 library(htmltools)
@@ -557,4 +557,147 @@ reactable(
     ),
     defaultPageSize = 15
 )
+```
+
+## Table Title and Subtitle
+
+To add a title/subtitle, we'll save our table to a variable `tbl`, then wrap it around a `html` `div`. 
+
+```{r tbl}
+
+options(reactable.theme = reactableTheme(
+    backgroundColor = "#fffef0"
+))
+
+tbl <- reactable(
+    # data
+    raptor_table,
+    # header styling
+    defaultColDef = colDef(headerStyle = list(fontFamily = "liberation mono", fontSize = 16)),
+    # styling for entire table
+    height = 600,
+    minRows = 10,
+    showSortIcon = TRUE,
+    compact = TRUE,
+    pagination = TRUE,
+    showPageInfo = TRUE,
+    searchable = TRUE,
+    language = reactableLang(searchPlaceholder = "Search...", 
+                             noData = "No matches"),
+    # styling individual columns
+    # columns start
+    columns = list(
+        NAME = colDef(minWidth = 120, 
+                      style = list(fontFamily = "liberation mono", 
+                                   fontSize = 14)),
+        SEASON = colDef(minWidth = 60, 
+                        align = "left",
+                        style = list(fontFamily = "liberation mono", 
+                                     fontSize = 14)), 
+        MIN_PLAYED = colDef(name = 'MIN. PLAYED', 
+                            minWidth = 60, 
+                            align = 'right',
+                            format = colFormat(separators = TRUE), 
+                            style = list(fontFamily = "liberation mono", 
+                                         fontSize = 14)), 
+        OFF = colDef(name = "OFF.", 
+                     minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1),
+                     style = function(value){
+                         # normalization is based on a cell's value in relation to the range of values in the column
+                         normalized <- (value - min(raptor_table$OFF)) / (max(raptor_table$OFF) - min(raptor_table$OFF))
+                         color <- color_palette(normalized)
+                         # with color set based on the color_palette function, we can feed it to the background parameter
+                         list(background = color, fontWeight = "bold", 
+                              fontFamily = "liberation mono",
+                              fontSize = 14)
+                     }
+        ), 
+        DEF = colDef(name = "DEF.", 
+                      minWidth = 60, 
+                     align = 'right',
+                     format = colFormat(digits = 1),
+                     style = function(value){
+                         # normalization is based on a cell's value in relation to the range of values in the column
+                         normalized <- (value - min(raptor_table$DEF)) / (max(raptor_table$DEF) - min(raptor_table$DEF))
+                         color <- color_palette(normalized)
+                         # with color set based on the color_palette function, we can feed it to the background parameter
+                         list(background = color, fontWeight = "bold", 
+                              fontFamily = "liberation mono",
+                              fontSize = 14)
+                     }
+        ), 
+        TOTAL = colDef(name = "TOTAL", 
+                       minWidth = 60, 
+                       align = 'right',
+                       format = colFormat(prefix = "+", 
+                                          digits = 1),
+                       style = list(backgroundColor = '#F5F5F5',
+                                    fontFamily = "liberation mono", 
+                                    fontSize = 14)), 
+        WAR = colDef(minWidth = 60, 
+                     align = "right",
+                     format = colFormat(digits = 1), 
+                     style = list(fontFamily = "liberation mono", 
+                                  fontSize = 14)), 
+        PLAYOFF_WAR = colDef(name = "P/O WAR", 
+                             minWidth = 100, 
+                             align = 'center', 
+                             format = colFormat(digits = 1), 
+                             style = list(fontFamily = "liberation mono", 
+                                          whiteSpace = "pre", 
+                                          fontSize = 14),
+                             # render bar chart
+                             cell = function(value){
+                                width <- paste0(value * 100 / max(raptor_table$PLAYOFF_WAR), "%")
+                                value <- format(value, width = 9, justify = "right")
+                                bar_chart(value, width = width, fill = "#3fc1c9")
+                             }
+        )
+    ), #columns end
+    # grouping OFF,DEF,TOTAL under RAPTOR
+    columnGroups = list(
+        colGroup(name = "RAPTOR", 
+                 columns = c("OFF", "DEF", "TOTAL"),
+                 headerStyle = list(fontFamily = "liberation mono", fontSize = 16))
+    ),
+    defaultPageSize = 15
+)
+```
+
+After we've saved our work with the `reactable` function into the `tbl` variable, we can wrap that in a `div` and create the **title** and **subtitle**.
+
+```{r title}
+div(class = "table-wrap",
+    div(class = "table-header",
+        div(class = "table-title", "Top 100 Vintage NBA Seasons"),
+        "This table highlights 538's new NBA statistic, RAPTOR, in addition to the more established Wins Above Replacement (WAR). An extra column, Playoff (P/O) War, is provided to highlight stars performers in the post-season, when the stakes are higher. The table is limited to the top-100 players who have played at least 1,000 minutes."),
+    tbl
+)
+
+```
+
+The cool thing is that we can style the table with `css` directly in Rmarkdown.
+
+```{css}
+.table-title {
+    font-size: 20px;
+    font-weight: 600;
+    font-family: "liberation mono";
+    padding: 10px 10px 10px 3px;
+}
+
+.table-header {
+    font-size: 14px;
+    font-weight: 300;
+    font-family: "liberation mono";
+    padding: 10px 10px 10px 10px;
+    
+}
+
+.table-wrap {
+    box-shadow: 2px 3px 20px black;
+    background-color: #fffef0;
+}
 ```
