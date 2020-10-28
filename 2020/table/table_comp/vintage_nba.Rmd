@@ -16,9 +16,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 We'll start off with the raw data from 538. The data accompanies this Rmarkdown file or, alternatively, can be downloaded directly from their [github repository](https://github.com/fivethirtyeight/data/tree/master/nba-raptor). The file we're using is called 'historical_RAPTOR_by_player.csv'. Background information on the RAPTOR metric can be found [here](https://fivethirtyeight.com/features/how-our-raptor-metric-works/). 
 
-We'll load the libraries, then the raw data.
+We'll load the libraries, then the raw data. 
 
-```{r libraries, include=FALSE}
+We are primarily using the `dplyr` and `readr` packages from the Tidyverse. We'll create our table with the `reactable` package and use `htmltools` for when we need to use `html` elements for table customization. 
+
+```{r libraries, include=TRUE, echo=TRUE}
 library(tidyverse)
 library(reactable)
 library(htmltools)
@@ -30,7 +32,7 @@ df %>% head()
 
 ## Objective
 
-Here's what the 538 table looks like (**note**: we'll add an extra column not shown in this picture.) This table features 538's most updated NBA statistic, RAPTOR, which stands for Robust Algorithm (using) Player Tracking (and) On/Off Ratings. 
+Here's what the original 538 table looks like (**note**: we'll add an extra column not shown in this picture.) This table features 538's most updated NBA statistic, RAPTOR, which stands for Robust Algorithm (using) Player Tracking (and) On/Off Ratings. 
 
 It attempts to rank indiviual (player's) seasons, rather than individual players *themselves*, because a player's career, like any career, has ebbs and flows. 
 
@@ -38,15 +40,16 @@ Our objective is to re-create this table and give it a fresh makeover.
 
 ![538 Raptor Table](./538_raptor.png)
 
+
 ## Data Wrangling
 
-We will wrangle the data to be a close to what we need *before* using the `reactable` package. We'll first select the columns we're interested in. Then we'll filter for players who played for more than 1000 minutes (mp), as done in the original. We'll arrange the data in descending order by WAR - wins above replacement. 
+We will wrangle the data to be close to what we need *before* using the `reactable` package. We'll first select the columns we're interested in. Then we'll filter for players who played for more than 1000 minutes (mp), as done in the original. We'll arrange the data in descending order by WAR - wins above replacement. 
 
 Next, we'll rename the columns to match the names used by 538. Then we'll format all columns with decimal numbers to be rounded to one decimal place. Finally, we'll choose the top 100 rows (after filtering) to keep our data manageable.
 
 We'll save this to a variable called `raptor_table`.
 
-```{r raptor_table, echo=TRUE}
+```{r raptor_table, echo=TRUE, message=FALSE}
 
 raptor_table <- df %>%
     select(player_name, season, mp, raptor_offense, raptor_defense, raptor_total, war_total, war_playoffs) %>%
@@ -66,9 +69,20 @@ raptor_table <- df %>%
     head(100) 
 ```
 
-## Major Structure and Columns
+## Introduction to {reactable}
 
-First, we'll wrap our `raptor_table` within the `reactable()` function, which is the reactable package with many parameters for styling and customization, as we'll explore. You'll note in the original table that OFF, DEF and TOTAL are *grouped* under RAPTOR. We'll add this structure to the table heading first. 
+The `reactable` package has a set of major functions for creating beautiful tables. 
+
+The primary function is `reactable()` which we'll use the wrap our `raptor_table` variable. This function immediately provides base features for the table. In addition, we'll use several parameters that come with this function to create our table. For example, we'll define the table `height`, `minRows` for number of rows in one view and `pagination` behavior for longer tables that do not fit on one view, as well as several other parameters.
+
+Next, we'll use a set of functions to customize columns including: `colDef()` for individual columns and `colGroup()` for grouping columns together. 
+
+Finally, we'll use `reactableTheme()` for overall table styling. That's all there is to creating beautiful tables with `reactable`.
+
+
+## Creating a Basic Table
+
+First, we'll wrap our `raptor_table` within the `reactable()` function to create a basic table. Just doing this gives us individual column sorting, which is neat. You'll note in the original table that OFF, DEF and TOTAL are *grouped* under RAPTOR; this is achieved using `colGroup()`. 
 
 ```{r major}
 reactable(
@@ -84,9 +98,9 @@ reactable(
 )
 ```
 
-## Major Table Structural Details
+## Add Basic Table Features
 
-Next, we'll add prominent structural details including table height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`, when any column name is clicked. 
+Next, we'll add basic table features including table height, mininum rows (10) and making it compact. In addition, we'll enable the sort icon, `showSortIcon`, when any column name is clicked. 
 
 We *won't* disable pagination because that will over write our `column grouping` (i.e., RAPTOR).
 
@@ -113,7 +127,7 @@ reactable(
 
 ## Add Search Box
 
-Next, we'll add a search box, `searchable`, as well as placeholder text for readability (`langauge`). You can type in a fake name in the search box and if there are no matches, the text will render "No matches". 
+Next, we'll add a search box with the `searchable` parameter, as well as placeholder text for readability (`langauge`). You can type in a fake name in the search box and if there are no matches, the text will render "No matches". 
 
 ```{r search}
 
@@ -140,11 +154,11 @@ reactable(
 
 ## Format Individual Columns
 
-Now we'll add some formatting and styling to each of the individual columns. This will include **column width** and **font** used within the columns. The bulk of this process will be within the `columns` parameter. In addition to the `OFF`, `DEF` and `TOTAL` columns, we'll add formating for the rest of the columns. 
+Next, we'll add some formatting and styling to each of the individual columns. This will include **column width** and **font** used within the columns. The bulk of this process will be within the `columns` parameter. In addition to the `OFF`, `DEF` and `TOTAL` columns, we'll add formating for the rest of the columns. 
 
 This includes customizing name, customizing digits (i.e., making sure commas are placed for minutes played), font and font sizes. 
 
-We'll also add a "+" prefix for the `TOTAL` column. Althought we had previously formatted our data to one decimal place, we'll need to explicitly re-state with `format = colFormat(digits = 1)` to make sure all digits line up properly. You'll note that the `style` for `PLAYOFF_WAR` has a `whiteSpace` parameter set to pre - this will be apparent why when we add visuals to this particular column below.
+We'll also add a "+" prefix for the `TOTAL` column. Althought we had previously formatted our data to one decimal place, we'll need to re-do this with `format = colFormat(digits = 1)` to make sure all digits line up properly. You'll note that the `style` for `PLAYOFF_WAR` has a `whiteSpace` parameter set to pre - this will be apparent why when we add visuals to this particular column below.
 
 We will style `OFF`, `DEF` and `TOTAL` separately in the next section.
 
@@ -178,7 +192,7 @@ reactable(
 
 ## Code Edit
 
-Let's pause to make the code more readable by adding comments to better structure the code. 
+Let's pause to make the code more readable by refactoring and adding comments to better structure the code. 
 
 ```{r edit}
 
@@ -248,7 +262,7 @@ reactable(
 
 ## Add Color for OFF, DEF & TOTAL
 
-We'll visualize differences in offensive (OFF) and defensive (DEF) ratings for each NBA player for the regular season and playoffs. 
+We'll visualize differences in offensive (OFF) and defensive (DEF) ratings for each NBA player for the regular season and playoffs by creating a `color_palette`, then inserting it in the style for specific columns (i.e., OFF, DEF).
 
 ```{r color}
 
@@ -348,7 +362,7 @@ reactable(
 
 ## Add Bars to P/O WAR
 
-Now we'll style the `P/O WAR` column to contrast with WAR, which includes regular season and playoffs. Basketball is nearly a completely different game between the regular season and playoffs, so it's worth knowing wins above replacement from the playoffs, *only* to see which NBA star takes their game up another level during the playoffs. 
+Now we'll style the `P/O WAR` column to contrast with `WAR`, which includes regular season and playoffs. Basketball is a completely different game between the regular season and playoffs, so it's worth knowing wins above replacement from the playoffs, if *only* to see which NBA star takes their game up another level during the playoffs. 
 
 ```{r bars}
 
@@ -455,7 +469,7 @@ reactable(
 
 ```
 
-## Table Header Styling
+## Column Name Styling
 
 We're putting the finishing touches on this table. We'll change all column header font to "liberation mono" and we'll set the
 `defaultPageSize` to 15. 
@@ -561,7 +575,9 @@ reactable(
 
 ## Table Title and Subtitle
 
-To add a title/subtitle, we'll save our table to a variable `tbl`, then wrap it around a `html` `div`. 
+To add a title/subtitle, we'll save our table to a variable `tbl`, then wrap it around a `html` `div`. This allows us to add `title` and `subtitle` to the table that is technically external to the table itself. 
+
+We'll also change the background color of the table itself using the `reactableTheme()` function.
 
 ```{r tbl}
 
@@ -678,7 +694,7 @@ div(class = "table-wrap",
 
 ```
 
-The cool thing is that we can style the table with `css` directly in Rmarkdown.
+The cool thing is that we can style the table with `css` directly in Rmarkdown (just make sure your code chunk has `css` instead of `r` just for the css parts). We'll use `css` to style our `title` and `subtitle` to make it consistent with the table itself. 
 
 ```{css}
 .table-title {
