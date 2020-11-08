@@ -1,7 +1,7 @@
 # sessioninfo
-R version 4.0.2 (2020-06-22)
-Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Catalina 10.15.6
+#R version 4.0.2 (2020-06-22)
+#Platform: x86_64-apple-darwin17.0 (64-bit)
+#Running under: macOS Catalina 10.15.6
 
 # load libraries
 library(tidyverse)
@@ -75,8 +75,10 @@ datasaurus %>%
 # scatter plot - facet_wrap
 datasaurus %>%
     ggplot(aes(x=y, y=x, color=dataset)) +
-    geom_point() +
-    facet_wrap(~dataset)
+    geom_point(alpha = 0.5) +
+    facet_wrap(~dataset) +
+    theme_classic() +
+    theme(legend.position = "none")
 
 # dino
 datasaurus %>%
@@ -232,5 +234,92 @@ omit_dino2 <- omit_dino %>%
 # GGally correlelogram
 ggcorr(omit_dino2, method = c("everything", "pearson"))
 
+# Final
 
+# 2D Histogram
+datasaurus %>%
+    filter(dataset=='dino') %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_bin2d(bins=70) +
+    scale_fill_continuous(type = 'viridis') +
+    theme_bw()
+    
+# 2D histogram
+datasaurus %>%
+    filter(dataset=='dino') %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_bin2d() +
+    theme_bw()
+
+# Hexbin
+datasaurus %>%
+    filter(dataset=='dino') %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_hex() +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()
+
+# show contour geom_density
+datasaurus %>%
+    filter(dataset=='dino') %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_density2d()
+
+
+
+# show area geom_density ----
+
+# contour only 
+datasaurus %>%
+    #filter(dataset=='bullseye') %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_density_2d() +
+    theme_classic() +
+    facet_wrap(~dataset)
+
+
+# area only 
+datasaurus %>%
+    #filter(dataset=='bullseye') %>%
+    ggplot(aes(x=x, y=y)) +
+    stat_density_2d(aes(fill=y),geom = "polygon") +
+    theme_classic() +
+    facet_wrap(~dataset)
+    
+    
+# area + contour
+datasaurus %>%
+    #filter(dataset=='bullseye') %>%
+    ggplot(aes(x=x, y=y)) +
+    stat_density_2d(aes(fill=y),geom = "polygon", colour="white") +
+    theme_classic() +
+    facet_wrap(~dataset)
+
+
+# using raster
+datasaurus %>%
+    #filter(dataset=='bullseye') %>%
+    ggplot(aes(x=x, y=y)) +
+    stat_density_2d(aes(fill=y), geom = "raster", colour=FALSE) +
+    theme_classic() +
+    facet_wrap(~dataset)
+
+
+
+
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    theme(legend.position = 'none')
+
+
+
+# facet wrap
+datasaurus %>%
+    ggplot(aes(x=y, y=x, color=dataset)) +
+    geom_bin2d(bins = 25) +
+    scale_fill_continuous(type = "viridis") +
+    facet_wrap(~dataset)
+    
+    
+    
 
