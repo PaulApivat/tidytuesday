@@ -48,7 +48,27 @@ datasaurus %>%
 # boxplot for both variables
 datasaurus %>%
     pivot_longer(cols = c(x,y), names_to = "name", values_to = "value") %>%
-    ggplot(aes(x=name, y=value)) +
-    geom_boxplot()
+    ggplot(aes(x=name, y=value, color=name)) +
+    geom_boxplot() +
+    geom_jitter(alpha=0.2)
+
+
+# scatter plot
+
+# correlation btwn x & y: -0.06601891
+cor(datasaurus$x, datasaurus$y, use = "everything", method = c("pearson"))
+
+# 95 CI: -0.11130666 -0.02045753
+cor.test(datasaurus$x, datasaurus$y, use = "everything", method = c("pearson"))
+
+# basic scatterplot
+datasaurus %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_point()
+
+
+
+
+
 
 
