@@ -113,6 +113,7 @@ datasaurus %>%
 install.packages("corrgram")
 install.packages("GGally")
 library(GGally)
+library(corrgram)
 
 
 # sample half-matrix correlelogram
@@ -319,7 +320,33 @@ datasaurus %>%
     geom_bin2d(bins = 25) +
     scale_fill_continuous(type = "viridis") +
     facet_wrap(~dataset)
-    
-    
-    
+
+
+# dino only ----
+
+datasaurus %>%
+    filter(dataset=="dino") %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_point()
+
+
+# correlation of x & y for "dino" dataset
+dino2 <- datasaurus %>%
+    filter(dataset=="dino")
+
+# correlation -0.0644
+cor(x = dino2$x, y = dino2$y, method = c("pearson"))
+cor.test(x = dino2$x, y = dino2$y, method = c("pearson"))
+
+
+# just geom_smooth (no scatter)
+# then add geom_point
+datasaurus %>%
+    filter(dataset=="dino") %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_smooth() +
+    geom_point()
+
+
+
 
