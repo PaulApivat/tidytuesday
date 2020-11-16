@@ -8,10 +8,45 @@ library(tidyverse)
 
 # load data
 datasaurus <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-13/datasaurus.csv')
+datasaurus_dozen <- read_tsv('DatasaurusDozen.tsv')
+datasaurus_wide <- read_tsv('DatasaurusDozen-wide.tsv')
+
+
 
 # summary statistics
 datasaurus %>%
     summary()
+
+# summary statistics - all dataset pairs
+datasaurus_wide %>%
+    slice(2:143) %>%
+    select(everything()) %>%
+    mutate_if(is.character, as.numeric) %>%
+    summary()
+
+
+datasaurus_wide %>%
+    slice(2:143) %>%
+    select(everything()) %>%
+    mutate_if(is.character, as.numeric) %>%
+    ggplot() + 
+    geom_boxplot(aes(x = away)) +
+    geom_boxplot(aes(x = away_1))
+
+
+datasaurus_dozen %>%
+    ggplot(aes(x = dataset, y = x, fill = dataset)) +
+    geom_boxplot()
+
+
+# 
+datasaurus_dozen %>%
+    ggplot(aes(x = dataset, y = y, fill = dataset)) +
+    geom_boxplot()
+
+
+datasaurus_wide %>%
+    slice_tail() %>% view()
 
 
 # single coordinate plotting 
