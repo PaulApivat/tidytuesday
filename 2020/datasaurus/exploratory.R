@@ -18,9 +18,18 @@ datasaurus %>%
     summary()
 
 # summary statistics - all dataset pairs
+# summary statistics - only X (same mean: 54.26 or 54.27)
 datasaurus_wide %>%
     slice(2:143) %>%
-    select(everything()) %>%
+    select(away, bullseye, circle, dino, dots, h_lines, high_lines, slant_down, slant_up, star, v_lines, wide_lines, x_shape) %>%
+    mutate_if(is.character, as.numeric) %>%
+    summary()
+
+
+# summary statistics - only Y (same mean: 47.83 or 47.84)
+datasaurus_wide %>%
+    slice(2:143) %>%
+    select(away_1, bullseye_1, circle_1, dino_1, dots_1, h_lines_1, high_lines_1, slant_down_1, slant_up_1, star_1, v_lines_1, wide_lines_1, x_shape_1) %>%
     mutate_if(is.character, as.numeric) %>%
     summary()
 
@@ -33,16 +42,22 @@ datasaurus_wide %>%
     geom_boxplot(aes(x = away)) +
     geom_boxplot(aes(x = away_1))
 
-
+# boxplot for X values, across datasets
+# mean red dot
 datasaurus_dozen %>%
     ggplot(aes(x = dataset, y = x, fill = dataset)) +
-    geom_boxplot()
+    geom_boxplot(alpha = 0.6) +
+    stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
+    scale_fill_brewer(palette = "Set3")
 
 
-# 
+# boxplot for Y values, across datasets
+# mean red dot
 datasaurus_dozen %>%
     ggplot(aes(x = dataset, y = y, fill = dataset)) +
-    geom_boxplot()
+    geom_boxplot(alpha = 0.6) +
+    stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
+    scale_fill_brewer(palette = "Set1")
 
 
 datasaurus_wide %>%
