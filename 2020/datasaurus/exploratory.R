@@ -17,6 +17,8 @@ datasaurus_wide <- read_tsv('DatasaurusDozen-wide.tsv')
 datasaurus %>%
     summary()
 
+
+
 # summary statistics - all dataset pairs
 # summary statistics - only X (same mean: 54.26 or 54.27)
 datasaurus_wide %>%
@@ -32,6 +34,19 @@ datasaurus_wide %>%
     select(away_1, bullseye_1, circle_1, dino_1, dots_1, h_lines_1, high_lines_1, slant_down_1, slant_up_1, star_1, v_lines_1, wide_lines_1, x_shape_1) %>%
     mutate_if(is.character, as.numeric) %>%
     summary()
+
+# summary statistics (customized)
+# x_mean, y_mean, x_sd, y_sd and correlation
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    summarize(
+        x_mean = mean(x),
+        x_sd = sd(x),
+        y_mean = mean(y),
+        y_sd = sd(y),
+        corr = cor(x,y)
+    )
+    
 
 
 datasaurus_wide %>%
