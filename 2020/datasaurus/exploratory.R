@@ -35,6 +35,26 @@ datasaurus_wide %>%
     mutate_if(is.character, as.numeric) %>%
     summary()
 
+
+# correlation matrix
+install.packages("ggcorrplot")
+library(ggcorrplot)
+
+datasaurus_wide_x <- datasaurus_wide %>%
+    slice(2:143) %>%
+    select(away, bullseye, circle, dino, dots, h_lines, high_lines, slant_down, slant_up, star, v_lines, wide_lines, x_shape) %>%
+    mutate_if(is.character, as.numeric)
+    
+# correlation matrix for X values
+corr_x <- round(cor(datasaurus_wide_x), 1)
+
+head(corr_x[, 1:6])
+
+# visualization correlation matrix with ggcorrplot
+ggcorrplot(corr_x)
+
+
+
 # summary statistics (customized)
 # x_mean, y_mean, x_sd, y_sd and correlation
 datasaurus_dozen %>%
