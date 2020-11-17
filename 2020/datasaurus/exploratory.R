@@ -45,8 +45,17 @@ datasaurus_wide_x <- datasaurus_wide %>%
     select(away, bullseye, circle, dino, dots, h_lines, high_lines, slant_down, slant_up, star, v_lines, wide_lines, x_shape) %>%
     mutate_if(is.character, as.numeric)
     
+
+
+datasaurus_wide_y <- datasaurus_wide %>%
+    slice(2:143) %>%
+    select(away_1, bullseye_1, circle_1, dino_1, dots_1, h_lines_1, high_lines_1, slant_down_1, slant_up_1, star_1, v_lines_1, wide_lines_1, x_shape_1) %>%
+    mutate_if(is.character, as.numeric)
+
+
 # correlation matrix for X values
 corr_x <- round(cor(datasaurus_wide_x), 1)
+corr_y <- round(cor(datasaurus_wide_y), 1)
 
 head(corr_x[, 1:6])
 
@@ -56,12 +65,24 @@ ggcorrplot(corr_x, method = 'circle')
 ggcorrplot(corr_x, hc.order = TRUE, type="lower", outline.color = "white")
 ggcorrplot(corr_x, hc.order = TRUE, type="upper", outline.color = "white")
 
+# correlation between X-values
 ggcorrplot(corr_x, hc.order = TRUE, 
            type="lower", 
            outline.color = "white",
            ggtheme = ggplot2::theme_gray,
-           colors = c("red", "white", "green"),
+           colors = c("#d8b365", "#f5f5f5", "#5ab4ac"),
+           lab = TRUE) 
+
+
+
+# correlation between Y-values
+ggcorrplot(corr_y, hc.order = TRUE, 
+           type="lower", 
+           outline.color = "white",
+           ggtheme = ggplot2::theme_gray,
+           colors = c("#ef8a62", "#f7f7f7", "#67a9cf"),
            lab = TRUE)
+
 
 
 
@@ -173,6 +194,41 @@ datasaurus_dozen %>%
     ggplot(aes(x=y)) +
     geom_histogram() +
     facet_wrap(~dataset)
+
+# facet histogram (both-values)
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    ggplot() +
+    geom_histogram(aes(x=x, fill='red'), alpha = 0.5, bins = 30) +
+    geom_histogram(aes(x=y, fill='green'), alpha = 0.5, bins = 30) +
+    facet_wrap(~dataset) +
+    scale_fill_discrete(labels = c('y', 'x')) +
+    theme_classic() +
+    labs(
+        fill = 'Axes',
+        x = '',
+        y = 'Count',
+        title = 'Faceted Histogram: x- and y-values'
+    )
+
+
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    ggplot(aes(x=x, y=y, color=dataset)) +
+    geom_point(alpha = 0.5) +
+    facet_wrap(~dataset) +
+    scale_color_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey')) +
+    theme_classic() +
+    theme(legend.position = "none") +
+    labs(
+        x = 'X-axis',
+        y = 'Y-axis',
+        title = 'Faceted Scatter Plot'
+    )
+
+
+
+
 
 datasaurus %>%
     ggplot(aes(x=y)) +
@@ -431,6 +487,19 @@ datasaurus %>%
     theme_classic() +
     facet_wrap(~dataset)
 
+# contours of a 2D Density estimate
+datasaurus_dozen %>%
+    ggplot(aes(x=x, y=y)) +
+    geom_density_2d() +
+    theme_classic() +
+    facet_wrap(~dataset) +
+    labs(
+        x = 'X-axis',
+        y = 'Y-axis',
+        title = 'Contours of a 2D density estimate'
+    )
+
+
 
 # area only 
 datasaurus %>%
@@ -439,7 +508,19 @@ datasaurus %>%
     stat_density_2d(aes(fill=y),geom = "polygon") +
     theme_classic() +
     facet_wrap(~dataset)
-    
+
+
+datasaurus_dozen %>%
+    ggplot(aes(x=x, y=y)) +
+    stat_density_2d(aes(fill=y), geom = "polygon", colour = 'white') +
+    theme_classic() +
+    facet_wrap(~dataset) +
+    labs(
+        x = 'X-axis',
+        y = 'Y-axis',
+        title = 'Stat Density 2D estimate'
+    )
+
     
 # area + contour
 datasaurus %>%
