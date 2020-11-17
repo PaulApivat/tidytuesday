@@ -52,6 +52,17 @@ head(corr_x[, 1:6])
 
 # visualization correlation matrix with ggcorrplot
 ggcorrplot(corr_x)
+ggcorrplot(corr_x, method = 'circle')
+ggcorrplot(corr_x, hc.order = TRUE, type="lower", outline.color = "white")
+ggcorrplot(corr_x, hc.order = TRUE, type="upper", outline.color = "white")
+
+ggcorrplot(corr_x, hc.order = TRUE, 
+           type="lower", 
+           outline.color = "white",
+           ggtheme = ggplot2::theme_gray,
+           colors = c("red", "green", "yellow"),
+           lab = TRUE)
+
 
 
 
