@@ -60,7 +60,7 @@ ggcorrplot(corr_x, hc.order = TRUE,
            type="lower", 
            outline.color = "white",
            ggtheme = ggplot2::theme_gray,
-           colors = c("red", "green", "yellow"),
+           colors = c("red", "white", "green"),
            lab = TRUE)
 
 
@@ -87,7 +87,15 @@ datasaurus_dozen %>%
     ggplot(aes(x = dataset, y = x, fill = dataset)) +
     geom_boxplot(alpha = 0.6) +
     stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
-    scale_fill_brewer(palette = "Set3")
+    scale_fill_brewer(palette = "Set3") +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        y = '13 variables',
+        x = 'X-values',
+        title = "Boxplots: Slight differences in the distribution and median values",
+        subtitle = "Identical mean values"
+    )
 
 
 # boxplot for Y values, across datasets
@@ -96,7 +104,15 @@ datasaurus_dozen %>%
     ggplot(aes(x = dataset, y = y, fill = dataset)) +
     geom_boxplot(alpha = 0.6) +
     stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
-    scale_fill_brewer(palette = "Set1")
+    scale_fill_brewer(palette = "Paired") +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        y = '13 variables',
+        x = 'Y-values',
+        title = "Boxplots: Slight differences in the distribution and median values (Y-axis)",
+        subtitle = "Identical mean values"
+    )
 
 
 install.packages("ggridges")
@@ -106,13 +122,29 @@ library(ggridges)
 datasaurus_dozen %>%
     ggplot(aes(x = x, y = dataset, fill = dataset)) +
     geom_density_ridges_gradient(scale = 3, quantile_lines = T, quantile_fun = mean) +
-    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey'))
+    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey')) +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        x = "X-values",
+        y = "13 variables",
+        title = "Ridgeline Plot: More variation in the distribution (X-axis)",
+        subtitle = "Identical mean values"
+    )
 
 # ggridges for mean line for Y values
 datasaurus_dozen %>%
     ggplot(aes(x = y, y = dataset, fill = dataset)) +
     geom_density_ridges_gradient(scale = 3, quantile_lines = T, quantile_fun = mean) +
-    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey'))
+    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey')) +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        x = "Y-values",
+        y = "13 variables",
+        title = "Ridgeline Plot: More variation in the distribution (Y-axis)",
+        subtitle = "Identical mean values"
+    )
 
 
 datasaurus_dozen %>% str()
@@ -127,6 +159,20 @@ datasaurus_wide %>%
 datasaurus %>%
     ggplot(aes(x=x)) +
     geom_histogram()
+
+# facet histogram (x-value)
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    ggplot(aes(x=x)) +
+    geom_histogram() +
+    facet_wrap(~dataset)
+
+# facet histogram (y-value)
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    ggplot(aes(x=y)) +
+    geom_histogram() +
+    facet_wrap(~dataset)
 
 datasaurus %>%
     ggplot(aes(x=y)) +

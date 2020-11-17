@@ -1,0 +1,156 @@
+---
+title: "Going beyond summary statistics"
+author: "Paul Apivat Hanvongse"
+date: "11/17/2020"
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Datasaurus Introduction
+
+I recently came across the **Datasaurus** dataset by Alberto Cairo on [#TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-10-13/readme.md) and wanted to create a series of charts illustrating the lessons associated with this dataset, primarily to: [never trust summary statistics alone](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html).
+
+First, some context. Here's Alberto's [original tweet](https://twitter.com/albertocairo/status/765167969139765250) from years ago when he created this dataset:
+
+![png](./alberto_cairo.png)
+
+This tweet alone doesn't communicate why we shouldn't trust summary statistics alone, so let's unpack this. First we'll load the various packages and data we'll use.
+
+## Load Packages
+
+```{r packages}
+library(tidyverse)
+library(ggcorrplot)
+library(ggridges)
+```
+
+## Load Data
+
+**note** : `datasaurus` and `datasaurus_dozen` are identical. The former is provided via #TidyTuesday, the latter from [this research paper](https://www.autodesk.com/research/publications/same-stats-different-graphs) discussing more advanced concepts beyond the scope of this document (i.e., simulated annealing). 
+
+You'll also note that `datasaurus_dozen` and `datasaurus_wide` are the same data, organized differently. The former in *long* format and the latter, in *wide* format - see here for [details](http://www.cookbook-r.com/Manipulating_data/Converting_data_between_wide_and_long_format/).
+
+We'll use **both** `datasaurus_dozen` and `datasaurus_wide` throughout this document.
+
+```{r data}
+datasaurus <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-13/datasaurus.csv')
+datasaurus_dozen <- read_tsv('DatasaurusDozen.tsv')
+datasaurus_wide <- read_tsv('DatasaurusDozen-wide.tsv')
+```
+
+## Eyeballing the data
+
+Here are the first six rows of `datasaurus_dozen` (long):
+
+```{r long, echo=FALSE}
+head(datasaurus_dozen)
+```
+
+Here are the first six rows of `datasaurus_wide` (wide):
+
+```{r wide, echo=FALSE}
+head(datasaurus_wide)
+```
+
+There are 13 variables, each with X- and Y- axes.
+
+## Summary Statistics
+
+First, we'll note that if we just look at summary statistics (i.e., **mean** and **standard deviation**), we might conclude that these variables are all the *same*. Moreover, within each variable, `x` and `y` values have very **similarly low correlations** at ranging from -0.06 to -0.07.
+
+```{r summary}
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    summarize(
+        x_mean = mean(x),
+        x_sd = sd(x),
+        y_mean = mean(y),
+        y_sd = sd(y),
+        corr = cor(x,y)
+    )
+```
+
+## Boxplots
+
+You could use `boxplots` to show *slight* variation in the distribution and **median** values of these 13 variables. However, the **mean** values, indicated with the red circles, are identical.
+
+```{r boxplot_x}
+datasaurus_dozen %>%
+    ggplot(aes(x = dataset, y = x, fill = dataset)) +
+    geom_boxplot(alpha = 0.6) +
+    stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
+    scale_fill_brewer(palette = "Set3") +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        y = '13 variables',
+        x = 'X-values',
+        title = "Boxplots: Slight differences in the distribution and median values (X-axis)",
+        subtitle = "Identical mean values"
+    )
+```
+
+Here's the same plot for `y` values:
+
+```{r boxplot_y}
+datasaurus_dozen %>%
+    ggplot(aes(x = dataset, y = y, fill = dataset)) +
+    geom_boxplot(alpha = 0.6) +
+    stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
+    scale_fill_brewer(palette = "Paired") +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        y = '13 variables',
+        x = 'Y-values',
+        title = "Boxplots: Slight differences in the distribution and median values (Y-axis)",
+        subtitle = "Identical mean values"
+    )
+```
+
+## Ridgeline Plot
+
+We can begin to get a sense for how these variables are different if we plot the distribution in different ways. The ridgeline plot begins to reveal aspects of the data that were hidden before.
+
+We can begin to see that certain variables have markedly different distribution shapes (i.e., `v_lines`, `dots`, `x_shape`, `wide_lines`).
+
+```{r ridgeline_x}
+datasaurus_dozen %>%
+    ggplot(aes(x = x, y = dataset, fill = dataset)) +
+    geom_density_ridges_gradient(scale = 3, quantile_lines = T, quantile_fun = mean) +
+    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey')) +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        x = "X-values",
+        y = "13 variables",
+        title = "Ridgeline Plot: More variation in the distribution (X-axis)",
+        subtitle = "Identical mean values"
+    )
+```
+
+For `y` values, `high_lines`, `dots`, `circle` and `star` have obviously different distributions from the rest. Again, the **mean** values are identical across variables.
+
+```{r ridgeline_y}
+datasaurus_dozen %>%
+    ggplot(aes(x = y, y = dataset, fill = dataset)) +
+    geom_density_ridges_gradient(scale = 3, quantile_lines = T, quantile_fun = mean) +
+    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey')) +
+    theme_classic() +
+    theme(legend.position = 'none') +
+    labs(
+        x = "Y-values",
+        y = "13 variables",
+        title = "Ridgeline Plot: More variation in the distribution (Y-axis)",
+        subtitle = "Identical mean values"
+    )
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
