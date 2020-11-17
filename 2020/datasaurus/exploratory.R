@@ -71,11 +71,17 @@ datasaurus_dozen %>%
 install.packages("ggridges")
 library(ggridges)
 
+# ggridges with mean line for X values
 datasaurus_dozen %>%
     ggplot(aes(x = x, y = dataset, fill = dataset)) +
     geom_density_ridges_gradient(scale = 3, quantile_lines = T, quantile_fun = mean) +
     scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey'))
 
+# ggridges for mean line for Y values
+datasaurus_dozen %>%
+    ggplot(aes(x = y, y = dataset, fill = dataset)) +
+    geom_density_ridges_gradient(scale = 3, quantile_lines = T, quantile_fun = mean) +
+    scale_fill_manual(values = c('#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928', 'grey'))
 
 
 datasaurus_dozen %>% str()
