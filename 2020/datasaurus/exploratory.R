@@ -103,13 +103,37 @@ datasaurus_dozen %>%
 library(psych)
 
 # long format
+
 datasaurus_dozen %>%
     group_by(dataset) %>%
     describe()
 
+# density plot with x-values (no skewness or kurtosis per se)
+datasaurus_dozen %>%
+    ggplot(aes(x=x)) +
+    stat_density(geom = "line", color = "dodgerblue") +
+    facet_wrap(~dataset) +
+    labs(
+        title = "X values"
+    )
+
+
+datasaurus_dozen %>%
+    ggplot(aes(x=y)) +
+    stat_density(geom = "line", color = "red") +
+    facet_wrap(~dataset) +
+    labs(
+        title = "Y values"
+    )
+
+
+
+
+
 
 # wide format
-# summary statistics - only X (same mean: 54.26 or 54.27)
+
+# summary statistics - only X (same mean: 54.26 or 54.27) - Psych Package
 datasaurus_wide %>%
     slice(2:143) %>%
     select(away, bullseye, circle, dino, dots, h_lines, high_lines, slant_down, slant_up, star, v_lines, wide_lines, x_shape) %>%
@@ -118,7 +142,7 @@ datasaurus_wide %>%
     describe()
 
 
-# summary statistics - only Y (same mean: 47.83 or 47.84)
+# summary statistics - only Y (same mean: 47.83 or 47.84) - Psych Package
 datasaurus_wide %>%
     slice(2:143) %>%
     select(away_1, bullseye_1, circle_1, dino_1, dots_1, h_lines_1, high_lines_1, slant_down_1, slant_up_1, star_1, v_lines_1, wide_lines_1, x_shape_1) %>%
@@ -127,6 +151,9 @@ datasaurus_wide %>%
     describe()
 
 
+
+
+ 
 
 
 
