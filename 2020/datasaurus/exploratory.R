@@ -99,6 +99,34 @@ datasaurus_dozen %>%
         corr = cor(x,y)
     )
     
+# Add Skewness & Kurtosis from psych package ----
+library(psych)
+
+# long format
+datasaurus_dozen %>%
+    group_by(dataset) %>%
+    describe()
+
+
+# wide format
+# summary statistics - only X (same mean: 54.26 or 54.27)
+datasaurus_wide %>%
+    slice(2:143) %>%
+    select(away, bullseye, circle, dino, dots, h_lines, high_lines, slant_down, slant_up, star, v_lines, wide_lines, x_shape) %>%
+    mutate_if(is.character, as.numeric) %>%
+    # psych package for skewness and kurtosos
+    describe()
+
+
+# summary statistics - only Y (same mean: 47.83 or 47.84)
+datasaurus_wide %>%
+    slice(2:143) %>%
+    select(away_1, bullseye_1, circle_1, dino_1, dots_1, h_lines_1, high_lines_1, slant_down_1, slant_up_1, star_1, v_lines_1, wide_lines_1, x_shape_1) %>%
+    mutate_if(is.character, as.numeric) %>%
+    # psych package for skewness and kurtosis
+    describe()
+
+
 
 
 
