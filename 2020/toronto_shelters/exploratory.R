@@ -1,6 +1,8 @@
 # load libraries
 library(tidyverse)
-library(lubridate)
+library(lubridate) # handling dates
+library(magick) # add logo to plot
+
 
 # load data
 shelters <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-12-01/shelters.csv')
@@ -67,8 +69,11 @@ toronto_shelters %>%
 # challenge: split dttm into year, month, day
 # note: some shelter_name will have multiple entries for the same year_month (must group across facility_name)
 
+# homeless_toronto ----
+# note: read in logo png below
 
-toronto_shelters %>%
+
+homeless_toronto <- toronto_shelters %>%
     # handling date first
     mutate(
         date = occupancy_date %>% ymd(),
@@ -87,54 +92,35 @@ toronto_shelters %>%
         sum_capacity = sum(capacity) 
     ) %>%
     ggplot()+
-    geom_line(aes(x=year_month, y=sum_occupancy, color=sector))+
-    geom_line(aes(x=year_month, y=sum_capacity, color=sector))+
-    facet_wrap(~shelter_name)
+    #geom_line(aes(x=year_month, y=sum_occupancy, color=sector))+
+    geom_col(aes(x=year_month, y=sum_occupancy, fill=sector))+
+    facet_wrap(~shelter_name) +
+    scale_y_continuous(labels = scales::comma, position = "right") +
+    theme_minimal() +
+    theme(
+        legend.position = "bottom",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(face = "bold"),
+        plot.caption = element_text(face = "bold"),
+        plot.background = element_rect(fill = '#d1e0e0'),
+    ) +
+    labs(
+        title = "Homeless in Toronto",
+        subtitle = "Total Occupancy by Shelters: 2017 - 2020",
+        caption = "Data: open.toronto.ca | Visualization: @paulapivat",
+        fill = "Type",
+        y = "",
+        x = ""
+    ) +
+    scale_fill_manual(values = c("#17295B", "#0B488F", "#ffffff", "#E92515"))
     
-    
-    
-    
-    
-    
-    
-    
-    group_by(year_month, shelter_name, sector) %>%
-    ggplot(aes(x=year_month, y=occupancy, color=sector)) +    
-    geom_line() +
-    facet_wrap(~shelter_name)
 
+# read in open_data_toronto.png
+open_data_toronto <- image_read("open_data_toronto.png")
 
-
-# pick up here
-toronto_shelters %>%
-    select(occupancy_date, shelter_name, sector:capacity) %>%
-    drop_na() %>%               #29,155 rows
-    filter(!capacity==0) %>%    #29,051 rows
-    group_by(shelter_name, sector) %>%
-    ggplot(aes(x=occupancy_date, y=occupancy, color=sector)) +
-    geom_line() +
-    facet_wrap(~shelter_name)
-
-
-
-
-
-   
-toronto_shelters %>%
-    filter(shelter_name=="Seaton House") %>%
-    select(occupancy_date, shelter_name, sector:capacity)
-    group_by(occupancy_date, shelter_name, sector) %>% 
-    summarize(
-        sum_occupancy = sum(occupancy),
-        sum_capacity = sum(capacity) 
-    ) %>%
-    mutate(
-        occupancy_rate = sum_occupancy/sum_capacity
-    ) %>%
-    ungroup() %>%
-    view()
-   
-    
+homeless_toronto
+grid::grid.raster(open_data_toronto, x = 0.95, y = 0.1, just = c('right', 'bottom'), width = unit(2, 'inches'))
 
 
 
