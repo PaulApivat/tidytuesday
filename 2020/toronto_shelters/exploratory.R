@@ -1,5 +1,6 @@
 # load libraries
 library(tidyverse)
+library(lubridate)
 
 # load data
 shelters <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-12-01/shelters.csv')
@@ -58,22 +59,82 @@ toronto_shelters %>%
 
 
 # handling missing values, NaN and Inf ----
+
+# NOTE: include occupancy date
+# show changes in occupancy rate over time for shelters in the City of Toronto
+# something off: hypothesis: dttm format, need to turn this into discrete figure
+# in one day, there could be multiple entries
+# challenge: split dttm into year, month, day
+# note: some shelter_name will have multiple entries for the same year_month (must group across facility_name)
+
+
 toronto_shelters %>%
-    select(shelter_name, sector:occupancy_rate) %>%
-    drop_na() %>%
-    filter(!capacity==0)
-    
-    
-    
-    group_by(shelter_name, sector) %>% 
+    # handling date first
+    mutate(
+        date = occupancy_date %>% ymd(),
+        year = date %>% year(),
+        month = date %>% month(),
+        day = date %>% day(),
+        year_month = make_datetime(year, month) # make year-month
+    ) %>% 
+    select(year_month, shelter_name, sector:capacity) %>%
+    drop_na() %>%               #29,155 rows
+    filter(!capacity==0) %>% 
+    # group_by shelter_name, then sum_occupancy, sum_capacity
+    group_by(year_month, shelter_name, sector) %>% 
     summarize(
         sum_occupancy = sum(occupancy),
         sum_capacity = sum(capacity) 
     ) %>%
-    # drop all cap
-    filter(!is.na(sum_capacity))
+    ggplot()+
+    geom_line(aes(x=year_month, y=sum_occupancy, color=sector))+
+    geom_line(aes(x=year_month, y=sum_capacity, color=sector))+
+    facet_wrap(~shelter_name)
+    
+    
+    
+    
+    
+    
+    
+    
+    group_by(year_month, shelter_name, sector) %>%
+    ggplot(aes(x=year_month, y=occupancy, color=sector)) +    
+    geom_line() +
+    facet_wrap(~shelter_name)
+
+
+
+# pick up here
+toronto_shelters %>%
+    select(occupancy_date, shelter_name, sector:capacity) %>%
+    drop_na() %>%               #29,155 rows
+    filter(!capacity==0) %>%    #29,051 rows
+    group_by(shelter_name, sector) %>%
+    ggplot(aes(x=occupancy_date, y=occupancy, color=sector)) +
+    geom_line() +
+    facet_wrap(~shelter_name)
+
+
+
+
+
+   
+toronto_shelters %>%
+    filter(shelter_name=="Seaton House") %>%
+    select(occupancy_date, shelter_name, sector:capacity)
+    group_by(occupancy_date, shelter_name, sector) %>% 
+    summarize(
+        sum_occupancy = sum(occupancy),
+        sum_capacity = sum(capacity) 
+    ) %>%
+    mutate(
+        occupancy_rate = sum_occupancy/sum_capacity
+    ) %>%
+    ungroup() %>%
+    view()
+   
     
 
-toronto_shelters %>%
-    filter(shelter_name=="Birkdale Residence") %>% view()
+
 
