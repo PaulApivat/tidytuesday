@@ -25,6 +25,17 @@ toronto_shelters <- shelters %>%
     # filter for organization, leaves 30,163 rows
     filter(organization_name=="City of Toronto") 
 
+# filter for outside City of Toronto
+shelters %>%
+    mutate(
+        occupancy_rate = occupancy/capacity
+    ) %>% 
+    # filter for city, leaves 108,054 rows
+    #filter(shelter_city=="Toronto") %>%
+    # filter for organization, leaves 30,163 rows
+    filter(organization_name !="City of Toronto") 
+
+
 
 # Exploring (Toronto Shelters) ----
 
@@ -73,7 +84,7 @@ toronto_shelters %>%
 # note: read in logo png below
 
 
-homeless_toronto <- toronto_shelters %>%
+city_of_toronto <- toronto_shelters %>%
     # handling date first
     mutate(
         date = occupancy_date %>% ymd(),
@@ -106,8 +117,8 @@ homeless_toronto <- toronto_shelters %>%
         plot.background = element_rect(fill = '#d1e0e0'),
     ) +
     labs(
-        title = "Homeless in Toronto",
-        subtitle = "Total Occupancy by Shelters: 2017 - 2020",
+        title = "Organization: City of Toronto",
+        subtitle = "Total Occupancy by Homeless Shelters: 2017 - 2020",
         caption = "Data: open.toronto.ca | Visualization: @paulapivat",
         fill = "Type",
         y = "",
@@ -119,7 +130,7 @@ homeless_toronto <- toronto_shelters %>%
 # read in open_data_toronto.png
 open_data_toronto <- image_read("open_data_toronto.png")
 
-homeless_toronto
+city_of_toronto
 grid::grid.raster(open_data_toronto, x = 0.95, y = 0.1, just = c('right', 'bottom'), width = unit(2, 'inches'))
 
 
