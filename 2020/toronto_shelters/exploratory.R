@@ -25,15 +25,10 @@ toronto_shelters <- shelters %>%
     # filter for organization, leaves 30,163 rows
     filter(organization_name=="City of Toronto") 
 
-# filter for outside City of Toronto
-shelters %>%
-    mutate(
-        occupancy_rate = occupancy/capacity
-    ) %>% 
+# all_toronto ----
+all_toronto <- shelters %>%
     # filter for city, leaves 108,054 rows
-    #filter(shelter_city=="Toronto") %>%
-    # filter for organization, leaves 30,163 rows
-    filter(organization_name !="City of Toronto") 
+    filter(shelter_city=="Toronto") 
 
 
 
@@ -80,7 +75,7 @@ toronto_shelters %>%
 # challenge: split dttm into year, month, day
 # note: some shelter_name will have multiple entries for the same year_month (must group across facility_name)
 
-# homeless_toronto ----
+# city_of_toronto ----
 # note: read in logo png below
 
 
@@ -134,4 +129,47 @@ city_of_toronto
 grid::grid.raster(open_data_toronto, x = 0.95, y = 0.1, just = c('right', 'bottom'), width = unit(2, 'inches'))
 
 
+# all_toronto (plot) ----
+
+all_toronto %>%
+    mutate(
+        date = occupancy_date %>% ymd(),
+        year = date %>% year(),
+        month = date %>% month(),
+        day = date %>% day(),
+        year_month = make_datetime(year, month) # make year-month
+    ) %>% 
+    select(year_month, organization_name, sector:capacity) %>%
+    drop_na() %>%                # drop NA values
+    filter(!capacity==0) %>%     # filter out capacity==0 (to prevent Nan from occupancy/capacity)
+    #filter(organization_name != "City of Toronto") %>%
+    #filter(organization_name != "COSTI Immigrant Services") %>%
+    group_by(year_month, organization_name, sector) %>% 
+    summarize(
+        sum_occupancy = sum(occupancy),
+        sum_capacity = sum(capacity) 
+    ) %>%
+    ggplot()+
+    geom_bar(aes(x=year_month, y=sum_occupancy, fill=sector), position = "fill", stat = "identity")+
+    facet_wrap(~organization_name) +
+    scale_y_continuous(labels = scales::comma, position = "right") +
+    theme_minimal()+
+    theme(
+        legend.position = "bottom",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(face = "bold"),
+        plot.caption = element_text(face = "bold"),
+        plot.background = element_rect(fill = '#d1e0e0'),
+    )+
+    labs(
+        title = "Homeless in Toronto: 2017 - 2020",
+        subtitle = "Proportional occupancy across organizations",
+        caption = "Data: open.toronto.ca | Visualization: @paulapivat",
+        fill = "Type",
+        y = "",
+        x = ""
+    ) +
+    scale_fill_manual(values = c("#ca0020", "#f4a582", "#f7f7f7", "#92c5de", "#0571b0"))
+    #scale_fill_manual(values = c("#17295B", "#0B488F", "#ffffff", "#E92515", "#F6A7A1"))
 
