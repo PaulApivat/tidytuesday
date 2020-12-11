@@ -36,3 +36,29 @@ women %>%
     arrange(category) %>%
     view()
 
+# ggraph sample ----
+library(ggraph)
+library(igraph)
+
+# data frame with hierarchical structure
+edges <- flare$edges
+
+# information about each node
+vertices <- flare$vertices
+
+# make graph object
+mygraph <- graph_from_data_frame(edges, vertices = vertices)
+
+# plot
+ggraph(mygraph, layout = 'circlepack')+
+    geom_node_circle()+
+    theme_void()
+
+
+
+
+
+
+
+
+
