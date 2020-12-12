@@ -69,5 +69,46 @@ p + scale_fill_viridis()
 # Adjust color palette: colorBrewer
 p + scale_fill_distiller(palette = "RdPu")
 
+# Circular Packing w/ Labels ----
+
+# Create a subset of the dataset (remove 1 level)
+edges2 <- flare$edges %>%
+    filter(to %in% from) %>%
+    droplevels()
+
+vertices2 <- flare$vertices %>%
+    filter(name %in% c(edges$from, edges$to)) %>%
+    droplevels()
+
+vertices2$size <- runif(nrow(vertices))
+
+# Rebuild the graph object
+mygraph2 <- graph_from_data_frame(edges2, vertices = vertices2)
+
+# circular packing with labels
+ggraph(mygraph2, layout = 'circlepack')+
+    geom_node_circle(aes(fill=depth))+
+    geom_node_text(aes(label=shortName, filter=leaf, fill=depth, size=size))+
+    theme_void()+
+    theme(legend.position = 'FALSE')+
+    scale_fill_viridis()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
