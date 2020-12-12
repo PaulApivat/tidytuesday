@@ -55,10 +55,19 @@ ggraph(mygraph, layout = 'circlepack')+
     theme_void()
 
 
+# Map Color to Hierarchy Depth ----
 
+# Left: color depends on depth
+p <- ggraph(mygraph, layout = 'circlepack')+
+    geom_node_circle(aes(fill = depth))+
+    theme_void()+
+    theme(legend.position = 'FALSE')
 
+# Adjust color palette: Viridis
+p + scale_fill_viridis()
 
-
+# Adjust color palette: colorBrewer
+p + scale_fill_distiller(palette = "RdPu")
 
 
 
