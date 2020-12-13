@@ -299,3 +299,25 @@ women_sun <- women %>%
     arrange(category) 
 
 sunburst(data.frame(xtabs(count~path,women_sun)))
+
+# women into sunburt (version 2: country first)
+
+women_sun2 <- women %>%
+    select(country, category, role) %>%
+    mutate(
+        path = paste(country, category, role, sep = "-"),
+        count = 1
+    ) %>%
+    slice(2:100) %>%
+    arrange(country)
+
+sunburst(data.frame(xtabs(count~path, women_sun2)))
+
+
+
+
+
+
+
+
+
