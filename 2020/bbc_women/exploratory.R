@@ -93,14 +93,20 @@ ggraph(mygraph2, layout = 'circlepack')+
     theme(legend.position = 'FALSE')+
     scale_fill_viridis()
 
+# Hiding Levels ----
+# source: https://www.r-graph-gallery.com/315-hide-first-level-in-circle-packing.html
 
+edges3 <- flare$edges
+vertices3 <- flare$vertices
+mygraph3 <- graph_from_data_frame(edges3, vertices=vertices3)
 
-
-
-
-
-
-
+# hide first level (right)
+ggraph(mygraph3, layout = 'circlepack') +
+    geom_node_circle(aes(fill = as.factor(depth), color = as.factor(depth)))+
+    scale_fill_manual(values=c("0" = "white", "1" = "red", "2" = "green", "3" = "yellow", "4"= "blue"))+
+    scale_color_manual(values = c("0" = "white", "1" = "black", "2" = "black", "3" = "black", "4"="black"))+
+    theme_void()+
+    theme(legend.position = "FALSE")
 
 
 
