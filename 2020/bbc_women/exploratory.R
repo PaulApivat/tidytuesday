@@ -342,5 +342,135 @@ women2$continent <- ifelse(women2$country %in% europe, 'Europe', women2$continen
 women2$continent <- ifelse(women2$country %in% africa, 'Africa', women2$continent)
 women2$continent <- ifelse(women2$country %in% north_america, 'North America', women2$continent)
 
+# plot sunburst with continent (continent, country) (women_sun3)
+women_sun3 <- women2 %>%
+    select(continent, country, category, role) %>%
+    mutate(
+        path = paste(continent, country, category, role, sep = "-"),
+        count = 1
+    ) %>%
+    slice(2:100) %>%
+    arrange(continent)
+
+# women_sun4
+women_sun4 <- women2 %>%
+    select(continent, category, country, role) %>%
+    mutate(
+        path = paste(continent, category, country, role, sep = "-"),
+        count = 1
+    ) %>%
+    slice(2:100) %>%
+    arrange(continent)
+
+# women_sun5
+women_sun5 <- women2 %>%
+    select(category, continent, country, role) %>%
+    mutate(
+        path = paste(category, continent, country, role, sep = "-"),
+        count = 1
+    ) %>%
+    slice(2:100) %>%
+    arrange(category) %>%
+    view()
+
+
+    
+sunburst(data = data.frame(xtabs(count~path, women_sun3)), 
+         colors = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"))
+
+
+
+sunburst(data = data.frame(xtabs(count~path, women_sun4)), 
+                #red(switch)        #blue      #green    #purple     #orange   #yellow
+         colors = c("#00441b", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33",
+                #pink(switch)     #light-blue  #light-green   #light-purple
+                    "#e41a1c", "#b3cde3", "#ccebc5", "#decbe4",
+            #dark-green(switch) - sequential greens                                                                  - then purple
+                    "#fbb4ae", "#006d2c", "#238b45", "#41ae76", "#66c2a4", "#99d8c9", "#ccece6", "#e5f5f9", "#f7fcfd", "#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#810f7c", "#4d004b"))
+
+
+# NOTE: Try Continent + Countries being the same shade (implies cateogry, continent, country, role)
+sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
+         # category: colorbrewer, qualitative, 4-class Set1
+         colors = c("#7570b3", "#377eb8", "#4daf4a", "#984ea3",
+        # continent: (switch) 6-class Dark2
+                    "#e41a1c", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02",
+# Asia (#7570b3) x 34 (switch)    
+                    "#1b9e77", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", 
+                    "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", 
+                    "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3", "#7570b3",
+                    "#7570b3", "#7570b3", "#7570b3", "#7570b3",
+#Africa(#d95f02) x 21         
+                    "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02",
+                    "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02", "#d95f02",
+                    "#d95f02",
+# Europe (#e7298a) x 22
+                    "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a",
+                    "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a", "#e7298a",
+                    "#e7298a", "#e7298a",
+# S.Amer (#e6ab02) x 8 
+                    "#e6ab02", "#e6ab02", "#e6ab02", "#e6ab02", "#e6ab02", "#e6ab02", "#e6ab02", "#e6ab02",
+# N.Amer (#66a61e) x 12
+                    "#66a61e", "#66a61e", "#66a61e", "#66a61e", "#66a61e", "#66a61e", "#66a61e", "#66a61e", "#66a61e", "#66a61e",
+                    "#66a61e", "#66a61e", 
+# Oceania ("#1b9e77") x 2
+                    "#1b9e77", "#1b9e77",
+# There's actually 99 roles          
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC",
+                    "#DCDCDC", "#DCDCDC", "#DCDCDC", "#DCDCDC"), legend = FALSE)
+
+
+
+
+
+sunburst(data = data.frame(xtabs(count~path, women_sun4)), 
+         #colorbrewer2 BuGn (Blue-Green)
+         colors = c("#d7301f", "#238b45", "#41ae76", "#66c2a4", "#99d8c9", "#ccece6",
+         #OrRd      #switch          
+                    "#006d2c", "#ef6548", "#fc8d59", "#fdbb84",
+                    ), legend = FALSE)
+
+
+women2 %>%
+    #filter(continent=='Africa') %>%
+    count(country, sort = TRUE)
+
+# count number of country shapes
+women2 %>%
+    group_by(continent) %>%
+    count(country, sort = TRUE) %>%
+    summarize(
+        sum_n = sum(n)
+    )
+
+# count number of role shapes
+women2 %>%
+    group_by(continent, role) %>%
+    count(role, sort = TRUE) %>%
+    summarize(
+        sum_n = sum(n)
+    ) %>%
+    summarize(
+        sum_role = sum(sum_n)
+    )
+
+women2 %>%
+    group_by(continent, country) %>%
+    count(role, sort = TRUE) %>%
+    arrange(continent) %>%
+    view()
+    
+    
+
+
 
 
