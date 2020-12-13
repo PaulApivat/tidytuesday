@@ -300,6 +300,9 @@ women_sun <- women %>%
 
 sunburst(data.frame(xtabs(count~path,women_sun)))
 
+sunburst(data = data.frame(xtabs(count~path, women_sun)), colors = c("red", "green", "blue", "yellow", "purple"), percent = FALSE)
+sunburst(data = data.frame(xtabs(count~path, women_sun)), colors = c("#d9d9d9","#bc80bd","#ccebc5", "#ffed6f"), percent = FALSE)
+
 # women into sunburt (version 2: country first)
 
 women_sun2 <- women %>%
@@ -314,10 +317,30 @@ women_sun2 <- women %>%
 sunburst(data.frame(xtabs(count~path, women_sun2)))
 
 
+# add continent column to women
+women %>%
+    arrange(country) %>%
+    view()
+
+asia <-  c('Afghanistan', 'Bangladesh', 'China', 'Exiled Uighur from Ghulja (in Chinese, Yining)', 'Hong Kong', 'India', 'Indonesia', 'Iran', 'Iraq/UK', 'Japan', 'Kyrgyzstan',
+           'Lebanon', 'Malaysia', 'Myanmar', 'Nepal', 'Pakistan', 'Singapore', 'South Korea', 'Syria', 'Thailand', 'UAE', 'Vietnam', 'Yemen')
+south_america <- c('Argentina', 'Brazil', 'Colombia', 'Ecuador', 'Peru', 'Venezuela')
+oceania <- c('Australia')
+europe <- c('Belarus', 'Finland', 'France', 'Germany', 'Italy', 'Netherlands', 'Northern Ireland', 'Norway', 'Republic of Ireland', 'Russia', 'Turkey', 'UK', 'Ukraine', 'Wales, UK')
+africa <- c('Benin', 'DR Congo', 'Egypt', 'Ethiopia', 'Kenya', 'Morocco', 'Mozambique', 'Nigeria', 'Sierra Leone', 'Somalia', 'Somaliland', 'South Africa', 'Tanzania', 'Uganda', 'Zambia',
+            'Zimbabwe')
+north_america <- c('El Salvador', 'Jamaica', 'Mexico', 'US')
 
 
-
-
+women2 <- women %>%
+    mutate(continent = NA) 
+    
+women2$continent <- ifelse(women2$country %in% asia, 'Asia', women2$continent)
+women2$continent <- ifelse(women2$country %in% south_america, 'South America', women2$continent)
+women2$continent <- ifelse(women2$country %in% oceania, 'Oceania', women2$continent)
+women2$continent <- ifelse(women2$country %in% europe, 'Europe', women2$continent)
+women2$continent <- ifelse(women2$country %in% africa, 'Africa', women2$continent)
+women2$continent <- ifelse(women2$country %in% north_america, 'North America', women2$continent)
 
 
 
