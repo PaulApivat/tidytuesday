@@ -477,7 +477,7 @@ sunburst(data = data.frame(xtabs(count~path, women_sun5)),
                     # continent: (switch) 6-class BrBG (diverging)
                     "#e41a1c", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"), legend = FALSE)
 
-# FINAL VERSION ----
+# FINAL VERSIONS ----
 # see sunburstR package
 # create women_sun5 from women2
 # women2 = manually create continents
@@ -488,7 +488,37 @@ sunburst(data = data.frame(xtabs(count~path, women_sun5)),
                     "#e41a1c", "#bf812d", "#dfc27d", "#80cdc1", "#35978f", "#01665e"), legend = FALSE)
 
 
+# Two Sequential Tracks Version - Grey and Reds
+sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
+         # category: colorbrewer, sequential, single-hue 9-class Grey
+         colors = c("#969696", "#737373", "#525252", "#252525",
+        # continent: (switch) sequential, single-hue, 6-class Reds
+                    "#fee5d9", "#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15"), legend = FALSE)
 
+
+
+# Two Sequential Tracks Version - YlGnBu and Reds
+sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
+         # category: colorbrewer, sequential, multi-hue 9-class YlGnBu
+         colors = c("#41b6c4", "#1d91c0", "#225ea8", "#253494",
+        # continent: (switch) sequential, single-hue, 6-class Reds
+                    "#fee5d9", "#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15"), legend = FALSE)
+
+
+# Two Sequential Tracks Version - Mint Green and Royal Red
+sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
+         # category: mint green
+         colors = c("#ffcce7", "#6ce0b1", "#2dd290", "#1f9365",
+                    # continent: (switch) royal red
+                    "#abedd3", "#ff99cf", "#ff66b8", "#ff33a0", "#ff0088", "#cc006d"), legend = FALSE)
+
+
+# Two Sequential Tracks Version - Mint Green and Black/Grey
+sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
+         # category: mint green
+         colors = c("#e6e6e6", "#6ce0b1", "#2dd290", "#1f9365",
+        # continent: (switch) Black/Gray shades
+                    "#abedd3", "#bfbfbf", "#999999", "#737373", "#4d4d4d", "#262626"), legend = FALSE)
 
 women2 %>%
     #filter(continent=='Africa') %>%
