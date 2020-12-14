@@ -470,21 +470,24 @@ sunburst(data = data.frame(xtabs(count~path, women_sun5)),
 
 
 
-# Near Final version ----
+# Near Final version 
 sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
          # category: colorbrewer, qualitative, 4-class Set1
          colors = c("#8c510a", "#377eb8", "#4daf4a", "#984ea3",
                     # continent: (switch) 6-class BrBG (diverging)
                     "#e41a1c", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"), legend = FALSE)
 
+# FINAL VERSION ----
+# see sunburstR package
+# create women_sun5 from women2
+# women2 = manually create continents
+sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
+         # category: colorbrewer, qualitative, 4-class Set1
+         colors = c("#8c510a", "#377eb8", "#4daf4a", "#984ea3",
+        # continent: (switch) 11-class BrBG (diverging)
+                    "#e41a1c", "#bf812d", "#dfc27d", "#80cdc1", "#35978f", "#01665e"), legend = FALSE)
 
 
-sunburst(data = data.frame(xtabs(count~path, women_sun4)), 
-         #colorbrewer2 BuGn (Blue-Green)
-         colors = c("#d7301f", "#238b45", "#41ae76", "#66c2a4", "#99d8c9", "#ccece6",
-         #OrRd      #switch          
-                    "#006d2c", "#ef6548", "#fc8d59", "#fdbb84",
-                    ), legend = FALSE)
 
 
 women2 %>%
@@ -516,7 +519,19 @@ women2 %>%
     arrange(continent) %>%
     view()
     
-    
+# another s/o example ----
+leafs <- c("base","base-child1-grandchild1","base-child1-grandchild2","base-child1","base-child2-grandchild3","base-child2","base-child3-grandchild4","base-child3-grandchild5","base-child3-grandchild6","base-child3-grandchild7","base-child3")
+values <- c(200,15,10,20,55,10,120,30,30,20,10)  
+
+# colors
+colors <- c("#c994c7","#6a51a3","#807dba","#bcbddc","#74c476","#c7e9c0","#fcbba1","#fc9272","#ef3b2c","#cb181d","#99000d")
+# match those colors to leaf names, matched by index
+labels <- c("base","grandchild1","grandchild2","child1","child2","grandchild3","grandchild4","grandchild5","grandchild6","grandchild7","child3")
+
+df = data.frame(v1=leafs, v2=values);
+
+sunburst(df, 
+         colors = list(range = colors, domain = labels))
 
 
 
