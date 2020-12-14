@@ -470,14 +470,14 @@ sunburst(data = data.frame(xtabs(count~path, women_sun5)),
 
 
 
-# Near Final version 
+ 
 sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
          # category: colorbrewer, qualitative, 4-class Set1
          colors = c("#8c510a", "#377eb8", "#4daf4a", "#984ea3",
                     # continent: (switch) 6-class BrBG (diverging)
                     "#e41a1c", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"), legend = FALSE)
 
-# FINAL VERSIONS ----
+
 # see sunburstR package
 # create women_sun5 from women2
 # women2 = manually create continents
@@ -512,6 +512,10 @@ sunburst(data = data.frame(xtabs(count~path, women_sun5)),
                     # continent: (switch) royal red
                     "#abedd3", "#ff99cf", "#ff66b8", "#ff33a0", "#ff0088", "#cc006d"), legend = FALSE)
 
+# FINAL ----
+# see sunburstR package
+# create women_sun5 from women2
+# women2 = manually create continents
 
 # Two Sequential Tracks Version - Mint Green and Black/Grey
 sunburst(data = data.frame(xtabs(count~path, women_sun5)), 
