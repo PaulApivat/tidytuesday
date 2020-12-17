@@ -73,6 +73,7 @@ afri_creat <- women %>%
         V2 = c(500, 200, 300, 100, 400)
     )
 
+afri_creat
 ```
 
 ## Sunburst
