@@ -1,0 +1,84 @@
+---
+title: "sunburst"
+author: "Paul Apivat Hanvongse"
+date: "12/17/2020"
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Libraries
+
+
+```{r libraries}
+library(tidyverse)
+library(sunburstR)
+```
+
+## Load Data & Explore
+
+You can also embed plots, for example:
+
+```{r exploratory, echo=FALSE}
+women <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-12-08/women.csv')
+
+head(women)
+```
+
+## Add Continents
+
+```{r continents}
+# add continent as character vector
+asia <-  c('Afghanistan', 'Bangladesh', 'China', 'Exiled Uighur from Ghulja (in Chinese, Yining)', 'Hong Kong', 'India', 'Indonesia', 'Iran', 'Iraq/UK', 'Japan', 'Kyrgyzstan', 'Lebanon', 'Malaysia', 'Myanmar', 'Nepal', 'Pakistan', 'Singapore', 'South Korea', 'Syria', 'Thailand', 'UAE', 'Vietnam', 'Yemen')
+
+south_america <- c('Argentina', 'Brazil', 'Colombia', 'Ecuador', 'Peru', 'Venezuela')
+oceania <- c('Australia')
+europe <- c('Belarus', 'Finland', 'France', 'Germany', 'Italy', 'Netherlands', 'Northern Ireland', 'Norway', 'Republic of Ireland', 'Russia', 'Turkey', 'UK', 'Ukraine', 'Wales, UK')
+africa <- c('Benin', 'DR Congo', 'Egypt', 'Ethiopia', 'Kenya', 'Morocco', 'Mozambique', 'Nigeria', 'Sierra Leone', 'Somalia', 'Somaliland', 'South Africa', 'Tanzania', 'Uganda', 'Zambia', 'Zimbabwe')
+north_america <- c('El Salvador', 'Jamaica', 'Mexico', 'US')
+
+# add new column for continent
+women <- women %>%
+    mutate(continent = NA) 
+
+# add continents to women dataframe
+women$continent <- ifelse(women$country %in% asia, 'Asia', women$continent)
+women$continent <- ifelse(women$country %in% south_america, 'South America', women$continent)
+women$continent <- ifelse(women$country %in% oceania, 'Oceania', women$continent)
+women$continent <- ifelse(women$country %in% europe, 'Europe', women$continent)
+women$continent <- ifelse(women$country %in% africa, 'Africa', women$continent)
+women$continent <- ifelse(women$country %in% north_america, 'North America', women$continent)
+
+women
+```
+
+## Data Wrangling: African Creativity
+
+```{r wrangling}
+afri_creat <- women %>%
+    select(category, continent, role) %>%
+    mutate(
+        path = paste(category, continent, role, sep="-")
+    ) %>%
+    slice(2:100) %>%
+    arrange(category) %>%
+    filter(category=='Creativity') %>%
+    filter(continent=='Africa') %>%
+    mutate(
+        V2 = c(500, 200, 300, 100, 400)
+    )
+
+```
+
+## Sunburst
+
+```{r sunburst}
+sunburst(data = data.frame(xtabs(V2~path, afri_creat)),
+         colors = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"))
+
+```
