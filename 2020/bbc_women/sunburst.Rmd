@@ -1,5 +1,6 @@
 ---
-title: "sunburst"
+title: "BBC Women of 2020"
+subtitle: "Visualizing women's achievement across continents with sunburstR"
 author: "Paul Apivat Hanvongse"
 date: "12/17/2020"
 output: 
@@ -14,17 +15,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Load Libraries
 
+The two main libraries are `tidyverse` (mostly `dplyr` so you can just load that if you want) and `sunburstR`. There are other packages for sunburst plots including: [plotly](https://plotly.com/r/sunburst-charts/) and [ggsunburst (of ggplot)](https://github.com/didacs/ggsunburst), but we'll explore [sunburstR](https://www.rdocumentation.org/packages/sunburstR/versions/2.1.5/topics/sunburst) in this post.
 
-```{r libraries}
+```{r libraries, message=FALSE}
 library(tidyverse)
 library(sunburstR)
 ```
 
 ## Load Data & Explore
 
-You can also embed plots, for example:
+The data is from [week 50 of TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-12-08/readme.md), exploring the BBC's top 100 influential women of 2020. 
 
-```{r exploratory, echo=FALSE}
+
+```{r exploratory, results='hide', message=FALSE}
 women <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-12-08/women.csv')
 
 head(women)
@@ -32,7 +35,13 @@ head(women)
 
 ## Add Continents
 
-```{r continents}
+The original dataset organized 100 women by category, country, role and description. I found that for employing the sunburst plot, I would want to group countries together by continents. 
+
+I manually added country names to continent vectors, then added a new column to the `women` dataframe to conditionally add continent name.
+
+We could then focus on six continents rather than 65 separate countries. 
+
+```{r continents, results='hide'}
 # add continent as character vector
 asia <-  c('Afghanistan', 'Bangladesh', 'China', 'Exiled Uighur from Ghulja (in Chinese, Yining)', 'Hong Kong', 'India', 'Indonesia', 'Iran', 'Iraq/UK', 'Japan', 'Kyrgyzstan', 'Lebanon', 'Malaysia', 'Myanmar', 'Nepal', 'Pakistan', 'Singapore', 'South Korea', 'Syria', 'Thailand', 'UAE', 'Vietnam', 'Yemen')
 
@@ -59,13 +68,19 @@ women
 
 ## Data Wrangling
 
-```{r wrangling}
+The key to using the `sunburstR` package with this specific dataset is the wrangling that happens to filter by continents we created above. We'll also want to get rid of dashes with `mutate_at` as dashes are structurally needed to render the sunburst plots.
+
+Below, I've filtered the `women` data frame into Africa and Asia (the same could be done for North and South America and Europe as well). 
+
+The **two most important** operations here are the creation of the `path` and `V2` columns that will later be parameters for rendering the sunburst plots. 
+
+```{r wrangling, message=FALSE}
 
 # Filter for Africa
 africa_name <- women %>%
     select(continent, category, role, name) %>%
     # remove dash within dplyr pipe
-    mutate_at(vars(3, 4), funs(gsub("-", "", .))) %>%
+    mutate_at(vars(3, 4), funs(gsub("-", "", .))) %>% 
     filter(continent=='Africa') %>%
     mutate(
         path = paste(continent, category, role, name, sep = "-")
@@ -93,6 +108,12 @@ asia_name <- women %>%
 
 ## Sunburst: Africa
 
+Ultimately, I found the information best presented by continent as the *base* of the sunburst plot, followed by category, specific roles and the names of each of the 100 women honored by the BBC. 
+
+Moreover, by presenting the data by continent, you can focus on just five specific color as you decide on a palette. 
+
+I wouldn't recommend trying to pick a color for each role or name; it becomes too unweildy. Just pick five colors for the two inner most rings of the sunburst plot and it'll shuffle the rest of the colors.
+
 ```{r africa}
 # Africa
 sunburst(data = data.frame(xtabs(V2~path, africa_name)), legend = FALSE,
@@ -107,3 +128,7 @@ sunburst(data = data.frame(xtabs(V2~path, africa_name)), legend = FALSE,
 sunburst(data = data.frame(xtabs(V2~path, asia_name)), legend = FALSE,
          colors = c("#e6e0ae", "#dfbc5e", "#ee6146", "#d73c37", "#b51f09"))
 ```
+
+And that's it for visualizing the BBC's top 100 influential women in 2020 with the `sunburstR` package. 
+
+For more content on data science, visualization, in R and Python, [find me on Twitter](https://twitter.com/paulapivat). 
