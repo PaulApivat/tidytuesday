@@ -57,29 +57,35 @@ women$continent <- ifelse(women$country %in% north_america, 'North America', wom
 women
 ```
 
-## Data Wrangling: African Creativity
+## Data Wrangling: Africa
 
 ```{r wrangling}
-afri_creat <- women %>%
-    select(category, continent, role) %>%
-    mutate(
-        path = paste(category, continent, role, sep="-")
-    ) %>%
-    slice(2:100) %>%
-    arrange(category) %>%
-    filter(category=='Creativity') %>%
+
+africa_name <- women %>%
+    select(continent, category, role, name) %>%
+    # remove dash within dplyr pipe
+    mutate_at(vars(3, 4), funs(gsub("-", "", .))) %>%
     filter(continent=='Africa') %>%
     mutate(
-        V2 = c(500, 200, 300, 100, 400)
+        path = paste(continent, category, role, name, sep = "-")
+    ) %>%
+    slice(2:100) %>%
+    mutate(
+        V2 = 1
     )
 
-afri_creat
+
+
+
 ```
 
-## Sunburst
+## Sunburst: Africa
 
 ```{r sunburst}
-sunburst(data = data.frame(xtabs(V2~path, afri_creat)),
-         colors = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"))
+# creativity in Africa
+
+
+sunburst(data = data.frame(xtabs(V2~path, africa_name)), legend = FALSE,
+         colors = c("D99527", "6F7239", "CE4B3C", "C8AC70", "018A9D"))
 
 ```
