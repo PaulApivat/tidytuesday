@@ -57,10 +57,11 @@ women$continent <- ifelse(women$country %in% north_america, 'North America', wom
 women
 ```
 
-## Data Wrangling: Africa
+## Data Wrangling
 
 ```{r wrangling}
 
+# Filter for Africa
 africa_name <- women %>%
     select(continent, category, role, name) %>%
     # remove dash within dplyr pipe
@@ -74,18 +75,35 @@ africa_name <- women %>%
         V2 = 1
     )
 
-
-
+# Filter for Asia
+asia_name <- women %>%
+    select(continent, category, role, name) %>%
+    # remove dash within dplyr pipe
+    mutate_at(vars(3, 4), funs(gsub("-", "", .))) %>%
+    filter(continent=='Asia') %>%
+    mutate(
+        path = paste(continent, category, role, name, sep = "-")
+    ) %>%
+    slice(2:100) %>%
+    mutate(
+        V2 = 1
+    )
 
 ```
 
 ## Sunburst: Africa
 
-```{r sunburst}
-# creativity in Africa
-
-
+```{r africa}
+# Africa
 sunburst(data = data.frame(xtabs(V2~path, africa_name)), legend = FALSE,
          colors = c("D99527", "6F7239", "CE4B3C", "C8AC70", "018A9D"))
 
+```
+
+## Sunburst: Asia
+
+```{r asia}
+# Asia
+sunburst(data = data.frame(xtabs(V2~path, asia_name)), legend = FALSE,
+         colors = c("#e6e0ae", "#dfbc5e", "#ee6146", "#d73c37", "#b51f09"))
 ```
