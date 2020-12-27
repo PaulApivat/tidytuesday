@@ -134,12 +134,13 @@ bigmac %>%
         plot.background = element_rect(fill = '#8FD0CA'),
         plot.title = element_text(face = 'bold', family = 'sans'),
         plot.subtitle = element_text(margin = margin(0,0,30,0), face = 'italic'),
-        axis.text.x = element_text(face = 'bold'),
+        axis.text.x = element_text(face = 'bold', margin = margin(0,0,20,0)),
+        axis.title.x = element_text(hjust = 0.35)
         ) +
     labs(
         title = "The Big Mac index",
         subtitle = "Using 'burgernomics' to show the exchange rate between each \ncountry's currency relative to the US dollar from 2000 - 2020.",
-        x = "",
+        x = "Raw index, relative to the US dollar",
         y = "",
         caption = "Data: The Economist | Visual: @paulapivat"
     ) +
