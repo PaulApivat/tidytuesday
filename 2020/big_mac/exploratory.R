@@ -78,6 +78,33 @@ bigmac %>%
         title = "Raw Index: Undervalued and Overvalued compared to US",
         subtitle = "July, 2020"
     )
+
+# title = "Raw Index: Undervalued and Overvalued compared to US"
+# subtitle = "July, 2020"
+# approximate squishing of scatterplot
+bigmac %>%
+    select(date, name, usd_raw) %>%
+    filter(date=='2020-07-01') %>%
+    ggplot(aes(x = usd_raw, y = date)) +
+    geom_point(size = 1.5, position = 'jitter') +
+    geom_vline(xintercept = 0, color = 'red') +
+    theme_minimal() +
+    theme(
+        legend.position = 'none',
+        plot.title = element_text(margin = margin(0,0,0,0)),
+        plot.subtitle = element_text(margin = margin(0,0,180,0))
+        ) +
+    labs(
+        title = "Raw Index: Undervalued and Overvalued compared to US",
+        subtitle = "July, 2020"
+    ) + 
+    # squish the plot
+    # > 1 squish from sides
+    # < 1 squish from top
+    coord_fixed(ratio = 0.08)
+
+
+
     
 # title = "Raw Index: Undervalued and Overvalued compared to US"
 bigmac %>%
@@ -100,6 +127,7 @@ bigmac %>%
     ) +
     scale_x_continuous(breaks = seq(-1.0, 1.5, by = 0.25)) +
     coord_flip()
+
 
 
 
