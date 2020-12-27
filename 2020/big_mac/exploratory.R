@@ -91,7 +91,8 @@ bigmac %>%
     theme_minimal() +
     theme(
         legend.position = 'none',
-        plot.title = element_text(margin = margin(0,0,0,0)),
+        # expand distance between title and plot
+        plot.title = element_text(margin = margin(0,0,10,0)),
         plot.subtitle = element_text(margin = margin(0,0,180,0))
         ) +
     labs(
@@ -102,6 +103,7 @@ bigmac %>%
     # > 1 squish from sides
     # < 1 squish from top
     coord_fixed(ratio = 0.08)
+    
 
 
 
