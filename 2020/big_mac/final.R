@@ -37,5 +37,5 @@ final <- bigmac %>%
     scale_x_continuous(labels = scales::percent) 
 
 
-final
+print(final)
 
