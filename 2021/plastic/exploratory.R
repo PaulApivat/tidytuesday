@@ -59,41 +59,38 @@ plastics %>%
 # Maps of Coca-Cola ----
 
 # install libraries
-install.packages(c("RgoogleMaps", "ggmap", "mapproj", "sf",
-                   "dplyr", "OpenStreetMap", "devtools", "DT"))
+install.packages('ggmap')
+install.packages('maps')
+install.packages('mapdata')
 
 
+world_map <- map_data('world')
+ggplot() + 
+    geom_polygon(data = world_map, aes(x=long, y=lat, group=group)) + 
+    coord_fixed(1.3)
+
+# Join world_map region w/ plastics country
+
+# anti-join pattern
+library(dplyr)
+
+world_map1 <- world_map %>%
+    mutate(id = region)
 
 
-install.packages('sf')
-library(sf)
-install.packages('rnaturalearth')
-library(rnaturalearth)
-install.packages('rnaturalearthdata')
-library(rnaturalearthdata)
-install.packages('rgeos')
-library(rgeos)
-install.packages('ggspatial')
-library(ggspatial)
+plastics1 <- plastics %>%
+    filter(parent_company == 'The Coca-Cola Company') %>%
+    arrange(country) %>%
+    mutate(id = country)
 
 
+# anti_join
+anti_join(world_map1, plastics1, by ="id")
 
-# load data
-world <- ne_countries(scale = 110, type = "countries", continent = NULL,
-                      country = NULL, geounit = NULL, sovereignty = NULL,
-                      returnclass = c("sp", "sf"))
+anti_join(plastics1, world_map1, by ="id")
 
-# gene world map
-ggplot(data = world) +
-    geom_sf(colour = 'white')
+#strategy 1
+world_map1[!world_map1$id %in% plastics1$id, ]
 
+plastics1[!plastics1$id %in% world_map1$id, ]
 
-ggplot(data = world) +
-    geom_sf() +
-    labs( x = "Longitude", y = "Latitude") +
-    coord_sf(xlim = c(100.00, 160.00), ylim = c(-45.00, -10.00), expand = FALSE) +
-    annotation_scale(location = "bl", width_hint = 0.5) +
-    annotation_north_arrow(location = "bl", which_north = "true", 
-                           pad_x = unit(0.75, "in"), pad_y = unit(0.5, "in"),
-                           style = north_arrow_fancy_orienteering) +
-    theme_bw()
