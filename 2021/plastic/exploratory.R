@@ -70,9 +70,14 @@ library(dplyr)
 library(tidyverse)
 
 world_map <- map_data('world')
+
 ggplot() + 
     geom_polygon(data = world_map, aes(x=long, y=lat, group=group)) + 
     coord_fixed(1.3)
+
+
+
+
 
 # Join world_map region w/ plastics country
 
@@ -103,14 +108,80 @@ world_map1[!world_map1$id %in% plastics1$id, ]
 plastics1[!plastics1$id %in% world_map1$id, ]
 
 # NOTE
-# delete ecuador (missing data)
+# change ECUADOR (to normal case)
+# change NIGERIA
+# change Korea to South Korea
+
 # delete empty (missing data)
 # delete hong kong (missing data)
-# turn Korea to South Korea
-# delete nigeria (missing data)
 # delete United Kingdom of Great Britain & Northern Ireland (missing data)
 # delete United States of America (missing data)
 
+# Change or Delete Values ----
+world_map1 %>% View(title = 'world_map1')
+world_map1 %>%
+    mutate(id1 = row_number()) %>%
+    View(title = 'world_map1')
+
+
+
+
+# Change values in plastic1 ----
+
+# ECUADOR -> Ecuador
+plastics1$country[22] <- 'Ecuador'
+plastics1$country[22]
+plastics1 %>% View(title = 'plastics1')
+
+# NIGERIA -> Nigeria
+plastics1$country[55] <- 'Nigeria'
+plastics1$country[55]
+plastics1 %>% View(title = 'plastics1')
+
+# Korea -> South Korea
+plastics1$country[42] <- 'South Korea'
+plastics1$country[42]
+plastics1 %>% View(title = 'plastics1')
+
+# Delete values in plastic1 ----
+
+# Delete Row 24 w/ country == 'EMPTY'
+# Delete Row 20 w/ country == 'Hong Kong'
+# delete United Kingdom of Great Britain & Northern Ireland
+# delete United States of America (missing data)
+
+plastics1 %>% View(title = 'plastics1')
+
+
+plastics2 <- plastics1[-c(24, 30, 85, 86, 87),] 
+    
+# Re-check anti_join pattern ----
+
+# make sure id column is updated
+plastics2 <- plastics2 %>%
+    mutate(id = country)
+
+# confirm all column values match and ready for join
+anti_join(plastics2, world_map1, by ="id") %>%
+    View()
+
+plastics3 <- plastics2 %>%
+    left_join(world_map1, by = 'id')
+
+# Plot Map ----
+
+# base plot
+base <- 
+    
+plastics3 %>%
+    arrange(desc(grand_total)) %>%
+    View()
+
+    
+ggplot(data = plastics3) + 
+    coord_fixed(1.3) +
+    geom_polygon(aes(x=long, y=lat, group=group, fill = grand_total)) +
+    scale_fill_viridis_c()
 
 
 
