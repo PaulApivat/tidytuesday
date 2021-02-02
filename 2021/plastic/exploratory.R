@@ -63,6 +63,11 @@ install.packages('ggmap')
 install.packages('maps')
 install.packages('mapdata')
 
+library(ggmap)
+library(maps)
+library(mapdata)
+library(dplyr)
+library(tidyverse)
 
 world_map <- map_data('world')
 ggplot() + 
@@ -71,7 +76,7 @@ ggplot() +
 
 # Join world_map region w/ plastics country
 
-# anti-join pattern
+# Anti-join patterns ----
 library(dplyr)
 
 world_map1 <- world_map %>%
@@ -85,12 +90,28 @@ plastics1 <- plastics %>%
 
 
 # anti_join
-anti_join(world_map1, plastics1, by ="id")
+anti_join(world_map1, plastics1, by ="id") %>%
+    View(title = 'world')
 
-anti_join(plastics1, world_map1, by ="id")
+anti_join(plastics1, world_map1, by ="id") %>%
+    View()
+
 
 #strategy 1
 world_map1[!world_map1$id %in% plastics1$id, ]
 
 plastics1[!plastics1$id %in% world_map1$id, ]
+
+# NOTE
+# delete ecuador (missing data)
+# delete empty (missing data)
+# delete hong kong (missing data)
+# turn Korea to South Korea
+# delete nigeria (missing data)
+# delete United Kingdom of Great Britain & Northern Ireland (missing data)
+# delete United States of America (missing data)
+
+
+
+
 
