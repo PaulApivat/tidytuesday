@@ -194,18 +194,40 @@ ggplot(data = plastics3) +
     geom_polygon(aes(x=long, y=lat, group=group, fill = grand_total_1)) +
     scale_fill_viridis_d()
 
+# Base Plot with Map & Binning
 plastics3 %>%
     filter(year == 2020) %>%
     ggplot() +
     coord_fixed(1.3) +
     geom_polygon(aes(x=long, y=lat, group=group, fill = grand_total_1)) +
-    scale_fill_viridis_d()
+    scale_fill_viridis_d() +
+    theme_minimal()
+
+
+# make sure that all plastic types add up to grand_total
+plastics2 %>%
+    filter(year == 2020) %>%
+    arrange(desc(grand_total)) %>%
+    mutate(
+        # sum across columns
+        calc_total = select(., empty:pvc) %>% rowSums(na.rm = TRUE)
+    ) %>% view()
 
 
 
+plastics3 %>%
+    filter(year == 2020) %>%
+    ggplot() +
+    geom_bar(aes(x=grand_total_1, fill = grand_total_1))
 
 
+plastics2 %>%
+    group_by(country) %>%
+    arrange(desc(grand_total)) %>%
+    view()
 
+
+# create binning for smaller data frame plastics2
 
 
 
