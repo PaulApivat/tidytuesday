@@ -183,6 +183,30 @@ ggplot(data = plastics3) +
     geom_polygon(aes(x=long, y=lat, group=group, fill = grand_total)) +
     scale_fill_viridis_c()
 
+# divide grand_total into 7 levels (binning)
+# business data science notes (binning)
+
+plastics3$grand_total_1 <- cut(plastics3$grand_total, breaks = 7, labels = c("level1", "level2", "level3", "level4", "level5", "level6", "level7"))
+
+
+ggplot(data = plastics3) + 
+    coord_fixed(1.3) +
+    geom_polygon(aes(x=long, y=lat, group=group, fill = grand_total_1)) +
+    scale_fill_viridis_d()
+
+plastics3 %>%
+    filter(year == 2020) %>%
+    ggplot() +
+    coord_fixed(1.3) +
+    geom_polygon(aes(x=long, y=lat, group=group, fill = grand_total_1)) +
+    scale_fill_viridis_d()
+
+
+
+
+
+
+
 
 
 
