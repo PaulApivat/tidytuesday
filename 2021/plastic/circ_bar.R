@@ -111,16 +111,38 @@ circ %>%
     arrange(desc(grand_total)) %>%
     mutate(country = as.factor(country)) %>%
     ggplot(aes(x=reorder(parent_company, grand_total), grand_total)) +
-    geom_boxplot() +
+    geom_boxplot(fill = "#b5dedc") +
     geom_point(aes(color=factor(country)), position = position_dodge(width = 0.5)) +
     theme(
-        legend.position = 'none'
+        legend.position = 'none',
+        panel.background = element_rect(fill = '#429c8b'),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = '#429c8b'),
+        axis.text.x = element_text(colour = "#f3e29f"),
+        axis.text.y = element_text(colour = "#f3e29f"),
+        axis.title.x = element_text(colour = "#f3e29f", margin = margin(10,0,0,0)),
+        plot.title = element_text(colour = "white", margin = margin(0,0,5,0), size = 16, face = "bold"),
+        plot.subtitle = element_text(colour = "white", margin = margin(0,0,30,0), face = "bold"),
+        plot.caption = element_text(colour = "white", margin = margin(30,0,0,30))
     ) +
     geom_label(
-        data = circ %>% filter(grand_total > 2000), aes(label=country)
+        data = circ %>% filter(grand_total > 2000), 
+        aes(label=country), 
+        colour = "white",
+        fill = "#429c8b",
+        fontface = "bold",
+        label.size = NA
     ) +
     coord_flip() +
-    ylim(0, 9500)
+    ylim(0, 9500) +
+    labs(
+        y = "Total Count",
+        x = "",
+        title = "Top 20 Plastic Producing Companies in 2020",
+        subtitle = "& Five Locations with the Most Plastic",
+        caption = "Data: BreakFreeFromPlastic.org | Graphic: @paulapivat"
+    )
 
 
 
