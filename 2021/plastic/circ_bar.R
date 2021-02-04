@@ -36,9 +36,70 @@ top_brands = c("Universal Robina Corporation",
                "jasmine")
 
 
-# filter Plastics by Top 20 Plastic Producing Brands in 2020
+# filter by Top 20 Plastic Producing Brands in 2020
 # filter by 2020
 # save as circ
 circ <- plastics %>%
     filter(parent_company %in% top_brands) %>%
     filter(year==2020) 
+
+
+
+# Order data
+tmp <- circ %>%
+    select(country, grand_total) %>%
+    filter(!is.na(grand_total)) %>%
+    arrange(desc(grand_total)) %>%
+    mutate(country = as.factor(country))
+
+# Set a number of 'empty bar' (why 10?)
+empty_bar = 10
+
+# Add lines to the initial tmp dataframe (why?)
+to_add = matrix(NA, empty_bar, ncol(tmp))
+colnames(to_add) = colnames(tmp)
+tmp=rbind(tmp, to_add)
+tmp$id=seq(1, nrow(tmp))
+
+
+# get the name and the y position of each label
+label_tmp=tmp
+number_of_bar=nrow(label_tmp)
+angle = 90 - 360 * (label_tmp$id-0.5) /number_of_bar  # subtract 0.5 so letters are at the center of the bar
+label_tmp$hjust <- ifelse(angle < -90, 1, 0)
+label_tmp$angle <- ifelse(angle < -90, angle+180, angle)
+label_tmp$country <- paste(label_tmp$country, " (", label_tmp$grand_total,")", sep = "")
+
+# Make the Circular Bar Plot
+ggplot(tmp, aes(x=as.factor(id), y=grand_total)) +
+    geom_bar(stat = "identity", fill=alpha("#6f1712", 0.8)) +
+    ylim(-5000, 5000) +
+    theme_minimal() +
+    theme(
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        plot.margin = unit(rep(-1,4), "cm") 
+    ) +
+    coord_polar(start = 0)+
+    geom_text(data = label_tmp, aes(x=id, y=grand_total+200, label=country), color="black", fontface="bold", alpha=0.6, 
+              size=2.5, angle = label_tmp$angle, hjust=label_tmp$hjust, inherit.aes = FALSE) +
+    #geom_text(aes(x=24, y=4500, label="Where Did Coca-Cola Dump the Most Plastic in 20202?"), color="black", inherit.aes = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
