@@ -117,17 +117,16 @@ circ %>%
         legend.position = 'none'
     ) +
     geom_label(
-        label=ifelse(circ$grand_total > 2000, paste(circ$country, circ$grand_total), NA),
-        nudge_x = 0.25,
-        nudge_y = 7500,
-        check_overlap = T
+        data = circ %>% filter(grand_total > 2000), aes(label=country)
     ) +
     coord_flip() +
-    ylim(0, 8500)
+    ylim(0, 9500)
 
 
 
-
+circ %>%
+    select(country, parent_company, grand_total) %>%
+    arrange(desc(grand_total))
 
 
 
