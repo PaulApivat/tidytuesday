@@ -120,7 +120,7 @@ circ %>%
         panel.grid.minor = element_blank(),
         plot.background = element_rect(fill = '#429c8b'),
         axis.text.x = element_text(colour = "#f3e29f"),
-        axis.text.y = element_text(colour = "#f3e29f"),
+        axis.text.y = element_text(colour = "#f3e29f", size = 12),
         axis.title.x = element_text(colour = "#f3e29f", margin = margin(10,0,0,0)),
         plot.title = element_text(colour = "white", margin = margin(0,0,5,0), size = 16, face = "bold"),
         plot.subtitle = element_text(colour = "white", margin = margin(0,0,30,0), face = "bold"),
@@ -131,11 +131,12 @@ circ %>%
         aes(label=country), 
         colour = "white",
         fill = "#429c8b",
-        fontface = "bold",
-        label.size = NA
+        fontface = "italic",
+        label.size = NA,
+        size = 3.5
     ) +
     coord_flip() +
-    ylim(0, 9500) +
+    ylim(0, 6500) +
     labs(
         y = "Total Count",
         x = "",
