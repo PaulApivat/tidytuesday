@@ -297,6 +297,25 @@ plastics2 %>%
         subtitle = "From the Coca-Cola Company"
     )
 
+# Parts of Whole
+plastics2 %>%
+    filter(country == 'Nigeria') %>%
+    filter(year == 2020) %>%
+    select(country, empty:pvc) %>%
+    pivot_longer(cols = c(hdpe:pvc), names_to = "plastic", values_to = "amount") %>%
+    filter(amount > 0) %>%
+    ggplot(aes(x="", y=amount, fill=plastic)) +
+    geom_bar(stat = 'identity', width = 1) +
+    coord_polar("y", start = 0) +
+    labs(
+        fill = "Plastic Type",
+        x = "",
+        y = "",
+        title = "Plastic Waste in Nigeria by Type",
+        subtitle = "Producer: The Coca-Cola Company 2020"
+    )
+
+
 
 
 plastics3 %>%
