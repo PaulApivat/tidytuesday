@@ -204,7 +204,15 @@ plastics3 %>%
     theme_minimal() +
     scale_fill_manual(values = c("#fff8ff","#ba432e","#6f1712", "#360103")) +
     theme(
-        panel.background = element_rect(fill = "gray")
+        panel.background = element_rect(fill = "light gray"),
+        legend.position = "bottom"
+    ) +
+    labs(
+        x = "Longitude",
+        y = "Latitude",
+        fill = "Plastic Output",
+        title = "Top 5 Countries in Plastic Waste",
+        subtitle = "The Coca-Cola Company: 2020"
     )
 
 
@@ -255,9 +263,9 @@ label_tmp$hjust <- ifelse(angle < -90, 1, 0)
 label_tmp$angle <- ifelse(angle < -90, angle+180, angle)
 
 
-# Make the plot
+# Make the Circular Bar Plot
 ggplot(tmp, aes(x=as.factor(id), y=grand_total)) +
-    geom_bar(stat = "identity", fill=alpha("#69b3a2", 0.8)) +
+    geom_bar(stat = "identity", fill=alpha("#6f1712", 0.8)) +
     ylim(-5000, 5000) +
     theme_minimal() +
     theme(
@@ -272,17 +280,22 @@ ggplot(tmp, aes(x=as.factor(id), y=grand_total)) +
     geom_text(aes(x=24, y=4500, label="Where Did Coca-Cola Dump the Most Plastic in 20202?"), color="black", inherit.aes = FALSE)
 
 
+# Standard Bar Plot
 plastics2 %>%
+    filter(!is.na(grand_total)) %>%
+    filter(year == 2020) %>%
     ggplot(aes(x=reorder(country, grand_total), y=grand_total)) +
-    geom_bar(stat = 'identity', fill=alpha("#69b3a2", 0.8)) +
-    ylim(0,4500)+
+    geom_bar(stat = 'identity', fill=alpha("#6f1712", 0.8)) +
     theme_minimal() +
     theme(
-        axis.text = element_blank(),
-        plot.margin = unit(rep(-1,4), "cm")
+        axis.text.x = element_text(angle = 45, hjust = 1),
     ) +
-    geom_text(aes(label = country), angle = 90) +
-    coord_polar(start = 0)
+    labs(
+        x = "",
+        y = "Total Output (Plastic)",
+        title = "Recipient of the Most Plastic in 2020",
+        subtitle = "From the Coca-Cola Company"
+    )
 
 
 
