@@ -83,12 +83,47 @@ ggplot(tmp, aes(x=as.factor(id), y=grand_total)) +
     ) +
     coord_polar(start = 0)+
     geom_text(data = label_tmp, aes(x=id, y=grand_total+200, label=country), color="black", fontface="bold", alpha=0.6, 
-              size=2.5, angle = label_tmp$angle, hjust=label_tmp$hjust, inherit.aes = FALSE) +
+              size=2.5, angle = label_tmp$angle, hjust=label_tmp$hjust, inherit.aes = FALSE)
+
     #geom_text(aes(x=24, y=4500, label="Where Did Coca-Cola Dump the Most Plastic in 20202?"), color="black", inherit.aes = FALSE)
 
 
+# FACET ----
+
+# Facet Wrap Bar Chart
+circ %>%
+    select(country, parent_company, grand_total) %>%
+    filter(!is.na(grand_total)) %>%
+    arrange(desc(grand_total)) %>%
+    mutate(country = as.factor(country)) %>%
+    ggplot(aes(x=reorder(country, grand_total), y=grand_total)) + 
+    geom_bar(stat = "identity") +
+    theme(
+        axis.text.x = element_text(angle = 45, hjust = 1)
+    ) +
+    facet_wrap(~parent_company)
 
 
+# Facet Wrap Box Plot
+circ %>%
+    select(country, parent_company, grand_total) %>%
+    filter(!is.na(grand_total)) %>%
+    arrange(desc(grand_total)) %>%
+    mutate(country = as.factor(country)) %>%
+    ggplot(aes(x=reorder(parent_company, grand_total), grand_total)) +
+    geom_boxplot() +
+    geom_point(aes(color=factor(country)), position = position_dodge(width = 0.5)) +
+    theme(
+        legend.position = 'none'
+    ) +
+    geom_label(
+        label=ifelse(circ$grand_total > 2000, paste(circ$country, circ$grand_total), NA),
+        nudge_x = 0.25,
+        nudge_y = 7500,
+        check_overlap = T
+    ) +
+    coord_flip() +
+    ylim(0, 8500)
 
 
 
