@@ -141,7 +141,7 @@ circ %>%
         y = "Total Count",
         x = "",
         title = "Top 20 Plastic Producing Companies in 2020",
-        subtitle = "& Five Locations with the Most Plastic",
+        subtitle = "& Five Outlier Locations",
         caption = "Data: BreakFreeFromPlastic.org | Graphic: @paulapivat"
     )
 
