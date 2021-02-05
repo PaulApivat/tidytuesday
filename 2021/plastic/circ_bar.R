@@ -112,7 +112,7 @@ nb.cols <- 46
 mycolors <- colorRampPalette(brewer.pal(8, "Set1"))(nb.cols)
 
 
-# Box Plot + Scatter Points
+# FINAL VERSION: Box Plot + Scatter Points
 # NOTE: moved geom_label before geom_point
 # change size of geom_point based on grand_total
 circ %>%
@@ -156,6 +156,28 @@ circ %>%
         subtitle = "& Five Outlier Locations",
         caption = "Data: BreakFreeFromPlastic.org | Graphic: @paulapivat"
     )
+
+
+# GGRIDGES ----
+library(ggridges)
+circ %>%
+    select(country, parent_company, grand_total) %>%
+    filter(!is.na(grand_total)) %>%
+    arrange(desc(grand_total)) %>%
+    mutate(country = as.factor(country)) %>%
+    ggplot(aes(x=grand_total, y=parent_company)) +
+    geom_density_ridges() +
+    geom_point(aes(color=factor(country), size = grand_total), alpha = 0.8) +
+    theme(
+        legend.position = "none"
+    )
+
+
+
+
+
+
+
 
 
 
