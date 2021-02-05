@@ -103,8 +103,16 @@ circ %>%
     ) +
     facet_wrap(~parent_company)
 
+# Problem: Insufficient colors in various palettes
+# Problem: Need enough colors for each country
 
-# Facet Wrap Box Plot 
+# Define number of colors you want\
+library(RColorBrewer)
+nb.cols <- 46
+mycolors <- colorRampPalette(brewer.pal(8, "Set1"))(nb.cols)
+
+
+# Box Plot + Scatter Points
 # NOTE: moved geom_label before geom_point
 # change size of geom_point based on grand_total
 circ %>%
@@ -116,6 +124,7 @@ circ %>%
     geom_boxplot(fill = "#b5dedc") +
     geom_label(
         data = circ %>% filter(grand_total > 2000), 
+        nudge_x = 0.5,
         aes(label=country), 
         colour = "white",
         fill = "#429c8b",
@@ -123,7 +132,8 @@ circ %>%
         label.size = NA,
         size = 3.5
     ) +
-    geom_point(aes(color=factor(country), size = grand_total), position = position_dodge(width = 0.5)) +
+    geom_point(aes(color=factor(country)), size = 10, alpha = 0.7, position = position_dodge(width = 0.5)) +     #size = (grand_total*10)
+    scale_color_manual(values = mycolors) +
     theme(
         legend.position = 'none',
         panel.background = element_rect(fill = '#429c8b'),
