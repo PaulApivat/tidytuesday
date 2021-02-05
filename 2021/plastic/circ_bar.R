@@ -104,7 +104,9 @@ circ %>%
     facet_wrap(~parent_company)
 
 
-# Facet Wrap Box Plot
+# Facet Wrap Box Plot 
+# NOTE: moved geom_label before geom_point
+# change size of geom_point based on grand_total
 circ %>%
     select(country, parent_company, grand_total) %>%
     filter(!is.na(grand_total)) %>%
@@ -112,7 +114,16 @@ circ %>%
     mutate(country = as.factor(country)) %>%
     ggplot(aes(x=reorder(parent_company, grand_total), grand_total)) +
     geom_boxplot(fill = "#b5dedc") +
-    geom_point(aes(color=factor(country)), position = position_dodge(width = 0.5)) +
+    geom_label(
+        data = circ %>% filter(grand_total > 2000), 
+        aes(label=country), 
+        colour = "white",
+        fill = "#429c8b",
+        fontface = "italic",
+        label.size = NA,
+        size = 3.5
+    ) +
+    geom_point(aes(color=factor(country), size = grand_total), position = position_dodge(width = 0.5)) +
     theme(
         legend.position = 'none',
         panel.background = element_rect(fill = '#429c8b'),
@@ -125,15 +136,6 @@ circ %>%
         plot.title = element_text(colour = "white", margin = margin(0,0,5,0), size = 16, face = "bold"),
         plot.subtitle = element_text(colour = "white", margin = margin(0,0,30,0), face = "bold"),
         plot.caption = element_text(colour = "white", margin = margin(30,0,0,30))
-    ) +
-    geom_label(
-        data = circ %>% filter(grand_total > 2000), 
-        aes(label=country), 
-        colour = "white",
-        fill = "#429c8b",
-        fontface = "italic",
-        label.size = NA,
-        size = 3.5
     ) +
     coord_flip() +
     ylim(0, 6500) +
