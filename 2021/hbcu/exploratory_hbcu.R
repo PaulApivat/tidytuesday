@@ -29,10 +29,12 @@ bach %>%
     geom_line(aes(x = total, y = total_asian_pacific_islander), color = "orange") +
     geom_line(aes(x = total, y = asian), color = "yellow") + 
     geom_line(aes(x = total, y = pacific_islander), color = "brown") +
-    geom_line(aes(x = total, y = american_indian_alaska_native), color = "purple")
+    geom_line(aes(x = total, y = american_indian_alaska_native), color = "purple") +
+    geom_ribbon(aes(ymin=black1, ymax=white1), fill='blue') +
+    geom_ribbon(aes(ymin=hispanic, ymax=black1), fill='green')
 
 
-# pivot_longer approach
+# pivot_longer approach ----
 bach %>%
     select(total, white1, black1, hispanic, asian_pacific_islander_asian, asian_pacific_islander_pacific_islander, american_indian_alaska_native) %>% 
     mutate(
@@ -66,6 +68,47 @@ bach %>%
         caption = "Data: National Center for Education Statistics | Graphic: @paulapivat"
     ) +
     scale_color_manual(values = c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"))
+
+
+# Geom_line White, Black, Hispanic ----
+bach1 <- bach
+
+bach %>%
+    select(total, white1, black1, hispanic) %>% 
+    mutate(
+        white1 = suppressWarnings(as.numeric(white1)),
+        black1 = suppressWarnings(as.numeric(black1)),
+        hispanic = suppressWarnings(as.numeric(hispanic))
+    ) %>% 
+    rename(
+        White = white1,
+        Black = black1,
+        Hispanic = hispanic
+    ) %>% 
+    filter(total > 1939) %>%
+    pivot_longer(!total, names_to = "Ethnicity", values_to = "Percent") %>%
+    ggplot(aes(x=total, y=Percent, color=Ethnicity)) +
+    geom_line(size = 1.5) +
+    geom_ribbon(data = bach1, aes(ymin = bach1$black1, ymax = bach1$white1), fill = 'blue', alpha = 0.5)
+    
+
+# Geom_line Asian, Pacific and Alaskan
+bach %>%
+    select(total, asian_pacific_islander_asian, asian_pacific_islander_pacific_islander, american_indian_alaska_native) %>% 
+    mutate(
+        asian_pacific_islander_asian = as.numeric(asian_pacific_islander_asian),
+        asian_pacific_islander_pacific_islander = as.numeric(asian_pacific_islander_pacific_islander),
+        american_indian_alaska_native = as.numeric(american_indian_alaska_native)
+    ) %>% 
+    rename(
+        Asian = asian_pacific_islander_asian,
+        `Pacific Islander` = asian_pacific_islander_pacific_islander,
+        `Alaska Native` = american_indian_alaska_native,
+    ) %>% 
+    filter(total > 2002) %>%
+    pivot_longer(!total, names_to = "Ethnicity", values_to = "Percent") %>% 
+    ggplot(aes(x=total, y=Percent, color=Ethnicity)) +
+    geom_line()
 
 
 
