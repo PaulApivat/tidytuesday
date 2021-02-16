@@ -44,13 +44,31 @@ bach %>%
         american_indian_alaska_native = as.numeric(american_indian_alaska_native)
     ) %>% 
     rename(
-        asian = asian_pacific_islander_asian,
-        pacific_islander = asian_pacific_islander_pacific_islander,
-        alaska_native = american_indian_alaska_native
+        Asian = asian_pacific_islander_asian,
+        `Pacific Islander` = asian_pacific_islander_pacific_islander,
+        `Alaska Native` = american_indian_alaska_native,
+        White = white1,
+        Black = black1,
+        Hispanic = hispanic
     ) %>% 
-    pivot_longer(!total, names_to = "ethnicity", values_to = "percent") %>% 
-    ggplot(aes(x = total, y = percent, color = ethnicity)) +
-    geom_line()
+    filter(total > 1939) %>%
+    pivot_longer(!total, names_to = "Ethnicity", values_to = "Percent") %>% 
+    ggplot(aes(x = total, y = Percent, color = Ethnicity)) +
+    geom_line(size = 1.5) +
+    theme_minimal() +
+    theme(
+        legend.position = "bottom",
+    ) +
+    labs(
+        x = "",
+        title = "High School Completion & Bachelor's Degree Attainment",
+        subtitle = "Among Persons Aged 25 and Older",
+        caption = "Data: National Center for Education Statistics | Graphic: @paulapivat"
+    ) +
+    scale_color_manual(values = c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"))
+
+
+
 
 # save all ethnicity (1910 - 2016) as one variable ----
 all_ethnicities <- bach %>%
@@ -74,7 +92,8 @@ all_ethnicities <- bach %>%
 all_ethnicities %>%
     filter(total > 2002) %>%
     ggplot(aes(x = total, y = percent, color = ethnicity)) +
-    geom_line()
+    geom_smooth(method = 'loess', formula = 'y ~ x') +
+    facet_wrap(~ethnicity)
     
 
 # show Standard Error ----
