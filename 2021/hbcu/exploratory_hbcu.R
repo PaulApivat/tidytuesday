@@ -63,7 +63,7 @@ bach %>%
     ) +
     labs(
         x = "",
-        title = "High School Completion & Bachelor's Degree Attainment",
+        title = "Bachelor's Degree Attainment",
         subtitle = "Among Persons Aged 25 and Older",
         caption = "Data: National Center for Education Statistics | Graphic: @paulapivat"
     ) +
@@ -72,6 +72,10 @@ bach %>%
 
 # Geom_line White, Black, Hispanic ----
 # with geom_ribbon - must use pivot_wider approach
+install.packages('ggtext')
+library(ggtext)
+
+
 
 
 bach %>%
@@ -81,20 +85,35 @@ bach %>%
         black1 = suppressWarnings(as.numeric(black1)),
         hispanic = suppressWarnings(as.numeric(hispanic))
     ) %>% 
-    #rename(
-    #    White = white1,
-    #    Black = black1,
-    #    Hispanic = hispanic
-    #) %>% 
-    filter(total > 1930) %>%
+    filter(total > 1939) %>%
     ggplot(aes(x = total)) +
     geom_line(aes(x = total, y = white1), color = "#e6ab02", size = 1.5) +
     geom_line(aes(x = total, y = black1), color = "#7570b3", size = 1.5) +
     geom_line(aes(x = total, y = hispanic), color = "#e7298a", size = 1.5) +
     geom_ribbon(aes(ymin = black1, ymax = white1), fill = 'grey', alpha = 0.5) +
-    geom_ribbon(aes(ymin = hispanic, ymax = black1), fill = '#fed9a6', alpha = 0.5) +
-    theme_minimal() 
+    geom_ribbon(aes(ymin = hispanic, ymax = black1), fill = 'pink', alpha = 0.5) +
+    theme_minimal() +
+    scale_x_continuous(breaks = seq(1930, 2025, by = 10)) +
+    xlim(1930, 2025) +
+    theme(
+        panel.grid.minor = element_blank(),
+        plot.caption = element_text(margin = margin(30,20,0,0))
+    ) +
+    labs(
+        x = NULL,
+        y = "Percent",
+        caption = 'Data: National Center for Education Statistics | Graphic: @paulapivat'
+    ) +
+    annotate("text", x = 1940, y = 35, label = 'Widening Gap', hjust = 0, vjust = 1, size = 8, fontface = "bold") +
+    annotate("text", x = 1940, y = 33, label = "Bachelors' Degree Attainment, 1940 - 2016", hjust = 0, vjust = 1, size = 6) +
+    annotate("text", x = 1938, y = 3, label = "3.6%") +
+    annotate("text", x = 2017, y = 38, label = "White\nAmerican\n(37.3%)", hjust = 0) +
+    annotate("text", x = 2017, y = 24, label = "Black\nAmerican\n(23.5%)", hjust = 0) +
+    annotate("text", x = 2017, y = 17, label = "Hispanic\nAmerican\n(16.4%)", hjust = 0)
     
+
+
+
 
 # Geom_line Asian, Pacific and Alaskan
 bach %>%
@@ -106,13 +125,17 @@ bach %>%
     ) %>% 
     rename(
         Asian = asian_pacific_islander_asian,
-        `Pacific Islander` = asian_pacific_islander_pacific_islander,
-        `Alaska Native` = american_indian_alaska_native,
+        `Pac_Islander` = asian_pacific_islander_pacific_islander,
+        `Alaskan` = american_indian_alaska_native,
     ) %>% 
     filter(total > 2002) %>%
-    pivot_longer(!total, names_to = "Ethnicity", values_to = "Percent") %>% 
-    ggplot(aes(x=total, y=Percent, color=Ethnicity)) +
-    geom_line()
+    ggplot(aes(x=total)) +
+    geom_line(aes(x = total, y = Asian), color = '#d95f02', size = 1.5) +
+    geom_line(aes(x = total, y = Pac_Islander), color = '#66a61e', size = 1.5) +
+    geom_line(aes(x = total, y = Alaskan), color = '#1b9e77', size = 1.5) +
+    geom_ribbon(aes(ymin = Pac_Islander, ymax = Asian), fill = 'grey', alpha = 0.5) +
+    geom_ribbon(aes(ymin = Alaskan, ymax = Pac_Islander), fill = 'orange', alpha = 0.5) +
+    theme_minimal()
 
 
 
