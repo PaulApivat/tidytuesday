@@ -135,7 +135,22 @@ bach %>%
     geom_line(aes(x = total, y = Alaskan), color = '#1b9e77', size = 1.5) +
     geom_ribbon(aes(ymin = Pac_Islander, ymax = Asian), fill = 'grey', alpha = 0.5) +
     geom_ribbon(aes(ymin = Alaskan, ymax = Pac_Islander), fill = 'orange', alpha = 0.5) +
-    theme_minimal()
+    theme_minimal() +
+    scale_x_continuous(breaks = seq(2003, 2020, by = 1)) +
+    theme(
+        panel.grid.minor = element_blank(),
+        plot.caption = element_text(margin = margin(30,20,0,0))
+    ) +
+    labs(
+        x = NULL,
+        y = "Percent",
+        caption = 'Data: National Center for Education Statistics | Graphic: @paulapivat'
+    ) +
+    annotate("text", x = 2003, y = 60, label = 'Persistent Gap', hjust = 0, vjust = 1, size = 8, fontface = "bold") +
+    annotate("text", x = 2003, y = 58, label = "Bachelors' Degree Attainment, 2003 - 2016", hjust = 0, vjust = 1, size = 6) +
+    annotate("text", x = 2016.8, y = 57, label = "Asian (56.4%)") +
+    annotate("text", x = 2016.5, y = 28, label = "Pacific\nIslander\n(27.5%)") +
+    annotate("text", x = 2016.5, y = 17, label = "Alaska\nNative\n(16.8%)")
 
 
 
