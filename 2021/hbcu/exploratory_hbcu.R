@@ -71,7 +71,8 @@ bach %>%
 
 
 # Geom_line White, Black, Hispanic ----
-bach1 <- bach
+# with geom_ribbon - must use pivot_wider approach
+
 
 bach %>%
     select(total, white1, black1, hispanic) %>% 
@@ -80,16 +81,19 @@ bach %>%
         black1 = suppressWarnings(as.numeric(black1)),
         hispanic = suppressWarnings(as.numeric(hispanic))
     ) %>% 
-    rename(
-        White = white1,
-        Black = black1,
-        Hispanic = hispanic
-    ) %>% 
-    filter(total > 1939) %>%
-    pivot_longer(!total, names_to = "Ethnicity", values_to = "Percent") %>%
-    ggplot(aes(x=total, y=Percent, color=Ethnicity)) +
-    geom_line(size = 1.5) +
-    geom_ribbon(data = bach1, aes(ymin = bach1$black1, ymax = bach1$white1), fill = 'blue', alpha = 0.5)
+    #rename(
+    #    White = white1,
+    #    Black = black1,
+    #    Hispanic = hispanic
+    #) %>% 
+    filter(total > 1930) %>%
+    ggplot(aes(x = total)) +
+    geom_line(aes(x = total, y = white1), color = "#e6ab02", size = 1.5) +
+    geom_line(aes(x = total, y = black1), color = "#7570b3", size = 1.5) +
+    geom_line(aes(x = total, y = hispanic), color = "#e7298a", size = 1.5) +
+    geom_ribbon(aes(ymin = black1, ymax = white1), fill = 'grey', alpha = 0.5) +
+    geom_ribbon(aes(ymin = hispanic, ymax = black1), fill = '#fed9a6', alpha = 0.5) +
+    theme_minimal() 
     
 
 # Geom_line Asian, Pacific and Alaskan
