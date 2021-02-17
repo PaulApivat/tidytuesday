@@ -84,7 +84,8 @@ loan_debt_pct_bach %>%
         w_minus_h = white1 - hispanic
     ) %>%
     ggplot(aes(x = w_minus_b, y = Black)) +
-    geom_point()
+    geom_point() +
+    geom_smooth(method = "loess", formula = "y ~ x")
 
 
 
@@ -96,7 +97,8 @@ loan_debt_pct_bach %>%
         w_minus_h = white1 - hispanic
     ) %>%
     ggplot(aes(x = b_minus_h, y = Hispanic)) +
-    geom_point()
+    geom_point() +
+    geom_smooth()
 
 # Gap btwn white1-hispanic scatterplot with Hispanic (share families w student debt)
 loan_debt_pct_bach %>%
@@ -106,14 +108,30 @@ loan_debt_pct_bach %>%
         w_minus_h = white1 - hispanic
     ) %>%
     ggplot(aes(x = w_minus_h, y = Hispanic)) +
-    geom_point()
+    geom_point() +
+    geom_smooth(method = "loess", formula = "y ~ x")
 
 # straight forward loan debt percentage ----
 # Share of families with student loan debt
 student_debt %>%
     ggplot(aes(x = year, y = loan_debt_pct, fill = race)) +
     geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(label = round(loan_debt_pct, digits = 2)), hjust = 0.5, vjust = 3, position = "stack")
+    geom_text(aes(label = round(loan_debt_pct, digits = 2)), hjust = 0.5, vjust = 3, position = "stack") +
+    scale_fill_manual(values = c("#7570b3", "#e7298a", "#e6ab02")) +
+    theme_minimal() +
+    theme(
+        legend.position = "bottom",
+        panel.grid.minor = element_blank(),
+        plot.caption = element_text(margin = margin(30,20,0,0))
+    ) +
+    labs(
+        x = NULL,
+        y = "% of families with student loan debt",
+        fill = "Race",
+        title = "Share of Families with Student Loan Debt (Ages 25 - 55)",
+        subtitle = "1989 - 2016",
+        caption = "Data: Urban Institute | Graphic: @paulapivat"
+    )
 
 
 
