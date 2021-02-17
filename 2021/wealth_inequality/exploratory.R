@@ -84,8 +84,30 @@ loan_debt_pct_bach %>%
         w_minus_h = white1 - hispanic
     ) %>%
     ggplot(aes(x = w_minus_b, y = Black)) +
-    geom_point() +
-    geom_smooth(method = "loess", formula = "y ~ x")
+    geom_point(size = 13, color = "white") +
+    theme_minimal() +
+    theme(
+        panel.background = element_rect(fill = "#7570b3"),
+        plot.background = element_rect(fill = "#7570b3"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.border = element_blank(),
+        axis.title.x = element_text(colour = "white", margin = margin(20,0,0,0)),
+        axis.title.y = element_text(colour = "white"),
+        axis.text.x = element_text(colour = "white"),
+        axis.text.y = element_text(colour = "white"),
+        plot.title = element_text(colour = "white"),
+        plot.subtitle = element_text(colour = "white"),
+        plot.caption = element_text(colour = "white", margin = margin(10,0,0,0)),
+    ) +
+    labs(
+        x = "College Attainment (Gap: White - Black American %)",
+        y = "Share of Black Families with Student Debt Loans",
+        title = "Student Debt Burden and College Attainment (r = 0.85)",
+        subtitle = "African American Families",
+        caption = "Data: Urban Institute | National Center for Education Statistics\nGraphic: @paulapivat"
+    )
+    
 
 
 
