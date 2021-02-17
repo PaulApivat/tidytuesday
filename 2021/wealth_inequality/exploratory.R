@@ -2,6 +2,10 @@ library(tidyverse)
 
 # Load Data ----
 student_debt <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-02-09/student_debt.csv')
+
+race_wealth <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-02-09/race_wealth.csv')
+
+
 bach <- read_csv("bachelors_or_higher_degree.csv")
 
 # Merge bach + student_debt ----
