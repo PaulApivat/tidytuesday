@@ -69,7 +69,7 @@ cor.test(diff_columns$b_minus_h, diff_columns$Hispanic)  # 0.66
 
 cor.test(diff_columns$w_minus_h, diff_columns$Hispanic)  # 0.68
 
-# segue into scatterplot
+# scatterplots ----
 
 # Gap btwn white1 - black1 scatterplot with Black (share families with student debt)
 # positive trend
@@ -104,6 +104,12 @@ loan_debt_pct_bach %>%
     ggplot(aes(x = w_minus_h, y = Hispanic)) +
     geom_point()
 
+# straight forward loan debt percentage ----
+# Share of families with student loan debt
+student_debt %>%
+    ggplot(aes(x = year, y = loan_debt_pct, fill = race)) +
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(label = round(loan_debt_pct, digits = 2)), hjust = 0.5, vjust = 3, position = "stack")
 
 
 
