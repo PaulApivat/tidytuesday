@@ -101,9 +101,9 @@ loan_debt_pct_bach %>%
         plot.caption = element_text(colour = "white", margin = margin(10,0,0,0)),
     ) +
     labs(
-        x = "College Attainment (Gap: White - Black American %)",
+        x = "College Attainment Gap (White - Black Americans, %)",
         y = "Share of Black Families with Student Debt Loans",
-        title = "Student Debt Burden and College Attainment (r = 0.85)",
+        title = "Student Debt Burden and College Attainment Gap (r = 0.85)",
         subtitle = "African American Families",
         caption = "Data: Urban Institute | National Center for Education Statistics\nGraphic: @paulapivat"
     )
@@ -119,8 +119,32 @@ loan_debt_pct_bach %>%
         w_minus_h = white1 - hispanic
     ) %>%
     ggplot(aes(x = b_minus_h, y = Hispanic)) +
-    geom_point() +
-    geom_smooth()
+    geom_point(size = 13, color = "white") +
+    theme_minimal() +
+    theme(
+        panel.background = element_rect(fill = "#e7298a"),
+        plot.background = element_rect(fill = "#e7298a"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.border = element_blank(),
+        axis.title.x = element_text(colour = "white", margin = margin(20,0,0,0)),
+        axis.title.y = element_text(colour = "white"),
+        axis.text.x = element_text(colour = "white"),
+        axis.text.y = element_text(colour = "white"),
+        plot.title = element_text(colour = "white"),
+        plot.subtitle = element_text(colour = "white"),
+        plot.caption = element_text(colour = "white", margin = margin(10,0,0,0)),
+    ) +
+    labs(
+        x = "College Attainment Gap (Black - Hispanic Americans, %)",
+        y = "Share of Hispanic Families with Student Debt Loans",
+        title = "Student Debt Burden and College Attainment Gap (r = 0.66)",
+        subtitle = "Hispanic American Families",
+        caption = "Data: Urban Institute | National Center for Education Statistics\nGraphic: @paulapivat"
+    )
+
+
+
 
 # Gap btwn white1-hispanic scatterplot with Hispanic (share families w student debt)
 loan_debt_pct_bach %>%
